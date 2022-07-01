@@ -34,7 +34,7 @@ ROOT API ENDPOINT : http://localhost:3002/
     - router.get('/login', Users.detail)
 
     - router.post('/create-user', Users.post_user)
-
+```
 
 ##	Hướng dẫn cài đặt:
 - Cài đặt NodeJS version 14 (https://nodejs.org/en/blog/release/v14.17.3/)
