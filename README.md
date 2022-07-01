@@ -36,7 +36,7 @@ ROOT API ENDPOINT : http://localhost:3002/
     - router.post('/create-user', Users.post_user)
 ```
 
-##	install instructions:
+##	Install instructions:
 - Cài đặt NodeJS version 14 (https://nodejs.org/en/blog/release/v14.17.3/)
 - Cài đặt Visual Studio Code
 - Cài đặt Xampp/Wamp
