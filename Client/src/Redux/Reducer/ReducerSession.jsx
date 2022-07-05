@@ -8,7 +8,7 @@ const ReducerSession = (state = initialState, action) => {
 
         case 'ADD_SESSION':
             
-            const stateLogin = [...state.idUser]
+            const stateLogin = [state.idUser]
             stateLogin.idUser = action.data
             return stateLogin
 

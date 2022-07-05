@@ -2252,6 +2252,20 @@ textarea:focus {
   font-weight: 500;
   padding-right: 10px;
 }
+.cart-price{
+	width: 400px;
+}
+.box .cart-box{
+	width: 200px;
+	float: right;
+}
+/* .price-box{
+	width: 200px;
+	float: left;
+} */
+.box{
+	float: left;
+}
 .product_desc .product_desc_info .price-box .new-price-2,
 .featured-price-box .new-price-2 {
 	color: #e80f0f !important;

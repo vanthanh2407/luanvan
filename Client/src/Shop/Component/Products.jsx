@@ -1,70 +1,56 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getAllProduct } from '../../API/Product'
+import { getAllProduct } from '../../API/Product';
+import cart from '../../CSS/Image/cart.png';
 
-// Products.propTypes = {
-//     products: PropTypes.array,
-//     sort: PropTypes.string
-// };
 
-// Products.defaultProps = {
-//     products: [],
-//     sort: ''
-// }
 
-// function Products(props) {
+Products.propTypes = {
+    // products: PropTypes.array,
+    // sort: PropTypes.string
+};
 
-//     const { products, sort } = props;
+Products.defaultProps = {
+    // products: [],
+    // sort: ''
+}
 
-//     if (sort === 'DownToUp') {
-//         products.sort((a, b) => {
-//             return a.price - b.price
-//         });
-//     }
-//     else if (sort === 'UpToDown') {
-//         products.sort((a, b) => {
-//             return b.price - a.price
-//         });
-//     }
+function Products(props) {
 
-//     let componentDidMount = async () => {
-//         let resopnse = await getAllBooks();
-//         if (resopnse && resopnse.errCode === 0) {
-//             this.setState({
-//                 arrProdcut: resopnse.product
-//             })
+    // const { products, sort } = props;
 
-//         }
-//         console.log('check: ', resopnse);
-//     }
-class Products extends Component {
+    // if (sort === 'DownToUp') {
+    //     products.sort((a, b) => {
+    //         return a.price - b.price
+    //     });
+    // }
+    // else if (sort === 'UpToDown') {
+    //     products.sort((a, b) => {
+    //         return b.price - a.price
+    //     });
+    // }
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            arrProdcut: [],
-            isOpenModalProduct: false,
-        }
-    }
+    const [products, set_product] = useState([]);
 
-    async componentDidMount() {
-        let resopnse = await getAllProduct();
-        if (resopnse && resopnse.errCode === 0) {
-            this.setState({
-                arrProdcut: resopnse.product
-            })
+    //hàm lấy tất cả sản phẩm
+    useEffect(() => {
+
+        const fetchData = async () => {
+
+            const response = await getAllProduct()
+            // console.log(response)
+            set_product(response)
 
         }
-        console.log('check: ', resopnse);
-    }
 
-    render() {
-        let arrProdcut = this.state.arrProdcut;
+        fetchData()
+
+    }, [])
+
     return (
         <div className="row">
             {
-                arrProdcut && arrProdcut.map(value => (
+                products.map(value => (
                     <div className="col-lg-4 col-md-4 col-sm-6 mt-40 animate__animated animate__zoomIn col_product" key={value.id}>
                         <div className="single-product-wrap">
                             <div className="product-image">
@@ -92,8 +78,13 @@ class Products extends Component {
                                         </div>
                                     </div>
                                     <h4><a className="product_name" href="single-product.html">{ value.summary.substring(0,45)+"..."}</a></h4>
-                                    <div className="price-box">
-                                        <span className="new-price">{new Intl.NumberFormat('vi-VN',{style: 'decimal',decimal: 'VND'}).format(value.price)+ ' VND'}</span>
+                                    <div className="cart_price">
+                                        <div className="box price-box">
+                                            <span className="new-price">{new Intl.NumberFormat('vi-VN',{style: 'decimal',decimal: 'VND'}).format(value.price)+ ' VND'}</span>
+                                        </div>
+                                        <div className="box cart-box" >
+                                            <img src={cart} style={{ width: '2rem' }} />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -103,6 +94,5 @@ class Products extends Component {
             }
         </div>
     );
-}
 }
 export default Products;

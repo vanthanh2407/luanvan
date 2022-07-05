@@ -50,13 +50,13 @@ function Header(props) {
 
     //Sau khi F5 nó sẽ kiểm tra nếu phiên làm việc của Session vẫn còn thì nó sẽ tiếp tục
     // đưa dữ liệu vào Redux
-    if (sessionStorage.getItem('id')) {
-        const action = addSession(sessionStorage.getItem('id'))
+    if (sessionStorage.getItem('id_user')) {
+        const action = addSession(sessionStorage.getItem('id_user'))
         dispatch(action)
     }
 
     //Get IdUser từ redux khi user đã đăng nhập
-    var id = useSelector(state => state.Session.id)
+    var id_user = useSelector(state => state.Session.idUser)
 
     // Get carts từ redux khi user chưa đăng nhập
     // const carts = useSelector(state => state.Cart.listCart)
@@ -68,7 +68,7 @@ function Header(props) {
     // Hàm này dùng để hiện thị
     useEffect(() => {
 
-        if (!id) { // user chưa đăng nhâp
+        if (!id_user) { // user chưa đăng nhâp
 
             set_active_user(false)
 
@@ -76,7 +76,7 @@ function Header(props) {
 
             const fetchData = async () => {
 
-                const response = await User.Get_User(sessionStorage.getItem('id'))
+                const response = await User.Get_User(sessionStorage.getItem('id_user'))
                 set_user(response)
 
             }
@@ -87,7 +87,7 @@ function Header(props) {
 
         }
 
-    }, [id])
+    }, [id_user])
 
 
     // Hàm này dùng để xử lý phần log out
@@ -123,7 +123,7 @@ function Header(props) {
 
         carts.map(value => {
             sum += value.count
-            price += parseInt(value.price) * parseInt(value.count)
+            price += parseInt(value.price_product) * parseInt(value.count)
         })
 
         set_count_cart(sum)
@@ -150,41 +150,41 @@ function Header(props) {
     const [female, set_female] = useState([])
 
     // Gọi API theo phương thức GET để load category
-    // useEffect(() => {
+    useEffect(() => {
 
-    //     const fetchData = async () => {
+        const fetchData = async () => {
 
-    //         // gender = male
-    //         const params_male = {
-    //             gender: 'male'
-    //         }
+            // gender = male
+            const params_male = {
+                gender: 'male'
+            }
 
-    //         const query_male = '?' + queryString.stringify(params_male)
+            const query_male = '?' + queryString.stringify(params_male)
 
-    //         const response_male = await Product.Get_Category_Gender(query_male)
+            const response_male = await Product.Get_Category_Gender(query_male)
 
-    //         set_male(response_male)
+            set_male(response_male)
 
-    //         // gender = female
-    //         const params_female = {
-    //             gender: 'female'
-    //         }
+            // gender = female
+            const params_female = {
+                gender: 'female'
+            }
 
-    //         const query_female = '?' + queryString.stringify(params_female)
+            const query_female = '?' + queryString.stringify(params_female)
 
-    //         const response_female = await Product.Get_Category_Gender(query_female)
+            const response_female = await Product.Get_Category_Gender(query_female)
 
-    //         set_female(response_female)
+            set_female(response_female)
 
-    //     }
+        }
 
-    //     fetchData()
+        fetchData()
 
-    // }, [])
+    }, [])
 
 
     // state keyword search
-    const [key, set_keyword_search] = useState('')
+    const [keyword_search, set_keyword_search] = useState('')
 
     const [products, set_products] = useState([])
 
@@ -205,26 +205,26 @@ function Header(props) {
     // Hàm này trả ra list product mà khách hàng tìm kiếm
     // sử dụng useMemo để performance hơn vì nếu mà dữ liệu mới giống với dữ liệu cũ thì nó sẽ lấy cái
     // Không cần gọi API để tạo mới data
-    const search_header = useMemo(() => {
+    // const search_header = useMemo(() => {
 
-        const new_data = products.filter(value => {
-            return value.name_product.toUpperCase().indexOf(key.toUpperCase()) !== -1
-        })
+    //     const new_data = products.filter(value => {
+    //         return value.name_product.toUpperCase().indexOf(keyword_search.toUpperCase()) !== -1
+    //     })
 
-        return new_data
+    //     return new_data
 
-    }, [key])
+    // }, [keyword_search])
 
     const handler_search = (e) => {
 
         e.preventDefault()
 
         // Đưa vào redux để qua bên trang search lấy query tìm kiếm
-        const action = addSearch(key)
+        const action = addSearch(keyword_search)
         dispatch(action)
 
         // set cho nó cái session
-        sessionStorage.setItem('search', key)
+        sessionStorage.setItem('search', keyword_search)
 
         window.location.replace('/search')
 
@@ -248,7 +248,7 @@ function Header(props) {
                                                     data-toggle="collapse"
                                                     data-target="#collapseExample"
                                                     aria-expanded="false"
-                                                    aria-controls="collapseExample">{user.lastname}</span>) : (
+                                                    aria-controls="collapseExample">Xin chào {user.firstname}</span>) : (
                                                 <span
                                                     data-toggle="collapse"
                                                     data-target="#collapseExample"
@@ -289,10 +289,10 @@ function Header(props) {
                         </div>
                         <div className="col-lg-9 pl-0 ml-sm-15 ml-xs-15 d-flex justify-content-between">
                             <form action="/search" className="hm-searchbox" onSubmit={handler_search}>
-                                <input type="text" placeholder="Enter your search key ..." value={key} onChange={(e) => set_keyword_search(e.target.value)} />
+                                <input type="text" placeholder="Enter your search key ..." value={keyword_search} onChange={(e) => set_keyword_search(e.target.value)} />
                                 <button className="li-btn" type="submit"><i className="fa fa-search"></i></button>
-                                {
-                                    key && <div className="show_search_product">
+                                {/* {
+                                    keyword_search && <div className="show_search_product">
                                         {
                                             search_header && search_header.map(value => (
                                                 <div className="hover_box_search d-flex" key={value._id}>
@@ -308,7 +308,7 @@ function Header(props) {
                                             ))
                                         }
                                     </div>
-                                }
+                                } */}
                             </form>
                             <div className="header-middle-right">
                                 <ul className="hm-menu">
@@ -334,7 +334,7 @@ function Header(props) {
                                                                     <img src={value.image} alt="cart products" />
                                                                 </Link>
                                                                 <div className="minicart-product-details">
-                                                                    <h6><a>{value.name_product}</a></h6>
+                                                                    <h6><a>{value.name_product.substring(0,37)+"..."}</a></h6>
                                                                     <span>{new Intl.NumberFormat('vi-VN',{style: 'decimal',decimal: 'VND'}).format(value.price_product)+ ' VNĐ'} x {value.count}, {value.size}</span>
                                                                 </div>
                                                                 <a className="close" onClick={() => handler_delete_mini(value.id_cart)}>
@@ -367,7 +367,7 @@ function Header(props) {
                                         <ul>
 
                                             <li className="dropdown-holder"><Link to="/">Home</Link></li>
-                                            <li className="megamenu-holder"><Link to="/shop/all">Product</Link>
+                                            <li className="megamenu-holder"><Link to="/shop/all">Menu</Link>
                                                 {/* <ul class="megamenu hb-megamenu">
                                                     <li><Link to="/shop/all">Male</Link>
                                                         <ul>

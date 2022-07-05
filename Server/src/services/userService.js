@@ -63,7 +63,7 @@ let createNewUserReal = (data) => {
                     errCode: 1,
                     errMessage: 'Your email is already exist, Please try anther email'
                 })
-            }
+            }else{
             let hashPwdBcrypt = await hashUserPwd(data.pwd);
             await db.Users.create({
 
@@ -80,7 +80,7 @@ let createNewUserReal = (data) => {
                 errCode: 0,
                 errMessage: 'OK',
 
-            })
+            })}
 
         } catch (error) {
             console.log(error);
@@ -168,6 +168,43 @@ let getUserByID = (UserID) => {
     })
 }
 
+// let login = (email, pwd) => {
+//     return new Promise(async (resolve, reject) => {
+//         try {
+//             let userData = {};
+//             let userIsExist = await checkUserEmail(email);
+//             if (userIsExist) {
+//                 let user = await db.Users.findOne({
+//                     where: { email: email },
+//                     attributes: ['email', 'id_permission', 'pwd', 'firstname', 'lastname'],
+//                     raw: true
+//                 });
+//                 if (user) {
+//                     let check = await bcrypt.compareSync(pwd, user.pwd)
+//                     if (email == user.email && check) {
+//                         userData.errCode = 0;
+//                         userData.errMessage = 'Login Success!';
+//                         delete user.pwd;
+//                         userData.user = user;
+//                     } else {
+//                         userData.errCode = 3;
+//                         userData.errMessage = 'Wrong password';
+//                     }
+//                 } else {
+//                     userData.errCode = 2;
+//                     userData.errMessage = 'Your not exist!';
+//                 }
+//                 resolve(userData);
+//             } else {
+//                 userData.errCode = 1;
+//                 userData.errMessage = 'Your Email not exist!';
+//                 resolve(userData);
+//             }
+//         } catch (error) {
+//             reject(error);
+//         }
+//     })
+// }
 let login = (email, pwd) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -213,7 +250,7 @@ let loginReal = (email, pwd) => {
             if (userIsExist) {
                 let user = await db.Users.findOne({
                     where: { email: email },
-                    attributes: ['email', 'id_permission', 'pwd', 'firstname', 'lastname'],
+                    attributes: ['id', 'email', 'id_permission', 'pwd', 'firstname', 'lastname'],
                     raw: true
                 });
                 if (user) {

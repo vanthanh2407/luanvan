@@ -42,6 +42,22 @@ let handleGetUserByID = async (req, res) => {
     let findByID = await userService.getUserByID(req.params.id);
     return res.status(200).json(findByID);
 }
+// let handleLogin = async (req, res) => {
+//     let email = req.body.email;
+//     let pwd = req.body.pwd;
+//     if (!email || !pwd) {
+//         return res.status(500).json({
+//             errCode: 1,
+//             message: 'Missing inputs parameter!'
+//         })
+//     }
+//     let userData = await userService.login(email, pwd);
+//     return res.status(200).json({
+//         errCode: userData.errCode,
+//         message: userData.errMessage,
+//         user: userData.user ? userData.user : {}
+//     })
+// }
 let handleLogin = async (req, res) => {
     let email = req.body.email;
     let pwd = req.body.pwd;
@@ -63,7 +79,7 @@ let handleLoginTest = async (req, res) => {
     let pwd = req.body.pwd;
     if (!email || !pwd) {
         return res.status(500).json({
-            errCode: 1,
+            errCode: 4,
             message: 'Missing inputs parameter!'
         })
     }

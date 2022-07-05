@@ -3,7 +3,7 @@ import axiosClient from './axiosClient'
 const Product = {
 
     Get_All_Product: () => {
-        const url = '/product'
+        const url = '/products'
         return axiosClient.get(url)
     },
 
@@ -36,7 +36,7 @@ const Product = {
 
 export default Product
 const getAllProduct = () => {
-    return axiosClient.get('/product');
+    return axiosClient.get('/products');
 }
 const getProduct = (id) => {
     return axiosClient.get(`/products/${id}`);

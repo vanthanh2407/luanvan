@@ -2,19 +2,15 @@ import db from "../models/index";
 import productService from "../services/productService";
 
 let handleGetAllProduct = async (req, res) => {
-    let product = await productService.getAllProduct();
-    return res.status(200).json({
-        errCode: 0,
-        message: 'Get All Product Succuess',
-        product
-    })
+    let data = await productService.getAllProduct();
+    return res.status(200).json(data)
 }
 let handleGetProcductByID = async (req, res) => {
-    let findByID = await productService.getProductByID(req.params.id);
-    return res.status(200).json(findByID);
+    let data = await productService.getProductByID(req.params.id);
+    return res.status(200).json(data);
 }
 let handleSearchProcduct = async (req, res) => {
-    let findByID = await productService.SearchProduct(req.params.key);
+    let findByID = await productService.SearchProduct(req.body.key);
     return res.status(200).json(findByID);
 }
 let handleCreateProduct = async (req, res) => {

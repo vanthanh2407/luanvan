@@ -270,7 +270,7 @@ function Checkout(props) {
 
     const [error_address, set_error_address] = useState(false)
 
-    const [from, set_from] = useState('155 Sư Vạn Hạnh, Phường 13, District 10, Ho Chi Minh City, Vietnam')
+    const [from, set_from] = useState('')
 
     // Khoảng cách
     const [distance, set_distance] = useState('')
@@ -365,9 +365,8 @@ function Checkout(props) {
                                                 <label>From <span className="required">*</span></label>
                                                 <input type="text" name="from"
                                                     id="from_places"
-                                                    disabled="true"
                                                     value={from} />
-                                                <input id="origin" name="origin" required="" type="hidden"
+                                                <input id="origin" name="origin" required="" 
                                                     value={from} />
                                             </div>
                                         </div>
@@ -380,7 +379,7 @@ function Checkout(props) {
                                                     value={information.address}
                                                     onChange={onChangeAddress} />
                                                 {error_address && <span style={{ color: 'red' }}>* Address is required</span>}
-                                                <input id="destination" type="text" name="destination" required="" type="hidden" />
+                                                <input id="destination" type="text hidden" name="destination" required=""  />
                                             </div>
                                         </div>
                                         <div className="col-md-12">

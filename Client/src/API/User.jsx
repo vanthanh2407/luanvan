@@ -17,20 +17,18 @@ const User = {
         return axiosClient.put(url, data)
     },
 
-    Get_Detail_User: (Inputemail, Inputpassword) => {
-        return axiosClient.post('/login', { email: Inputemail, pwd: Inputpassword });
-    },
+    Get_Detail_User: (email, pwd) => {
+        return axiosClient.post('/login', { email: email, pwd: pwd });    },
 
     Post_User: (data) => {
-        const url = '/create-user'
+        const url = '/create-userTest'
         return axiosClient.post(url, data)
     }
 
 }
 
 export default User
-const handleLoginApi = (Inputemail, Inputpassword) => {
-    return axiosClient.post('/login', { email: Inputemail, pwd: Inputpassword });
-}
+const handleLoginApi = (email, pwd) => {
+    return axiosClient.post('/login', { email: email, pwd: pwd });}
 
 export { handleLoginApi }

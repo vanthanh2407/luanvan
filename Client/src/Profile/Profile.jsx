@@ -32,13 +32,11 @@ function Profile(props) {
             const response = await User.Get_User(sessionStorage.getItem('id_user'))
 
             set_user(response)
-
-            set_name(response.fullname)
-
-            set_username(response.username)
-
-            set_email(response.email)
-
+            set_name(response.email)
+            set_firstname(response.firstname)
+            set_lastname(response.lastname)
+            set_phone(response.phone)
+            set_address(response.address)
             set_password(response.password)
             set_new_password(response.password)
             set_compare_password(response.password)
@@ -50,8 +48,10 @@ function Profile(props) {
     }, [])
 
     const [name, set_name] = useState('')
-    const [username, set_username] = useState('')
-    const [email, set_email] = useState('')
+    const [firstname, set_firstname] = useState('')
+    const [lastname, set_lastname] = useState('')
+    const [phone, set_phone] = useState('')
+    const [address, set_address] = useState('')
     const [password, set_password] = useState('')
     const [new_password, set_new_password] = useState('')
     const [compare_password, set_compare_password] = useState('')
@@ -59,9 +59,12 @@ function Profile(props) {
     const handler_update = async () => {
         
         const data = {
-            _id: sessionStorage.getItem('id_user'),
-            fullname: name,
-            username: username,
+            id: sessionStorage.getItem('id_user'),
+            email: name,
+            firstname: firstname,
+            lastname: lastname,
+            phone: phone,
+            address: address,
             password: compare_password
         }
 
@@ -80,7 +83,7 @@ function Profile(props) {
                             onClick={() => handler_Status('edit_profile')}>
 
                             <a className={edit_status === 'edit_profile' ? 'a_setting_active' : ''}
-                                style={{ fontSize: '1.1rem' }}>Edit Profile</a>
+                                style={{ fontSize: '1.1rem' }}>Chỉnh sửa hồ sơ</a>
 
                         </div>
 
@@ -88,7 +91,7 @@ function Profile(props) {
                             onClick={() => handler_Status('change_password')}>
 
                             <a className={edit_status === 'change_password' ? 'a_setting_active' : ''}
-                                style={{ fontSize: '1.1rem' }}>Change Password</a>
+                                style={{ fontSize: '1.1rem' }}>Đổi mật khẩu</a>
 
                         </div>
                     </div>
@@ -125,29 +128,47 @@ function Profile(props) {
                                     </div> */}
                                     <div className="txt_setting_edit pt-3 pb-2">
                                         <div className="d-flex justify-content-center align-items-center">
-                                            <span style={{ fontWeight: '600' }}>Name</span>
+                                            <span style={{ fontWeight: '600' } }>Email</span>
                                         </div>
                                         <div>
                                             <input className="txt_input_edit" type="text" value={name}
-                                                onChange={(e) => set_name(e.target.value)} />
+                                                onChange={(e) => set_name(e.target.value)} disabled/>
                                         </div>
                                     </div>
                                     <div className="txt_setting_edit pt-3 pb-2">
                                         <div className="d-flex justify-content-center align-items-center">
-                                            <span style={{ fontWeight: '600' }}>Username</span>
+                                            <span style={{ fontWeight: '600' }}>First Name</span>
                                         </div>
                                         <div>
-                                            <input className="txt_input_edit" type="text" value={username}
-                                                onChange={(e) => set_username(e.target.value)} />
+                                            <input className="txt_input_edit" type="text" value={firstname}
+                                                onChange={(e) => set_firstname(e.target.value)} />
                                         </div>
                                     </div>
                                     <div className="txt_setting_edit pt-3 pb-2">
                                         <div className="d-flex justify-content-center align-items-center">
-                                            <span style={{ fontWeight: '600' }}>Email</span>
+                                            <span style={{ fontWeight: '600' }}>Last Name</span>
                                         </div>
                                         <div>
-                                            <input className="txt_input_edit" type="text" disabled={true} value={email}
-                                                onChange={(e) => set_email(e.target.value)} />
+                                            <input className="txt_input_edit" type="text" value={lastname}
+                                                onChange={(e) => set_lastname(e.target.value)} />
+                                        </div>
+                                    </div>
+                                    <div className="txt_setting_edit pt-3 pb-2">
+                                        <div className="d-flex justify-content-center align-items-center">
+                                            <span style={{ fontWeight: '600' }}>Phone</span>
+                                        </div>
+                                        <div>
+                                            <input className="txt_input_edit" type="text" value={phone}
+                                                onChange={(e) => set_phone(e.target.value)} />
+                                        </div>
+                                    </div>
+                                    <div className="txt_setting_edit pt-3 pb-2">
+                                        <div className="d-flex justify-content-center align-items-center">
+                                            <span style={{ fontWeight: '600' }}>Address</span>
+                                        </div>
+                                        <div>
+                                            <input className="txt_input_edit" type="text" value={address}
+                                                onChange={(e) => set_address(e.target.value)} />
                                         </div>
                                     </div>
                                     <div className="d-flex justify-content-center pt-3 pb-4">
