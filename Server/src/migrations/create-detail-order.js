@@ -5,11 +5,19 @@ module.exports = {
             id_order: {
                 allowNull: false,
                 primaryKey: true,
+                references: {
+                    model: 'orders',
+                    key: 'id',
+                  },
                 type: Sequelize.INTEGER
             },
             id_product: {
                 allowNull: false,
                 primaryKey: true,
+                references: {
+                    model: 'products',
+                    key: 'id',
+                  },
                 type: Sequelize.INTEGER
             },
             price: {
@@ -23,8 +31,7 @@ module.exports = {
             },
             total: {
                 type: Sequelize.INTEGER
-            }
-            ,
+            },
             createdAt: {
                 allowNull: true,
                 type: Sequelize.DATE

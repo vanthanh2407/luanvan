@@ -18,7 +18,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       picture: {
-        type: Sequelize.JSON
+        type: Sequelize.STRING
       },
       content: {
         type: Sequelize.TEXT

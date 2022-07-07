@@ -8,13 +8,7 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            create_time: {
-                type: Sequelize.DATE
-            },
             address: {
-                type: Sequelize.STRING
-            },
-            status: {
                 type: Sequelize.STRING
             },
             paymethod: {
@@ -47,6 +41,14 @@ module.exports = {
                 allowNull: false,
                 references: {
                     model: 'users',
+                    key: 'id',
+                },
+            },
+            id_status: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                references: {
+                    model: 'statuses',
                     key: 'id',
                 },
             },

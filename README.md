@@ -41,8 +41,31 @@ ROOT API ENDPOINT : http://localhost:3002/
 - Cài đặt Visual Studio Code
 - Cài đặt Xampp/Wamp
 
-## Get Started
+# run project
 
+
+## Get Started
+- Import database trên phpmyadmin
+
+- Mở soucre code vào folder server chạy câu lệnh
+``` bash
+# install dependencies
+npm install
+```
+``` bash
+# run project
+npm start
+```
+- Mở soucre code vào folder client chạy câu lệnh
+``` bash
+# install dependencies
+npm install
+```
+``` bash
+# run project
+npm start
+```
+- Mở soucre code vào folder admin chạy câu lệnh
 ``` bash
 # install dependencies
 npm install
@@ -52,8 +75,13 @@ npm install
 npm start
 ```
 
+## Account demo
+email: vanthanh@gmail.com
+password: 12345
 
 ## Technical details
 - Nodejs, Reactjs.
 - Express.
 - MySQL
+
+

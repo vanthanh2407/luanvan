@@ -4,14 +4,20 @@ module.exports = {
         await queryInterface.createTable('Detail_Receipts', {
             id_receipt: {
                 allowNull: false,
-
                 primaryKey: true,
+                references: {
+                    model: 'suppliers',
+                    key: 'id',
+                  },
                 type: Sequelize.INTEGER
             },
             id_product: {
                 allowNull: false,
-
                 primaryKey: true,
+                references: {
+                    model: 'products',
+                    key: 'id',
+                  },
                 type: Sequelize.INTEGER
             },
             createdAt: {

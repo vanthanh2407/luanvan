@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
         name: DataTypes.STRING,
         date: DataTypes.DATE,
         content: DataTypes.STRING,
-        picture: DataTypes.JSON,
+        picture: DataTypes.STRING,
         id_user: DataTypes.INTEGER,
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE,

@@ -309,22 +309,8 @@ function Detail_Product(props) {
                                     </div>
                                     <div className="product-desc">
                                       <span><a className="product_name" >{product.summary}</a></span>
-                                         
-                                        {/* <p>
-                                            <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel harum tenetur delectus nam quam assumenda? Soluta vitae tempora ratione excepturi doloremque, repudiandae ullam, eum corporis, itaque dolor aperiam enim aspernatur.
-                                            </span>
-                                        </p> */}
                                     </div>
-                                    {/* <div className="product-variants">
-                                        <div className="produt-variants-size">
-                                            <label>Size</label>
-                                            <select className="nice-select" onChange={(e) => set_size(e.target.value)}>
-                                                <option value="S">S</option>
-                                                <option value="M">M</option>
-                                                <option value="L">L</option>
-                                            </select>
-                                        </div>
-                                    </div> */}
+
                                     <div className="single-add-to-cart">
                                         <form action="#" className="cart-quantity">
                                             <div className="quantity">
@@ -353,8 +339,8 @@ function Detail_Product(props) {
                         <div className="col-lg-12">
                             <div className="li-product-tab">
                                 <ul className="nav li-product-menu">
-                                    <li><a className="active" data-toggle="tab" href="#description"><span>Mô tả sản phẩm</span></a></li>
-                                    <li><a data-toggle="tab" href="#reviews"><span>Thông số kỹ thuật</span></a></li>
+                                    <li><a className="active" data-toggle="tab" href="#description"><span>Thông số kỹ thuật</span></a></li>
+                                    <li><a data-toggle="tab" href="#reviews"><span>Mô tả sản phẩm</span></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -362,17 +348,17 @@ function Detail_Product(props) {
                     <div className="tab-content">
                         <div id="description" className="tab-pane active show" role="tabpanel">
                             <div className="product-description">
-                                <table cellspacing="0" border="1" >
+                                <table cellspacing="0" border="1" className="table-product">
                                     <tr >
-                                        <td colspan="2" >Thông số kỹ thuật</td>
+                                        <td colspan="2" className="table-product-0">Thông số kỹ thuật</td>
 
                                     </tr>
                                     <tr>
-                                        <td>Ram</td>
+                                        <td className="table-product-1">Ram</td>
                                         <td>{product.ram}</td>
                                     </tr>
                                     <tr>
-                                        <td>Chip</td>
+                                        <td className="table-product-1">Chip</td>
                                         <td>{product.chip}</td>
                                     </tr>
                                     <tr>

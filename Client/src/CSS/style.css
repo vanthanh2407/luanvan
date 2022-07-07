@@ -5074,8 +5074,9 @@ span.required {
 	font-size: 18px;
 }
 .product-description, .product-details-manufacturer, .product-reviews {
-	padding: 25px 0;
+	padding: 25px 0
 }
+
 .product-details-manufacturer a img {
 	padding: .25rem;
 	background-color: #fff;

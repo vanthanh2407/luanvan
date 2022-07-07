@@ -14,6 +14,25 @@ let getAllComment = () => {
     })
 };
 
+let getCommenttByID = (ProductID) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let product = await db.Comment.findAll({
+                where: { id_product: ProductID },
+                raw: false
+            })
+            if (!product) {
+                resolve({
+                    errCode: 2,
+                    errMessage: 'The product is not exist'
+                })
+            }
+            resolve(product);
+        } catch (error) {
+            reject(error);
+        }
+    })
+}
 let createComment = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -74,33 +93,34 @@ let updateComment = (data) => {
     })
 }
 /// chi moi get comment
-let deleteComment = (CommentID) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            let comment = await db.Comment.findOne({
-                where: { id: CommentID },
-                raw: false
-            })
-            if (!comment) {
-                resolve({
-                    errCode: 2,
-                    errMessage: 'Comment is not exist'
-                })
-            } else {
-                await comment.destroy();
-            }
-            resolve({
-                errCode: 0,
-                errMessage: 'Comment is delete success'
-            })
-        } catch (error) {
-            reject(error)
-        }
-    })
-}
+// let deleteComment = (CommentID) => {
+//     return new Promise(async (resolve, reject) => {
+//         try {
+//             let comment = await db.Comment.findOne({
+//                 where: { id_product : CommentID },
+//                 raw: false
+//             })
+//             if (!comment) {
+//                 resolve({
+//                     errCode: 2,
+//                     errMessage: 'Comment is not exist'
+//                 })
+//             } else {
+//                 await comment.destroy();
+//             }
+//             resolve({
+//                 errCode: 0,
+//                 errMessage: 'Comment is delete success'
+//             })
+//         } catch (error) {
+//             reject(error)
+//         }
+//     })
+// }
 module.exports = {
     getAllComment: getAllComment,
     createComment: createComment,
     updateComment: updateComment,
-    deleteComment: deleteComment,
+    // deleteComment: deleteComment,
+    getCommenttByID:getCommenttByID,
 }

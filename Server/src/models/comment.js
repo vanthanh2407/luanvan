@@ -16,7 +16,6 @@ module.exports = (sequelize, DataTypes) => {
     };
     Comment.init({
         content: DataTypes.TEXT,
-        date: DataTypes.DATE,
         star: DataTypes.INTEGER,
         status: DataTypes.BOOLEAN,
         id_product: DataTypes.INTEGER,

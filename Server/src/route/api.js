@@ -70,6 +70,7 @@ let initUserRouter = (app) => {
 
     // comment
     router.get('/comment', commnetController.handleGetAllComment);
+    router.get('/comment/:id_product', commnetController.handleGetCommentByID);
     router.post('/create-comment', commnetController.handleCreateComment);
     router.put('/update-comment', commnetController.handleUpdateComment);
     router.delete('/delete-comment', commnetController.handleDeleteComment);

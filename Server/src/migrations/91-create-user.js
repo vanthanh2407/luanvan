@@ -21,15 +21,12 @@ module.exports = {
         type: Sequelize.STRING
       },
       phone: {
-        allowNull: false,
         type: Sequelize.STRING
       },
       address: {
-        allowNull: false,
         type: Sequelize.STRING
       },
       gender: {
-        allowNull: false,
         type: Sequelize.BOOLEAN
       },
       id_permission: {

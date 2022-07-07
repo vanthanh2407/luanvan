@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         }
     };
     Banner.init({
-        picture: DataTypes.JSON,
+        picture: DataTypes.STRING,
         id_product: DataTypes.INTEGER,
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE,

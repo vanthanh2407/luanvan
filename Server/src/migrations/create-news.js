@@ -18,7 +18,7 @@ module.exports = {
                 type: Sequelize.STRING
             },
             picture: {
-                type: Sequelize.JSON
+                type: Sequelize.STRING
             },
             id_user: {
                 type: Sequelize.INTEGER,

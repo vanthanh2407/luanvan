@@ -11,9 +11,6 @@ module.exports = {
             content: {
                 type: Sequelize.TEXT
             },
-            date: {
-                type: Sequelize.DATE
-            },
             star: {
                 type: Sequelize.INTEGER
             },

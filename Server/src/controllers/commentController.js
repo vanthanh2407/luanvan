@@ -12,6 +12,14 @@ let handleGetAllComment = async (req, res) => {
         comment
     })
 }
+let handleGetCommentByID = async (req, res) => {
+    let data = await commentService.getCommenttByID(req.params.id_product);
+    return res.status(200).json({
+        errCode: 0,
+        message: 'Get Comment Succuess',
+        data
+    });
+}
 //////////////
 let handleCreateComment = async (req, res) => {
     let message = await commentService.createComment(req.body);
@@ -43,4 +51,5 @@ module.exports = {
     handleCreateComment: handleCreateComment,
     handleUpdateComment: handleUpdateComment,
     handleDeleteComment: handleDeleteComment,
+    handleGetCommentByID:handleGetCommentByID
 }
