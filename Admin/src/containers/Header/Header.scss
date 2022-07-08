@@ -1,12 +1,15 @@
 @import "../../styles/common.scss";
 
-// .header-container {
-//     // z-index: 99;
-//     // display: flex;
-//     // justify-content: space-between;
-//     // background-color: black;
-//     // color: $common-text-color;
-    
+.header-container {
+    padding-left: 10px;
+    padding-top: 38px;
+    .hello{
+        font-size: 18px;
+        padding-left: 10px;
+        float: left;
+        margin-right: 20px;
+    }
+}
     
 
 //     // position: relative;

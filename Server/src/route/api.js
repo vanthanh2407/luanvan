@@ -8,6 +8,11 @@ import bannerController from "../controllers/bannerController";
 import commnetController from "../controllers/commentController";
 import supplierController from "../controllers/supplierController";
 
+// api ben server
+
+import newsControllerServer from "../controllers/admin/newsController";
+import receiptControllerServer from "../controllers/admin/receiptController";
+
 
 
 
@@ -81,6 +86,23 @@ let initUserRouter = (app) => {
     router.post('/create-supplier', supplierController.handleCreateSupplier);
     router.put('/update-supplier', supplierController.handleUpdateSupplier);
     router.delete('/delete-supplier', supplierController.handleDeleteSupplier);
+
+    //////////////// api ben server
+
+    // news
+    router.get('/news', newsControllerServer.handleGetAllNews);
+    router.post('/create-news', newsControllerServer.handleCreateNews);
+    router.put('/update-news', newsControllerServer.handleUpdateNews);
+    router.delete('/delete-news', newsControllerServer.handleDeleteNews);
+
+
+    // receipt
+    router.get('/receipt', receiptControllerServer.handleGetAllReceipt);
+    router.get('/receipt/:id', receiptControllerServer.handleGetReceiptByID);
+    router.post('/create-receipt', receiptControllerServer.handleCreateReceipt);
+    router.put('/update-receipt', receiptControllerServer.handleUpdateReceipt);
+    router.delete('/delete-receipt', receiptControllerServer.handleDeleteReceipt);
+
 
     router.get('/anhquoc', (req, res) => {
         return res.send('hello');

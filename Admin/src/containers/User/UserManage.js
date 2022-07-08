@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import './UserManage.scss';
+// import './UserManage.scss';
 import { getAllBooks, createProduct, deleteProduct, updateProduct, FindByIdProduct } from '../../services/productService';
-import ModelProduct from './ModelProduct';
-import ModelEditProduct from './ModelEditProduct';
+// import ModelProduct from './ModelProduct';
+// import ModelEditProduct from './ModelEditProduct';
 import { db } from '../../firebaseConnect';
 import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
@@ -24,13 +24,13 @@ class UserManage extends Component {
     }
 
     async componentDidMount() {
-        let resopnse = await getAllBooks();
-        if (resopnse && resopnse.errCode === 0) {
-            this.setState({
-                arrProdcut: resopnse.product
-            })
+        // let resopnse = await getAllBooks();
+        // if (resopnse && resopnse.errCode === 0) {
+        //     this.setState({
+        //         arrProdcut: resopnse.product
+        //     })
 
-        }
+        // }
 
     }
     handleGetAllProduct = async () => {
@@ -133,11 +133,11 @@ class UserManage extends Component {
         })
     }
     render() {
-        let arrProdcut = this.state.arrProdcut;
+        // let arrProdcut = this.state.arrProdcut;
         // console.log('check product', arrProdcut)
         return (
             <>
-                <ModelProduct
+                {/* <ModelProduct
                     isOpen={this.state.isOpenModalProduct}
                     toggleProduct={this.toggleProductModal}
                     createProductModal={this.createProductModal}
@@ -164,9 +164,7 @@ class UserManage extends Component {
                     >
                         <i className='fa fa-plus '> Add New Product</i>
                     </button>
-                    {/* <button id='newasd' onClick={() => alert("Hello!")} hidden
-                    >asdasd</button>
-                    <label htmlFor='newasd'>asdasdasdasdasdasd</label> */}
+                   
                     <h2>List Product</h2>
                 </div>
 
@@ -208,7 +206,8 @@ class UserManage extends Component {
                             }
                         </tbody>
                     </table>
-                </div>
+                </div> */}
+                <div>User real</div>
 
 
 
