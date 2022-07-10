@@ -1,48 +1,52 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import './UserManage.scss';
-import { getAllBooks, createProduct, deleteProduct, updateProduct, FindByIdProduct } from '../../services/productService';
-import ModelProduct from './ModelProduct';
-import ModelEditProduct from './ModelEditProduct';
+import './NewsManage.scss';
+import { getAllnews, createnews, deletenews, updatenews } from '../../services/newsService';
+import ModalCreateNews from './ModalCreateNews';
+import ModalEditNews from './ModalEditNews';
 import { db } from '../../firebaseConnect';
 import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 
-class UserManage extends Component {
+class NewsManage extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            arrProdcut: [],
+            arrNews: [],
+
+            arrNewsFromParent: [],
+
             isOpenModalProduct: false,
             isOpenModalEditProduct: false,
-            arrProdcutFromParent: [],
+
+
             errCode: '',
             errMessage: '',
         }
     }
 
     async componentDidMount() {
-        let resopnse = await getAllBooks();
+        let resopnse = await getAllnews();
         if (resopnse && resopnse.errCode === 0) {
             this.setState({
-                arrProdcut: resopnse.product
+                arrNews: resopnse.news
             })
 
         }
 
     }
-    handleGetAllProduct = async () => {
-        let resopnse = await getAllBooks();
+    handlegetAllnews = async () => {
+        let resopnse = await getAllnews();
         if (resopnse && resopnse.errCode === 0) {
             this.setState({
-                arrProdcut: resopnse.product
+                arrNews: resopnse.news
             })
 
         }
     }
-    handleCreateNewProduct = () => {
+    handleCreateNewCate = () => {
         this.setState({
             isOpenModalProduct: true
         })
@@ -64,18 +68,13 @@ class UserManage extends Component {
         })
     }
 
-    createProductModal = async (data) => {
-        // data.preventDefault()
-        // await setDoc(doc(db, "cities", "LA"), {
-        //     name: "Los Angeles",
-        //     state: "CA",
-        //     country: "USA"
-        // });
+    createNewsModal = async (data) => {
+
         try {
-            let res = await createProduct(data);
+            let res = await createnews(data);
             if (res) {
-                toast.success("Create Product Success");
-                this.handleGetAllProduct();
+                toast.success("Create News Success");
+                this.handlegetAllnews();
                 this.setState({
                     isOpenModalProduct: false,
                     errMessage: res.errMessage,
@@ -89,12 +88,12 @@ class UserManage extends Component {
             console.log(error)
         }
     }
-    editProductModal = async (data) => {
+    editNewsModal = async (data) => {
         try {
-            let res = await updateProduct(data);
+            let res = await updatenews(data);
             if (res) {
-                toast.success("Update Product Success");
-                this.handleGetAllProduct();
+                toast.success("Update News Success");
+                this.handlegetAllnews();
                 this.setState({
                     isOpenModalEditProduct: false,
                     errMessage: res.errMessage,
@@ -105,54 +104,57 @@ class UserManage extends Component {
             console.log(error)
         }
     }
-    handleDeleteProduct = async (product) => {
+    handleDeleteProduct = async (News) => {
         try {
-            let res = await deleteProduct(product.id)
+            let res = await deletenews(News.id)
             if (res) {
-                toast.success("Delete Product Success");
-                this.handleGetAllProduct();
+                toast.success("Delete News Success");
+                this.handlegetAllnews();
             } else { toast.error("Delete Product Failed"); }
         } catch (error) {
-            toast.error("Delete Product Failed");
             console.log(error)
         }
-        console.log('check delete product', product);
+
     }
 
 
-    // handleTestHidden = () => {
-    //     alert("check check");
-    // }
+    handleTestHidden = () => {
+        alert("check check");
+    }
 
 
-    handleEditProduct = (product) => {
+    handleEditNews = (news) => {
 
         this.setState({
             isOpenModalEditProduct: true,
-            arrProdcutFromParent: product
+            arrNewsFromParent: news
         })
     }
     render() {
-        let arrProdcut = this.state.arrProdcut;
+        let arrNews = this.state.arrNews;
         // console.log('check product', arrProdcut)
         return (
             <>
-                <ModelProduct
+                <ModalCreateNews
                     isOpen={this.state.isOpenModalProduct}
                     toggleProduct={this.toggleProductModal}
-                    createProductModal={this.createProductModal}
+
+                    createNewsModal={this.createNewsModal}
+
                     errMessage={this.state.errMessage}
                     errCode={this.state.errCode}
 
-                    handleEditProduct={this.handleEditProduct}
+                    handleEditNews={this.handleEditNews}
 
                 />
 
-                {this.state.isOpenModalEditProduct && <ModelEditProduct
+                {this.state.isOpenModalEditProduct && <ModalEditNews
                     isOpen={this.state.isOpenModalEditProduct}
                     toggleProductEdit={this.toggleProductModalEdit}
-                    editProduct={this.editProductModal}
-                    arrProdcutEdit={this.state.arrProdcutFromParent}
+
+                    editNews={this.editNewsModal}
+                    arrNewsEdit={this.state.arrNewsFromParent}
+
                     errMessage={this.state.errMessage}
                     errCode={this.state.errCode}
                 />}
@@ -160,14 +162,12 @@ class UserManage extends Component {
 
                 <div className='header-listproduct'>
                     <button className='button-add' type="button"
-                        onClick={() => this.handleCreateNewProduct()}
+                        onClick={() => this.handleCreateNewCate()}
                     >
-                        <i className='fa fa-plus '> Add New Product</i>
+                        <i className='fa fa-plus '> Add New News</i>
                     </button>
-                    {/* <button id='newasd' onClick={() => alert("Hello!")} hidden
-                    >asdasd</button>
-                    <label htmlFor='newasd'>asdasdasdasdasdasd</label> */}
-                    <h2>List Product</h2>
+
+                    <h2>List News</h2>
                 </div>
 
                 <div className="table-wrapper">
@@ -176,14 +176,15 @@ class UserManage extends Component {
                             <tr>
                                 <th>Id</th>
                                 <th>Name</th>
-                                <th>Price</th>
-                                <th>Quantity</th>
+                                <th>Content</th>
+                                <th>Picture</th>
+                                <th>Name User</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             {
-                                arrProdcut && arrProdcut.map((item, index) => {
+                                arrNews && arrNews.map((item, index) => {
 
                                     return (
                                         <>
@@ -191,11 +192,13 @@ class UserManage extends Component {
 
                                                 <td >{item.id}</td>
                                                 <td >{item.name}</td>
-                                                <td ><span className="new-price new-price-2">{new Intl.NumberFormat('vi-VN', { style: 'decimal', decimal: 'VND' }).format(item.price) + ' VNĐ'}</span></td>
-                                                <td >{item.quantity}</td>
+                                                <td>{item.content}</td>
+                                                <td>{item.picture}</td>
+                                                <td>{item.id_user}</td>
+
                                                 <td>
                                                     <button
-                                                        onClick={() => { this.handleEditProduct(item) }}
+                                                        onClick={() => { this.handleEditNews(item) }}
                                                         className='button-style-eidt' type='button' ><i className="fas fa-pencil-alt"></i></button>
                                                     <button
                                                         onClick={() => { this.handleDeleteProduct(item) }}
@@ -209,6 +212,7 @@ class UserManage extends Component {
                         </tbody>
                     </table>
                 </div>
+                {/* <div>zxc,nzx,cmnz,xcmnz,xcnz,cn,mzxcn,mzcn,mznxc,mznxc,nz,xcn,mznxc,</div> */}
 
 
 
@@ -231,4 +235,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserManage);
+export default connect(mapStateToProps, mapDispatchToProps)(NewsManage);

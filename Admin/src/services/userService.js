@@ -1,22 +1,22 @@
-
 import axios from "../axios"
 
 
 
-const handleLoginApi = (Inputemail, Inputpassword) => {
-    return axios.post('/login', { email: Inputemail, pwd: Inputpassword });
+const getAlluser = () => {
+    return axios.get('/user');
 }
-const getAllBooks = () => {
-    return axios.get('/product');
+const createuser = (data) => {
+    return axios.post('/create-user', data);
 }
-const createProduct = (data) => {
-    return axios.post('/create-product', data);
+const deleteuser = (userID) => {
+    return axios.delete('/delete-user', { data: { id: userID } });
 }
-const deleteProduct = (ProductID) => {
-    return axios.delete('/delete-product', { data: { id: ProductID } });
-}
-const updateProduct = (data) => {
-    return axios.put('/update-product', data);
+const updateuser = (data) => {
+    return axios.put('/update-user', data);
 }
 
-export { handleLoginApi, getAllBooks, createProduct, deleteProduct, updateProduct }
+
+
+export {
+    getAlluser, createuser, deleteuser, updateuser
+}

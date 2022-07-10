@@ -14,12 +14,14 @@ $title: #493b76;
     display: flex;
     justify-content: center;
     font-family: "Arimo";
-    background-color: rgb(174, 253, 174);
+    background-color: #dddbdb;
     // -webkit-box-shadow: 9px 13px 25px 0px rgba(0, 0, 0, 0.18);
     // -moz-box-shadow: 9px 13px 25px 0px rgba(0, 0, 0, 0.18);
     // box-shadow: 9px 13px 25px 0px rgba(0, 0, 0, 0.18);
     // animation: slideUp 2000ms ease;
 }
+
+
 
 @keyframes slideUp {
     0% {
@@ -32,6 +34,16 @@ $title: #493b76;
         -webkit-transform: translateY(0);
         transform: translateY(0);
 
+    }
+}
+.modal-content{
+    width: 799px !important;
+}
+.modal-header{
+    background-color: #363636;
+    color: white;
+    span{
+        color: white;
     }
 }
 
@@ -50,9 +62,6 @@ form {
     >* {
         margin-top: 20px;
     }
-    // .f-name{
-    //     margin-right: 50px;
-    // }
 
     input {
         width: 100%;
@@ -62,7 +71,7 @@ form {
         letter-spacing: .15rem;
         font-family: "Arimo";
         margin-top: 5px;
-        color: $maroon;
+        color: black;
         border-radius: 4px;
     }
 
@@ -70,7 +79,7 @@ form {
         text-transform: uppercase;
         font-size: 12px;
         letter-spacing: 2px;
-        color: $maroon;
+        color: black;
     }
 
     h1 {
@@ -159,7 +168,7 @@ button:focus {
     outline: none;
 }
 
-@media (max-width: auto) {
+@media (max-width: 736px) {
     .wrapper {
         width: 100%;
     }

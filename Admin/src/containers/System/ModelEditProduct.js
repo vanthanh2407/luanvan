@@ -1,18 +1,13 @@
-import React, { useEffect, Component } from 'react';
+import React, { Component } from 'react';
 // import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Input } from 'reactstrap';
 import { getAllCate } from '../../services/cateService';
 import { getAllBooks, createProduct, deleteProduct, updateProduct } from '../../services/productService';
-import { db, storage } from '../../firebaseConnect';
-import { doc, setDoc } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL, listAll, list, uploadBytes } from "firebase/storage";
-import { v4 } from "uuid";
-
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
-import './ModelProduct.scss'
-class ModelProduct extends Component {
+import './ModelEditProduct.scss'
+class ModelEditProduct extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -20,51 +15,46 @@ class ModelProduct extends Component {
             arrProductStatus: [],
             previewImageURL: '',
 
-            imageUpload: null,
-            setImageUpload: null,
-
-            fileUrl: [],
-            setFileUrl: [],
-
             arrProductFromParent: [],
 
             isOpen: false,
 
-
-            name: null,
-            price: null,
-            quantity: null,
-            picture: null,
-            content: null,
-            summary: null,
-            ram: null,
-            chip: null,
-            card: null,
-            display: null,
-            memory: null,
-            port: null,
-            operation: null,
-            pin: null,
-            dpi: null,
-            micro_switch: null,
-            scroll_switch: null,
-            durability: null,
-            keyboard_type: null,
-            model: null,
-            connect: null,
-            weight: null,
-            size: null,
-            color: null,
-            material: null,
-            insurance: null,
-            status: null,
-            id_cate: '',
+            id: this.props.arrProdcutEdit.id,
+            name: this.props.arrProdcutEdit.name,
+            price: this.props.arrProdcutEdit.price,
+            quantity: this.props.arrProdcutEdit.quantity,
+            picture: this.props.arrProdcutEdit.picture,
+            content: this.props.arrProdcutEdit.content,
+            summary: this.props.arrProdcutEdit.summary,
+            ram: this.props.arrProdcutEdit.ram,
+            chip: this.props.arrProdcutEdit.chip,
+            card: this.props.arrProdcutEdit.card,
+            display: this.props.arrProdcutEdit.display,
+            memory: this.props.arrProdcutEdit.memory,
+            port: this.props.arrProdcutEdit.port,
+            operation: this.props.arrProdcutEdit.operation,
+            pin: this.props.arrProdcutEdit.pin,
+            dpi: this.props.arrProdcutEdit.dpi,
+            micro_switch: this.props.arrProdcutEdit.micro_switch,
+            scroll_switch: this.props.arrProdcutEdit.scroll_switch,
+            durability: this.props.arrProdcutEdit.durability,
+            keyboard_type: this.props.arrProdcutEdit.keyboard_type,
+            model: this.props.arrProdcutEdit.model,
+            connect: this.props.arrProdcutEdit.connect,
+            weight: this.props.arrProdcutEdit.weight,
+            size: this.props.arrProdcutEdit.size,
+            color: this.props.arrProdcutEdit.color,
+            material: this.props.arrProdcutEdit.material,
+            insurance: this.props.arrProdcutEdit.insurance,
+            status: this.props.arrProdcutEdit.status,
+            id_cate: this.props.arrProdcutEdit.id_cate,
 
 
         }
     }
 
     async componentDidMount() {
+        let resEdit = this.props.arrProdcutEdit;
         let resopnseStatus = await getAllBooks();
         let resopnse = await getAllCate();
 
@@ -77,17 +67,45 @@ class ModelProduct extends Component {
         if (resopnseStatus && resopnseStatus.errCode === 0) {
             this.setState({
                 arrProductStatus: resopnseStatus.product
-
             })
-
         }
+        this.setState({
+            name: resEdit.name,
+            price: resEdit.price,
+            quantity: resEdit.quantity,
+            picture: resEdit.picture,
+            content: resEdit.content,
+            summary: resEdit.summary,
+            ram: resEdit.ram,
+            chip: resEdit.chip,
+            card: resEdit.card,
+            display: resEdit.display,
+            memory: resEdit.memory,
+            port: resEdit.port,
+            operation: resEdit.operation,
+            pin: resEdit.pin,
+            dpi: resEdit.dpi,
+            micro_switch: resEdit.micro_switch,
+            scroll_switch: resEdit.scroll_switch,
+            durability: resEdit.durability,
+            keyboard_type: resEdit.keyboard_type,
+            model: resEdit.model,
+            connect: resEdit.connect,
+            weight: resEdit.weight,
+            size: resEdit.size,
+            color: resEdit.color,
+            material: resEdit.material,
+            insurance: resEdit.insurance,
+            status: resEdit.status,
+            id_cate: resEdit.id_cate,
+        })
         // let arrProductFromParent =
         //     this.props.handleEditProductFromParent('data from parent')
         // this.props.handleEditProduct(arrProductFromParent)
 
     }
     toggle = () => {
-        this.props.toggleProduct();
+        this.props.toggleProductEdit();
     }
     handleOnchangeImage = (event) => {
         let data = event.target.files;
@@ -97,19 +115,9 @@ class ModelProduct extends Component {
             this.setState({
                 previewImageURL: objectURL,
                 picture: file
-            }, () => {
-                console.log('check state hinh anh: ', this.state.picture)
             })
         }
-
     }
-    componentDidUpdate(prevState, prevProps, snapshot) {
-
-    }
-    // useEffect = ((loadImage)=>{
-    //     if(useEffect.po)
-
-    // },[file]);
 
     checkValueInput = () => {
         let isValid = true;
@@ -134,44 +142,44 @@ class ModelProduct extends Component {
             isOpen: true
         })
     }
-    handleAddnew = async (data) => {
-
-
-
+    handleUpdate = () => {
+        // const handleClose = () => setShow(false);
         let isValid = this.checkValueInput();
-        if (isValid === true) {
-            this.props.createProductModal(this.state)
-        }
+        if (isValid === false) return;
+
+        this.props.editProduct(this.state)
+        // if (this.props.errCode === 0) {
+        //     this.props.toggleProduct();
+        // }
+
+
     }
     onChageInput = (event, id) => {
         let copystate = { ...this.state }
+
+
         copystate[id] = event.target.value;
+
+
         this.setState({
             ...copystate
         })
-    }
-    upLoadImage = () => {
-        // imageUpload: null,
-        // setImageUpload: null,
-
-        // fileUrl: [],
-        // setFileUrl: [],
-        if (this.state.imageUpload === null) return;
-        const imageREf = ref(storage, `images/${this.state.imageUpload.name + v4()}`);
-        uploadBytes(imageREf, this.state.imageUpload).then(() => {
-            console.log('check upload anh', imageREf)
-        })
-
+        // , () => {
+        //     console.log('check thu xem co hoat dong khong: ', this.state)
+        // }
     }
 
     render() {
         let arrCategory = this.state.arrCategory;
         let arrProductStatus = this.state.arrProductStatus;
+
+
+
         let {
             name, price, quantity, picture, content, summary, ram, chip, card, display, memory, port, operation, pin, dpi, micro_switch, scroll_switch,
             durability, keyboard_type, model, connect, weight, size, color, material, insurance, status, id_cate
         } = this.state;
-        // console.log('check anh: ', imageREf)
+
         return (
             <Modal isOpen={this.props.isOpen}
                 toggle={() => { this.toggle() }}
@@ -180,7 +188,7 @@ class ModelProduct extends Component {
             >
                 <ModalHeader toggle={() => { this.toggle() }}
                 >
-                    Create new Books
+                    Edit Product
                 </ModalHeader>
                 <ModalBody>
                     {/* <div className='body'></div> */}
@@ -403,9 +411,7 @@ class ModelProduct extends Component {
                                     <div className='preview-image-container'>
                                         <label for="card-num">Image</label>
                                         <input type="file"
-                                            // value={picture}
                                             onChange={(event) => this.handleOnchangeImage(event)}
-
                                         />
                                         <div className='preview-image'
                                             style={{ backgroundImage: `url(${this.state.previewImageURL})` }}
@@ -439,6 +445,10 @@ class ModelProduct extends Component {
                                     </div>
                                     <div>
                                         <label for="card-num">Category</label>
+                                        {/* <input type="text" name="zip"
+
+                                            onChange={(event) => { this.onChageInput(event, 'id_cate') }}
+                                        /> */}
                                         <select className='form-control'
                                             value={id_cate}
                                             onChange={(event) => { this.onChageInput(event, 'id_cate') }}
@@ -459,11 +469,10 @@ class ModelProduct extends Component {
                                         </select>
                                     </div>
                                 </div>
-                                {/* <div className="btns">
-                                    <button id='new' hidden
-                                        onClick={() => { this.testHandle(); alert("Hello!"); }}>Purchase</button>
-                                    <label className='label-create' htmlFor='new'>Add New</label>
-                                </div> */}
+                                <div className="btns">
+                                    {/* <button>Purchase</button>
+                                    <button>Back to cart</button> */}
+                                </div>
                             </form>
                             {/* {this.state.isOpen === true &&
                                 <Lightbox
@@ -473,10 +482,6 @@ class ModelProduct extends Component {
                                 />
                             } */}
                         </div>
-                        {/* <div>
-                            <button id='new' hidden></button>
-                            <button className='btn btn-primary' htmlFor="new">asc</button>
-                        </div> */}
 
 
                     </div>
@@ -484,9 +489,10 @@ class ModelProduct extends Component {
                 <ModalFooter>
                     <Button
                         color="primary"
-                        onClick={() => { this.handleAddnew(); this.upLoadImage(); }}
+                        onClick={() => { this.handleUpdate() }}
+
                     >
-                        Add new
+                        Update
                     </Button>
                     {' '}
                     <Button onClick={() => { this.toggle() }}>
@@ -509,4 +515,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ModelProduct);
+export default connect(mapStateToProps, mapDispatchToProps)(ModelEditProduct);
