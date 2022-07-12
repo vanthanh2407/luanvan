@@ -10,6 +10,7 @@ import NewsManage from '../containers/News/NewsManage';
 import ReceiptManage from '../containers/Receipt/ReceiptManage';
 import SupplierManage from '../containers/Supplier/SupplierManage';
 import UserManage from '../containers/User/UserManage';
+import OrderManage from '../containers/Order/OrderManage';
 
 
 import Header from '../containers/Header/Header';
@@ -30,6 +31,7 @@ class System extends Component {
                             <Route path="/system/banner-manage" component={BannerManage} />
                             <Route path="/system/comment-manage" component={CommentManage} />
                             <Route path="/system/coupon-manage" component={CouponManage} />
+                            <Route path="/system/order-manage" component={OrderManage} />
                             <Route path="/system/news-manage" component={NewsManage} />
                             <Route path="/system/receipt-manage" component={ReceiptManage} />
                             <Route path="/system/supplier-manage" component={SupplierManage} />

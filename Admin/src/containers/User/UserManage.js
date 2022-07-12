@@ -117,7 +117,7 @@ class UserManage extends Component {
     //     }
     // }
 
-    handleDeleteProduct = async (user) => {
+    handleDeleteUser = async (user) => {
         try {
             let res = await deleteuser(user.id)
             if (res) {
@@ -158,7 +158,6 @@ class UserManage extends Component {
 
                 return (
                     <>
-
                         <ModelCreateStaff
                             isOpen={this.state.isOpenModalProduct}
                             toggleProduct={this.toggleProductModal}
@@ -166,18 +165,14 @@ class UserManage extends Component {
                             errMessage={this.state.errMessage}
                             errCode={this.state.errCode}
                         />
-
-
                         <div className='header-listproduct'>
                             <button className='button-add' type="button"
                                 onClick={() => this.handleCreateNewProduct()}
                             >
                                 <i className='fa fa-plus '> Add New STAFF</i>
                             </button>
-
                             <h2>List User</h2>
                         </div>
-
                         <div className="table-wrapper">
                             <table className="fl-table">
                                 <thead>
@@ -198,14 +193,15 @@ class UserManage extends Component {
                                             return (
                                                 <>
                                                     <tr>
-
                                                         <td >{item.id}</td>
                                                         <td >{item.firstname}</td>
                                                         <td >{item.lastname}</td>
-
                                                         <td >{item.email}</td>
                                                         <td >{item.phone}</td>
                                                         <td >{item.id_permission}</td>
+                                                        <button
+                                                        onClick={() => { this.handleDeleteUser(item) }}
+                                                        className='button-style-delete' type='button'><i className="fa fa-trash"></i></button>
                                                     </tr>
                                                 </>
                                             )
@@ -250,7 +246,6 @@ class UserManage extends Component {
                                             return (
                                                 <>
                                                     <tr>
-
                                                         <td >{item.id}</td>
                                                         <td >{item.firstname}</td>
                                                         <td >{item.lastname}</td>
