@@ -19,8 +19,6 @@ const FindByIdBanner = (BannerID) => {
 const updateBanner = (data) => {
     return axios.put('/update-banner', data);
 }
-const GetProductByType = (datatype) => {
-    return axios.get('/getproductbytype?type=');
-}
+
 
 export { getAllBanner, createBanner, deleteBanner, updateBanner, FindByIdBanner }

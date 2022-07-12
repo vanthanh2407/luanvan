@@ -19,8 +19,5 @@ const FindByIdCate = (CateID) => {
 const updateCate = (data) => {
     return axios.put('/update-category', data);
 }
-const GetProductByType = (datatype) => {
-    return axios.get('/getproductbytype?type=');
-}
 
 export { getAllCate, createCate, deleteCate, updateCate, FindByIdCate }
