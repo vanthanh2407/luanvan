@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import io from "socket.io-client";
-
 import './Checkout.css'
 import OrderAPI from '../API/OrderAPI';
 import Paypal from './Paypal';
@@ -88,7 +87,8 @@ function Checkout(props) {
     const [show_error, set_show_error] = useState(false)
 
     const [information, set_information] = useState({
-        fullname: '',
+        firstname: '',
+        lastname: '',
         phone: '',
         address: '',
         email: ''
@@ -96,7 +96,7 @@ function Checkout(props) {
 
     const onChangeFullname = (e) => {
         set_information({
-            fullname: e.target.value,
+            firstname: e.target.value,
             phone: information.phone,
             address: information.address,
             email: information.email
@@ -213,7 +213,7 @@ function Checkout(props) {
         for (let i = 0; i < data_carts.length; i++) {
 
             const data_detail_order = {
-                id_order: response_order._id,
+                id_order: response_order.id,
                 id_product: data_carts[i].id_product,
                 name_product: data_carts[i].name_product,
                 price_product: data_carts[i].price_product,

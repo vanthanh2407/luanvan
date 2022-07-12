@@ -22,7 +22,7 @@ module.exports = {
             },
             id_payment: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
+                allowNull: true,
                 references: {
                     model: 'payments',
                     key: 'id',
@@ -30,7 +30,7 @@ module.exports = {
             },
             id_coupon: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
+                allowNull: true,
                 references: {
                     model: 'coupons',
                     key: 'id',

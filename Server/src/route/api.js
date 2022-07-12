@@ -7,6 +7,9 @@ import couPonController from "../controllers/couponController";
 import bannerController from "../controllers/bannerController";
 import commnetController from "../controllers/commentController";
 import supplierController from "../controllers/supplierController";
+import detail_orderController from "../controllers/detail_orderController";
+import orderController from "../controllers/orderController";
+
 
 
 
@@ -81,6 +84,16 @@ let initUserRouter = (app) => {
     router.post('/create-supplier', supplierController.handleCreateSupplier);
     router.put('/update-supplier', supplierController.handleUpdateSupplier);
     router.delete('/delete-supplier', supplierController.handleDeleteSupplier);
+
+    // detail order
+    router.get('/detailorder/:id_order', detail_orderController.handleGetDetailOrderByID);
+    router.post('/create-detailorder', detail_orderController.handleCreateDetailOrder);
+
+    //order
+    router.get('/orders/:id', orderController.handleGetOrderByID);
+    router.post('/create-order', orderController.handleCreateOrder);
+
+
 
     router.get('/anhquoc', (req, res) => {
         return res.send('hello');

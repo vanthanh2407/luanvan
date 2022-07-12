@@ -3,7 +3,7 @@ import axiosClient from './axiosClient'
 const OrderAPI = {
 
     post_order: (data) => {
-        const url = `/api/Payment/order`
+        const url = `/create-order`
         return axiosClient.post(url, data)
     },
 
@@ -13,7 +13,7 @@ const OrderAPI = {
     },
 
     get_detail: (id) => {
-        const url = `/api/Payment/order/detail/${id}`
+        const url = `/orders/${id}`
         return axiosClient.get(url)
     },
 

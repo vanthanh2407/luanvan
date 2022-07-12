@@ -15,6 +15,9 @@ module.exports = (sequelize, DataTypes) => {
         }
     };
     Detail_Order.init({
+        // id: DataTypes.INTEGER,
+        id_order: DataTypes.INTEGER,
+        id_product: DataTypes.INTEGER,
         price: DataTypes.INTEGER,
         name: DataTypes.STRING,
         quantity: DataTypes.INTEGER,
@@ -23,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
         updatedAt: DataTypes.DATE,
     }, {
         sequelize,
-        modelName: 'Detail_Order',
+        modelName: 'Detail_Order', 
     });
     return Detail_Order;
 };

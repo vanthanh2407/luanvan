@@ -3,12 +3,12 @@ import axiosClient from './axiosClient'
 const Detail_OrderAPI = {
 
     post_detail_order: (data) => {
-        const url = `/api/DetailOrder`
+        const url = `/create-detailorder`
         return axiosClient.post(url, data)
     },
 
-    get_detail_order: (id) => {
-        const url = `/api/DetailOrder/${id}`
+    get_detail_order: (id_order) => {
+        const url = `/detailorder/${id_order}`
         return axiosClient.get(url)
     }
 
