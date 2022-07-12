@@ -78,6 +78,19 @@ let handleSearchUser = async (req, res) => {
     let searchUser = await userService.SearchUser(req.body.search);
     return res.status(200).json(searchUser);
 }
+let handleUserByType = async (req, res) => {
+    try {
+        let findByType = await userService.getUserByType(req.query.type)
+        return res.status(200).json(findByType);
+    } catch (error) {
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from Server'
+        })
+    }
+
+
+}
 
 
 module.exports = {
@@ -90,6 +103,7 @@ module.exports = {
     handleSearchUser: handleSearchUser,
     handleCreateNewUserTest: handleCreateNewUserTest,
     handleLoginTest: handleLoginTest,
+    handleUserByType: handleUserByType,
 
 
 }

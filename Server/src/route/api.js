@@ -12,6 +12,8 @@ import supplierController from "../controllers/supplierController";
 
 import newsControllerServer from "../controllers/admin/newsController";
 import receiptControllerServer from "../controllers/admin/receiptController";
+import productControllerServer from "../controllers/admin/productController";
+import userControllerServer from "../controllers/admin/userController";
 
 
 
@@ -32,8 +34,10 @@ let initUserRouter = (app) => {
     router.put('/update-user', userController.handleUpdateUser);
     router.post('/login', userController.handleLogin);
     router.post('/loginTest', userController.handleLoginTest);
-
     router.get('/search-user', userController.handleSearchUser);
+
+    router.get('/searchByType', userControllerServer.handleUserByType); // ben server
+
 
     // Permission
     router.get('/permiss', permiss.handleGetAllPermiss);
@@ -57,6 +61,9 @@ let initUserRouter = (app) => {
     router.post('/create-product', productController.handleCreateProduct);
     router.put('/update-product', productController.handleUpdateProduct);
     router.delete('/delete-product', productController.handleDeleteProduct);
+
+    router.get('/product', productControllerServer.handleGetAllProduct); /// ben server
+
 
 
     //coupon 

@@ -284,6 +284,33 @@ let SearchUser = (search) => {
         }
     })
 }
+
+let getUserByType = (typeInput) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+
+            if (!typeInput) {
+                resolve({
+                    errCode: 1,
+                    errMessage: "Messing requited parameter"
+                });
+            } else {
+                let res = {};
+                let user = await db.Users.findAll({
+                    where: { id_permission: typeInput }
+                });
+                res.errCode = 0;
+                res.errMessage = "get user successful";
+                res.data = user;
+
+                resolve(res)
+            }
+
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 module.exports = {
     getAllUser: getAllUser,
     createNewUserReal: createNewUserReal,
@@ -295,5 +322,6 @@ module.exports = {
     SearchUser: SearchUser,
     login: login,
     createNewUser: createNewUser,
+    getUserByType: getUserByType,
 
 }

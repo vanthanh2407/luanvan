@@ -38,8 +38,8 @@ let handleDeleteProduct = async (req, res) => {
 module.exports = {
     handleGetAllProduct: handleGetAllProduct,
     handleGetProcductByID: handleGetProcductByID,
-    handleSearchProcduct:handleSearchProcduct,
-    handleCreateProduct:handleCreateProduct,
-    handleUpdateProduct:handleUpdateProduct,
-    handleDeleteProduct:handleDeleteProduct,
+    handleSearchProcduct: handleSearchProcduct,
+    handleCreateProduct: handleCreateProduct,
+    handleUpdateProduct: handleUpdateProduct,
+    handleDeleteProduct: handleDeleteProduct,
 }
