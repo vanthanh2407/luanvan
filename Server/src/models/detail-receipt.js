@@ -15,6 +15,8 @@ module.exports = (sequelize, DataTypes) => {
         }
     };
     Detail_Receipt.init({
+        id_receipt: DataTypes.INTEGER,
+        id_product : DataTypes.INTEGER,
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE,
     }, {

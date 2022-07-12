@@ -14,7 +14,8 @@ import newsControllerServer from "../controllers/admin/newsController";
 import receiptControllerServer from "../controllers/admin/receiptController";
 import productControllerServer from "../controllers/admin/productController";
 import userControllerServer from "../controllers/admin/userController";
-
+import orderControllerServer from "../controllers/admin/orderController";
+import statusControllerServer from "../controllers/admin/statusController";
 
 
 
@@ -110,6 +111,13 @@ let initUserRouter = (app) => {
     router.put('/update-receipt', receiptControllerServer.handleUpdateReceipt);
     router.delete('/delete-receipt', receiptControllerServer.handleDeleteReceipt);
 
+    // order 
+    router.get('/order', orderControllerServer.handleGetAllOrder);
+    router.put('/update-order', orderControllerServer.handleUpdateOrderStatus);
+
+    // status
+    router.get('/status', statusControllerServer.handleGetAllStatus);
+    
 
     router.get('/anhquoc', (req, res) => {
         return res.send('hello');

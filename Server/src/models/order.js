@@ -15,7 +15,6 @@ module.exports = (sequelize, DataTypes) => {
         }
     };
     Order.init({
-        create_time: DataTypes.DATE,
         address: DataTypes.STRING,
         id_status: DataTypes.STRING,
         paymethod: DataTypes.BOOLEAN,
