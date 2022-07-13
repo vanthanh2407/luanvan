@@ -76,47 +76,58 @@ let updateOrder = (data) => {
         }
     })
 }
-let updateOderData=(data)=>{
-    return new Promise(async(resolve,reject)=>{
+let updateOderData = (data) => {
+    return new Promise(async (resolve, reject) => {
         try {
-           
-          let Oder=await db.Order.findOne({
-              where:{id:data.id}
-          })
-          if(Oder){
-            if(data.id_status==6){
-                if(Oder.id_status<2){
-                    Oder.id_status=data.id_status
-                    await Oder.save();
-                    resolve({
-                        errCode:0,
-                        message:"Huỷ đơn thành công"
-                });}else{
-                    resolve({
-                        errCode:5,
-                        message:"Đơn hàng không thể hủy!"
+
+            let Oder = await db.Order.findOne({
+                where: { id: data.id }
+            })
+            if (Oder) {
+                if (data.id_status == 6) {
+                    if (Oder.id_status < 2) {
+                        Oder.id_status = data.id_status
+                        await Oder.save();
+                        resolve({
+                            errCode: 3,
+                            message: "Huỷ đơn thành công"
+                        });
+                    } else {
+                        resolve({
+                            errCode: 5,
+                            message: "Đơn hàng không thể hủy!"
+                        });
+                    }
+                } else {
+                    if (Oder.id_status > data.id_status) {
+                        resolve({
+                            errCode: 11,
+                            message: "Không thể cập nhật lại trạng thái trước đó"
+
+                        });
+                    }
+                    else {
+                        if (data.id_status == Oder.id_status + 1) {
+                            Oder.id_status = data.id_status
+                            await Oder.save();
+                            resolve({
+                                errCode: 0,
+                                message: "Update thành công"
+                            });
+                        } else {
+                            resolve({
+                                errCode: 4,
+                                message: "Update status failed"
+                            });
+                        }
+                    }
+                }
+            } else {
+                resolve({
+                    errCode: 20,
+                    message: "Sai Oder"
                 });
-                }
-            }else{
-                if(Oder.id_status>data.id_status){
-                    resolve({
-                        errCode:11,
-                        message:"Không thể cập nhật lại trạng thái trước đó"
-                        
-                    });
-                }
-                else{
-                    Oder.id_status=data.id_status
-                    await Oder.save();
-                    resolve({
-                        errCode:0,
-                        message:"Update thành công"
-                });}}
-          }else{
-              resolve({
-                errCode:20,
-                message:"Sai Oder"
-        });}
+            }
         } catch (e) {
             reject(e);
         }
