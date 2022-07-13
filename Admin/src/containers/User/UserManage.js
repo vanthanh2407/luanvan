@@ -7,6 +7,7 @@ import * as actions from "../../store/actions";
 import { USER_ROLE } from '../../utils/constant';
 
 import './UserManage.scss';
+import { getAllPermiss } from '../../services/permissService';
 import { getAlluser, createuser, updateuser, deleteuser, GetUserByType } from '../../services/userService';
 import ModelCreateStaff from './ModelCreateStaff';
 import { db } from '../../firebaseConnect';
@@ -19,6 +20,7 @@ class UserManage extends Component {
         super(props);
         this.state = {
             arrUser: [],
+            arrPermiss: [],
 
             arrCustomer: [],
             isOpenModalProduct: false,
@@ -33,7 +35,8 @@ class UserManage extends Component {
 
     async componentDidMount() {
         let resCustomer = await GetUserByType(3);
-        console.log('check customer did mount: ', resCustomer)
+        let resPermiss = await getAllPermiss();
+        console.log('check permiss', resPermiss)
         let resopnse = await getAlluser();
         if (resopnse && resopnse.errCode === 0) {
             this.setState({
@@ -43,6 +46,11 @@ class UserManage extends Component {
         if (resCustomer && resCustomer.errCode === 0) {
             this.setState({
                 arrCustomer: resCustomer.data
+            })
+        }
+        if (resPermiss && resPermiss.errCode === 0) {
+            this.setState({
+                arrPermiss: resPermiss.permiss
             })
         }
 
@@ -91,7 +99,6 @@ class UserManage extends Component {
                     errMessage: res.errMessage,
                     errCode: res.errCode
                 })
-                console.log('check api product', this.state.errMessage)
             }
 
         } catch (error) {
@@ -100,22 +107,7 @@ class UserManage extends Component {
         }
     }
 
-    // editProductModal = async (data) => {
-    //     try {
-    //         let res = await updateProduct(data);
-    //         if (res) {
-    //             toast.success("Update Product Success");
-    //             this.handleGetAllUser();
-    //             this.setState({
-    //                 isOpenModalEditProduct: false,
-    //                 errMessage: res.errMessage,
-    //                 errCode: res.errCode
-    //             })
-    //         }
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
+
 
     handleDeleteUser = async (user) => {
         try {
@@ -130,24 +122,12 @@ class UserManage extends Component {
     }
 
 
-    // handleTestHidden = () => {
-    //     alert("check check");
-    // }
-
-
-    // handleEditProduct = (product) => {
-
-    //     this.setState({
-    //         isOpenModalEditProduct: true,
-    //         arrUserFromParent: product
-    //     })
-    // }
-
     render() {
         const { processLogout, userInfo } = this.props;
         let arrUser = this.state.arrUser;
         let arrCustomer = this.state.arrCustomer;
-        console.log('check customer: ', this.state.arrCustomer)
+        let arrPermiss = this.state.arrPermiss;
+
 
 
 
@@ -198,10 +178,16 @@ class UserManage extends Component {
                                                         <td >{item.lastname}</td>
                                                         <td >{item.email}</td>
                                                         <td >{item.phone}</td>
-                                                        <td >{item.id_permission}</td>
+                                                        {
+                                                            arrPermiss && arrPermiss.map((permiss) => {
+                                                                if (permiss.id == item.id_permission)
+                                                                    return <td >{permiss.permission}</td>
+                                                            })
+                                                        }
+
                                                         <button
-                                                        onClick={() => { this.handleDeleteUser(item) }}
-                                                        className='button-style-delete' type='button'><i className="fa fa-trash"></i></button>
+                                                            onClick={() => { this.handleDeleteUser(item) }}
+                                                            className='button-style-delete' type='button'><i className="fa fa-trash"></i></button>
                                                     </tr>
                                                 </>
                                             )

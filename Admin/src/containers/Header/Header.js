@@ -35,7 +35,8 @@ class Header extends Component {
     render() {
         const { processLogout, userInfo } = this.props;
 
-        console.log('check user: ', userInfo)
+
+
         return (
             <div className="header-container">
                 <div className='hello'>

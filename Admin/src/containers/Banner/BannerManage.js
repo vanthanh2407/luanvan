@@ -8,6 +8,9 @@ import ModalEditBanner from './ModalEditBanner';
 import { db } from '../../firebaseConnect';
 import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
+import _ from "lodash";
+import * as actions from "../../store/actions";
+import { USER_ROLE } from '../../utils/constant';
 
 class BannerManage extends Component {
 
@@ -132,97 +135,177 @@ class BannerManage extends Component {
     }
     render() {
         let arrBanner = this.state.arrBanner;
-        // console.log('check product', arrProdcut)
-        return (
-            <>
-                <ModalCreateBanner
-                    isOpen={this.state.isOpenModalProduct}
-                    toggleProduct={this.toggleProductModal}
-
-                    createBannerModal={this.createBannerModal}
-
-                    errMessage={this.state.errMessage}
-                    errCode={this.state.errCode}
-
-                    handleEditBanner={this.handleEditBanner}
-
-                />
-
-                {this.state.isOpenModalEditProduct && <ModalEditBanner
-                    isOpen={this.state.isOpenModalEditProduct}
-                    toggleProductEdit={this.toggleProductModalEdit}
-
-                    editBanner={this.editBannerModal}
-                    arrBannerEdit={this.state.arrBannerFromParent}
-
-                    errMessage={this.state.errMessage}
-                    errCode={this.state.errCode}
-                />}
-
-
-                <div className='header-listproduct'>
-                    <button className='button-add' type="button"
-                        onClick={() => this.handleCreateNewCate()}
-                    >
-                        <i className='fa fa-plus '> Add New Banner</i>
-                    </button>
-
-                    <h2>List Banner</h2>
-                </div>
-
-                <div className="table-wrapper">
-                    <table className="fl-table">
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Picture</th>
-                                <th>Name Product</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                arrBanner && arrBanner.map((item, index) => {
-
-                                    return (
-                                        <>
-                                            <tr>
-
-                                                <td >{item.id}</td>
-                                                <td >{item.picture}</td>
-                                                <td>{item.id_product}</td>
-
-                                                <td>
-                                                    <button
-                                                        onClick={() => { this.handleEditBanner(item) }}
-                                                        className='button-style-eidt' type='button' ><i className="fas fa-pencil-alt"></i></button>
-                                                    <button
-                                                        onClick={() => { this.handleDeleteProduct(item) }}
-                                                        className='button-style-delete' type='button'><i className="fa fa-trash"></i></button>
-                                                </td>
-                                            </tr>
-                                        </>
-                                    )
-                                })
-                            }
-                        </tbody>
-                    </table>
-                </div>
-                {/* <div>zxc,nzx,cmnz,xcmnz,xcnz,cn,mzxcn,mzcn,mznxc,mznxc,nz,xcn,mznxc,</div> */}
+        const { processLogout, userInfo } = this.props;
 
 
 
+        if (userInfo && !_.isEmpty(userInfo)) {
+            let role = userInfo.id_permission;
+            if (role === USER_ROLE.ADMIN) {
+                return (
+                    <>
+                        <ModalCreateBanner
+                            isOpen={this.state.isOpenModalProduct}
+                            toggleProduct={this.toggleProductModal}
 
+                            createBannerModal={this.createBannerModal}
 
+                            errMessage={this.state.errMessage}
+                            errCode={this.state.errCode}
 
-            </>
-        );
+                            handleEditBanner={this.handleEditBanner}
+
+                        />
+
+                        {this.state.isOpenModalEditProduct && <ModalEditBanner
+                            isOpen={this.state.isOpenModalEditProduct}
+                            toggleProductEdit={this.toggleProductModalEdit}
+
+                            editBanner={this.editBannerModal}
+                            arrBannerEdit={this.state.arrBannerFromParent}
+
+                            errMessage={this.state.errMessage}
+                            errCode={this.state.errCode}
+                        />}
+
+                        <div className='banner'>
+                            <div className='header-listproduct'>
+                                <button className='button-add' type="button"
+                                    onClick={() => this.handleCreateNewCate()}
+                                >
+                                    <i className='fa fa-plus '> Add New Banner</i>
+                                </button>
+
+                                <h2>List Banner</h2>
+                            </div>
+
+                            <div className="table-wrapper">
+                                <table className="fl-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Picture</th>
+                                            <th>Name Product</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            arrBanner && arrBanner.map((item, index) => {
+
+                                                return (
+                                                    <>
+                                                        <tr>
+
+                                                            <td >{item.id}</td>
+                                                            <td >{item.picture}</td>
+                                                            <td>{item.id_product}</td>
+
+                                                            <td>
+                                                                <button
+                                                                    onClick={() => { this.handleEditBanner(item) }}
+                                                                    className='button-style-eidt' type='button' ><i className="fas fa-pencil-alt"></i></button>
+                                                                <button
+                                                                    onClick={() => { this.handleDeleteProduct(item) }}
+                                                                    className='button-style-delete' type='button'><i className="fa fa-trash"></i></button>
+                                                            </td>
+                                                        </tr>
+                                                    </>
+                                                )
+                                            })
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </>
+                );
+            } else if (role === USER_ROLE.STAFF) {
+                return (
+                    <>
+                        <ModalCreateBanner
+                            isOpen={this.state.isOpenModalProduct}
+                            toggleProduct={this.toggleProductModal}
+
+                            createBannerModal={this.createBannerModal}
+
+                            errMessage={this.state.errMessage}
+                            errCode={this.state.errCode}
+
+                            handleEditBanner={this.handleEditBanner}
+
+                        />
+
+                        {this.state.isOpenModalEditProduct && <ModalEditBanner
+                            isOpen={this.state.isOpenModalEditProduct}
+                            toggleProductEdit={this.toggleProductModalEdit}
+
+                            editBanner={this.editBannerModal}
+                            arrBannerEdit={this.state.arrBannerFromParent}
+
+                            errMessage={this.state.errMessage}
+                            errCode={this.state.errCode}
+                        />}
+
+                        <div className='banner'>
+                            <div className='header-listproduct'>
+                                <button className='button-add' type="button"
+                                    onClick={() => this.handleCreateNewCate()}
+                                >
+                                    <i className='fa fa-plus '> Add New Banner</i>
+                                </button>
+
+                                <h2>List Banner</h2>
+                            </div>
+
+                            <div className="table-wrapper">
+                                <table className="fl-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Picture</th>
+                                            <th>Name Product</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            arrBanner && arrBanner.map((item, index) => {
+                                                return (
+                                                    <>
+                                                        <tr>
+                                                            <td >{item.id}</td>
+                                                            <td >{item.picture.substring(0, 45) + "..."}</td>
+                                                            <td>{item.id_product}</td>
+
+                                                            <td>
+                                                                <button
+                                                                    onClick={() => { this.handleEditBanner(item) }}
+                                                                    className='button-style-eidt' type='button' ><i className="fas fa-pencil-alt"></i></button>
+                                                            </td>
+                                                        </tr>
+                                                    </>
+                                                )
+                                            })
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </>
+                );
+            }
+        }
+
     }
 
 }
 
 const mapStateToProps = state => {
     return {
+        userInfo: state.admin.userInfo
     };
 };
 

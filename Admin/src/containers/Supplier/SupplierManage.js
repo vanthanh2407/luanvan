@@ -194,7 +194,7 @@ class SupplierManage extends Component {
 
                                                 <td >{item.id}</td>
                                                 <td >{item.name}</td>
-                                                <td >{item.picture}</td>
+                                                <td >{item.picture.substring(0, 100) + "..."}</td>
                                                 <td >{item.phone}</td>
                                                 <td >{item.address}</td>
                                                 <td >{item.email}</td>

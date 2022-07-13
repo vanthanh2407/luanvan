@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import './OrderManage.scss';
-import { getAllOrder, updateOrder} from '../../services/orderService';
+import { getAllOrder, updateOrder } from '../../services/orderService';
 import { getAlluser, createuser, updateuser, deleteuser, GetUserByType } from '../../services/userService';
-import { getAllStatus} from '../../services/statusService';
-// import ModalCreateCate from './ModalCreateCate';
-// import ModalEditCate from './ModalEditCate';
+import { getAllStatus } from '../../services/statusService';
+
+import ModalEditOrder from './ModalEditOrder';
 import { db } from '../../firebaseConnect';
 import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
@@ -52,7 +52,7 @@ class OrderManage extends Component {
         }
 
     }
-    handleGetAllCate = async () => {
+    handleGetAllOrder = async () => {
         let resopnse = await getAllOrder();
         if (resopnse && resopnse.errCode === 0) {
             this.setState({
@@ -83,33 +83,44 @@ class OrderManage extends Component {
         })
     }
 
-    
-    editCateModal = async (data) => {
-        // try {
-        //     let res = await updateCate(data);
-        //     if (res) {
-        //         toast.success("Update Category Success");
-        //         this.handleGetAllCate();
-        //         this.setState({
-        //             isOpenModalEditProduct: false,
-        //             errMessage: res.errMessage,
-        //             errCode: res.errCode
-        //         })
-        //     }
-        // } catch (error) {
-        //     console.log(error)
-        // }
+
+    editOrderModal = async (data) => {
+        try {
+            let res = await updateOrder(data);
+            if (res && res.errCode === 0 || res.errCode === 3) {
+                toast.success("Update Order Success");
+                this.handleGetAllOrder();
+                this.setState({
+                    isOpenModalEditProduct: false,
+                    errMessage: res.errMessage,
+                    errCode: res.errCode
+                })
+            } else if (res && res.errCode === 11 || res.errCode === 5 || res.errCode === 4) {
+                toast.error("Update Order Failed");
+                this.handleGetAllOrder();
+                this.setState({
+                    isOpenModalEditProduct: false,
+                    errMessage: res.errMessage,
+                    errCode: res.errCode
+                })
+            }
+            // else if () {
+
+            // }
+        } catch (error) {
+            console.log(error)
+        }
     }
-    
 
 
-    
 
 
-    handleEditCate = (cate) => {
+
+
+    handleEditOrder = (Order) => {
         this.setState({
             isOpenModalEditProduct: true,
-            arrOrderFromParent: cate
+            arrOrderFromParent: Order
         })
     }
     render() {
@@ -117,21 +128,22 @@ class OrderManage extends Component {
         let arrUser = this.state.arrUser;
         let arrStatus = this.state.arrStatus;
 
-        console.log('check order', arrOrder)
+
+
         return (
             <>
-                
 
-                {/* {this.state.isOpenModalEditProduct && <ModalEditCate
+
+                {this.state.isOpenModalEditProduct && <ModalEditOrder
                     isOpen={this.state.isOpenModalEditProduct}
                     toggleProductEdit={this.toggleProductModalEdit}
 
-                    editCate={this.editCateModal}
+                    editOrder={this.editOrderModal}
                     arrOrderEdit={this.state.arrOrderFromParent}
 
                     errMessage={this.state.errMessage}
                     errCode={this.state.errCode}
-                />}  */}
+                />}
 
 
                 <div className='header-listproduct'>
@@ -164,29 +176,29 @@ class OrderManage extends Component {
                                                 <td >{item.id}</td>
                                                 <td >{item.note}</td>
                                                 {
-                                                    arrStatus && arrStatus.map((status)=>{
-                                                        if(status.id == item.id_status)
-                                                        return <td >{status.name}</td>
+                                                    arrStatus && arrStatus.map((status) => {
+                                                        if (status.id == item.id_status)
+                                                            return <td >{status.name}</td>
                                                     })
                                                 }
                                                 {
-                                                    arrUser && arrUser.map((user)=>{
-                                                        if(user.id == item.id_user)
-                                                        return <td >{user.firstname}</td>
+                                                    arrUser && arrUser.map((user) => {
+                                                        if (user.id == item.id_user)
+                                                            return <td >{user.firstname}</td>
                                                     })
                                                 }
                                                 {
-                                                    arrUser && arrUser.map((user)=>{
-                                                        if(user.id == item.id_user)
-                                                        return <td >{user.email}</td>
+                                                    arrUser && arrUser.map((user) => {
+                                                        if (user.id == item.id_user)
+                                                            return <td >{user.email}</td>
                                                     })
                                                 }
-                                                
+
                                                 {/* <td >{item.payment}</td> */}
                                                 <td >{item.total}</td>
                                                 <td>
                                                     <button
-                                                        onClick={() => { this.handleEditCate(item) }}
+                                                        onClick={() => { this.handleEditOrder(item) }}
                                                         className='button-style-eidt' type='button' ><i className="fas fa-pencil-alt"></i></button>
                                                 </td>
                                             </tr>

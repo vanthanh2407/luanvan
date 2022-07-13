@@ -45,6 +45,11 @@
         }
        
       }
+      .btn-logout i{
+        font-size: 18px;
+        
+       
+      }
   .body li{
     transition: 1s all;
     font-family: 'Roboto', sans-serif;
@@ -55,8 +60,12 @@
     color: #fff;
     list-style: none;
     display: block;
+    
     border-top-right-radius: 10px 10px;
     border-bottom-right-radius: 10px 10px;
+    .disable-gachchan{
+      text-decoration: none;
+    }
   }
  
   

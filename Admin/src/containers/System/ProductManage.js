@@ -8,6 +8,9 @@ import ModelEditProduct from './ModelEditProduct';
 import { db } from '../../firebaseConnect';
 import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
+import _ from "lodash";
+import * as actions from "../../store/actions";
+import { USER_ROLE } from '../../utils/constant';
 
 class ProductManage extends Component {
 
@@ -133,95 +136,180 @@ class ProductManage extends Component {
     }
     render() {
         let arrProdcut = this.state.arrProduct;
-
-        return (
-            <>
-                <ModelProduct
-                    isOpen={this.state.isOpenModalProduct}
-                    toggleProduct={this.toggleProductModal}
-                    createProductModal={this.createProductModal}
-                    errMessage={this.state.errMessage}
-                    errCode={this.state.errCode}
-
-                    handleEditProduct={this.handleEditProduct}
-
-                />
-
-                {this.state.isOpenModalEditProduct && <ModelEditProduct
-                    isOpen={this.state.isOpenModalEditProduct}
-                    toggleProductEdit={this.toggleProductModalEdit}
-                    editProduct={this.editProductModal}
-                    arrProdcutEdit={this.state.arrProdcutFromParent}
-                    errMessage={this.state.errMessage}
-                    errCode={this.state.errCode}
-                />}
-
-
-                <div className='header-listproduct'>
-                    <button className='button-add' type="button"
-                        onClick={() => this.handleCreateNewProduct()}
-                    >
-                        <i className='fa fa-plus '> Add New Product</i>
-                    </button>
-                    {/* <button id='newasd' onClick={() => alert("Hello!")} hidden
-                    >asdasd</button>
-                    <label htmlFor='newasd'>asdasdasdasdasdasd</label> */}
-                    <h2>List Product</h2>
-                </div>
-
-                <div className="table-wrapper">
-                    <table className="fl-table">
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Name</th>
-                                <th>Price</th>
-                                <th>Quantity</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                arrProdcut && arrProdcut.map((item, index) => {
-
-                                    return (
-                                        <>
-                                            <tr>
-
-                                                <td >{item.id}</td>
-                                                <td >{item.name}</td>
-                                                <td ><span className="new-price new-price-2">{new Intl.NumberFormat('vi-VN', { style: 'decimal', decimal: 'VND' }).format(item.price) + ' VNĐ'}</span></td>
-                                                <td >{item.quantity}</td>
-                                                <td>
-                                                    <button
-                                                        onClick={() => { this.handleEditProduct(item) }}
-                                                        className='button-style-eidt' type='button' ><i className="fas fa-pencil-alt"></i></button>
-                                                    <button
-                                                        onClick={() => { this.handleDeleteProduct(item) }}
-                                                        className='button-style-delete' type='button'><i className="fa fa-trash"></i></button>
-                                                </td>
-                                            </tr>
-                                        </>
-                                    )
-                                })
-                            }
-                        </tbody>
-                    </table>
-                </div>
+        const { processLogout, userInfo } = this.props;
 
 
 
+        if (userInfo && !_.isEmpty(userInfo)) {
+            let role = userInfo.id_permission;
+            if (role === USER_ROLE.ADMIN) {
+                return (
+                    <>
+                        <ModelProduct
+                            isOpen={this.state.isOpenModalProduct}
+                            toggleProduct={this.toggleProductModal}
+                            createProductModal={this.createProductModal}
+                            errMessage={this.state.errMessage}
+                            errCode={this.state.errCode}
+
+                            handleEditProduct={this.handleEditProduct}
+
+                        />
+
+                        {this.state.isOpenModalEditProduct && <ModelEditProduct
+                            isOpen={this.state.isOpenModalEditProduct}
+                            toggleProductEdit={this.toggleProductModalEdit}
+                            editProduct={this.editProductModal}
+                            arrProdcutEdit={this.state.arrProdcutFromParent}
+                            errMessage={this.state.errMessage}
+                            errCode={this.state.errCode}
+                        />}
+
+
+                        <div className='header-listproduct'>
+                            <button className='button-add' type="button"
+                                onClick={() => this.handleCreateNewProduct()}
+                            >
+                                <i className='fa fa-plus '> Add New Product</i>
+                            </button>
+                            <h2>List Product</h2>
+                        </div>
+
+                        <div className="table-wrapper">
+                            <table className="fl-table">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Name</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        arrProdcut && arrProdcut.map((item, index) => {
+
+                                            return (
+                                                <>
+                                                    <tr>
+
+                                                        <td >{item.id}</td>
+                                                        <td >{item.name}</td>
+                                                        <td ><span className="new-price new-price-2">{new Intl.NumberFormat('vi-VN', { style: 'decimal', decimal: 'VND' }).format(item.price) + ' VNĐ'}</span></td>
+                                                        <td >{item.quantity}</td>
+                                                        <td>
+                                                            <button
+                                                                onClick={() => { this.handleEditProduct(item) }}
+                                                                className='button-style-eidt' type='button' ><i className="fas fa-pencil-alt"></i></button>
+                                                            <button
+                                                                onClick={() => { this.handleDeleteProduct(item) }}
+                                                                className='button-style-delete' type='button'><i className="fa fa-trash"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                </>
+                                            )
+                                        })
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
 
 
 
-            </>
-        );
+
+
+
+                    </>
+                );
+            } else if (role === USER_ROLE.STAFF) {
+                return (
+                    <>
+                        <ModelProduct
+                            isOpen={this.state.isOpenModalProduct}
+                            toggleProduct={this.toggleProductModal}
+                            createProductModal={this.createProductModal}
+                            errMessage={this.state.errMessage}
+                            errCode={this.state.errCode}
+
+                            handleEditProduct={this.handleEditProduct}
+
+                        />
+
+                        {this.state.isOpenModalEditProduct && <ModelEditProduct
+                            isOpen={this.state.isOpenModalEditProduct}
+                            toggleProductEdit={this.toggleProductModalEdit}
+                            editProduct={this.editProductModal}
+                            arrProdcutEdit={this.state.arrProdcutFromParent}
+                            errMessage={this.state.errMessage}
+                            errCode={this.state.errCode}
+                        />}
+
+
+                        <div className='header-listproduct'>
+                            <button className='button-add' type="button"
+                                onClick={() => this.handleCreateNewProduct()}
+                            >
+                                <i className='fa fa-plus '> Add New Product</i>
+                            </button>
+                            <h2>List Product</h2>
+                        </div>
+
+                        <div className="table-wrapper">
+                            <table className="fl-table">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Name</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        arrProdcut && arrProdcut.map((item, index) => {
+
+                                            return (
+                                                <>
+                                                    <tr>
+
+                                                        <td >{item.id}</td>
+                                                        <td >{item.name}</td>
+                                                        <td ><span className="new-price new-price-2">{new Intl.NumberFormat('vi-VN', { style: 'decimal', decimal: 'VND' }).format(item.price) + ' VNĐ'}</span></td>
+                                                        <td >{item.quantity}</td>
+                                                        <td>
+                                                            <button
+                                                                onClick={() => { this.handleEditProduct(item) }}
+                                                                className='button-style-eidt' type='button' ><i className="fas fa-pencil-alt"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                </>
+                                            )
+                                        })
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+
+
+
+
+
+                    </>
+                );
+            }
+        }
+
+
     }
 
 }
 
 const mapStateToProps = state => {
     return {
+        userInfo: state.admin.userInfo
     };
 };
 
