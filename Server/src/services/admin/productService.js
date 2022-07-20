@@ -191,6 +191,30 @@ let deleteProduct = (ProductID) => {
     })
 }
 
+
+let getPage = (page, size) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let products = await db.Product.findAndCountAll({
+                // order: [
+                //     ['id', 'ASC']
+                // ],
+                limit: size,
+                offset:
+                    (page - 1) * size
+
+            });
+
+            resolve({
+                errCode: 0,
+                errMessage: 'Get Page Success',
+                products
+            });
+        } catch (error) {
+            reject(error);
+        }
+    })
+}
 module.exports = {
     getAllProduct: getAllProduct,
     getProductByID: getProductByID,
@@ -198,5 +222,6 @@ module.exports = {
     createProduct: createProduct,
     updateProduct: updateProduct,
     deleteProduct: deleteProduct,
-    getProductByType: getProductByType
+    getProductByType: getProductByType,
+    getPage: getPage
 }

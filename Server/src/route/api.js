@@ -64,6 +64,7 @@ let initUserRouter = (app) => {
     router.delete('/delete-product', productController.handleDeleteProduct);
 
     router.get('/product', productControllerServer.handleGetAllProduct); /// ben server
+    router.get('/product-page', productControllerServer.handleGetPageProduct); /// ben server
 
 
 
@@ -117,7 +118,7 @@ let initUserRouter = (app) => {
 
     // status
     router.get('/status', statusControllerServer.handleGetAllStatus);
-    
+
 
     router.get('/anhquoc', (req, res) => {
         return res.send('hello');

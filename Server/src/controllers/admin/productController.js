@@ -1,5 +1,6 @@
 
 import productService from "../../services/admin/productService";
+import db from "../../models/index";
 
 let handleGetAllProduct = async (req, res) => {
     let product = await productService.getAllProduct();
@@ -52,6 +53,46 @@ let handleDeleteProduct = async (req, res) => {
     }
 
 }
+let PAGE_SIZE = 2;
+// let handleGetPageProduct = async (req, res) => {
+//     let page = req.query.pageInput;
+//     if (page) {
+//         page = parseInt(page);
+//         let skipPageNumber = (page - 1) * PAGE_SIZE;
+//         await db.Product.find({})
+//             .skip(skipPageNumber)
+//             .limit(PAGE_SIZE)
+//             .then(data => {
+//                 res.json(data)
+//             })
+//             .catch(e => {
+//                 res.status(200).json('loi khong co input')
+//             })
+//     } else {
+//         let product = await productService.getAllProduct();
+//         return res.status(200).json({
+//             errCode: 0,
+//             message: 'Get All Product Succuess',
+//             product
+//         })
+//     }
+// }
+let handleGetPageProduct = async (req, res) => {
+    try {
+        let size = Number.parseInt(req.query.size);
+        let { page } = req.query;
+        let findByID = await productService.getPage(page, size);
+
+        return res.status(200).json(findByID);
+    } catch (error) {
+
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from server',
+
+        })
+    }
+}
 
 module.exports = {
     handleGetAllProduct: handleGetAllProduct,
@@ -60,5 +101,7 @@ module.exports = {
     handleCreateProduct: handleCreateProduct,
     handleUpdateProduct: handleUpdateProduct,
     handleDeleteProduct: handleDeleteProduct,
-    handleGetProcductByType: handleGetProcductByType
+    handleGetProcductByType: handleGetProcductByType,
+
+    handleGetPageProduct: handleGetPageProduct
 }
