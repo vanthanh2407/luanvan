@@ -24,8 +24,8 @@ const FindByIdProduct = (ProductID) => {
 const updateProduct = (data) => {
     return axios.put('/update-product', data);
 }
-const GetProductByType = (datatype) => {
-    return axios.get('/getproductbytype?type=');
+const GetPageProduct = (page, size) => {
+    return axios.get(`/product-page?page=${page}&size=${9}`);
 }
 
-export { handleLoginApi, getAllBooks, createProduct, deleteProduct, updateProduct, FindByIdProduct, getAllProduct }
+export { handleLoginApi, getAllBooks, createProduct, deleteProduct, updateProduct, FindByIdProduct, getAllProduct, GetPageProduct }

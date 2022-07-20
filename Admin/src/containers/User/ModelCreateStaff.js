@@ -1,16 +1,16 @@
-import React, { useEffect, Component } from 'react';
+import React, { Component } from 'react';
 // import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Input } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, } from 'reactstrap';
 
-import { getAlluser, createuser, updateuser, deleteuser, GetProductByType } from '../../services/userService';
+import { getAlluser } from '../../services/userService';
 import { getAllPermiss } from '../../services/permissService';
-import { db, storage } from '../../firebaseConnect';
-import { doc, setDoc } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL, listAll, list, uploadBytes } from "firebase/storage";
-import { v4 } from "uuid";
+// import { db, storage } from '../../firebaseConnect';
+// import { doc, setDoc } from "firebase/firestore";
+// import { ref, uploadBytesResumable, getDownloadURL, listAll, list, uploadBytes } from "firebase/storage";
+// import { v4 } from "uuid";
 
-import Lightbox from 'react-image-lightbox';
+// import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 import './ModelCreateStaff.scss'
 class ModalCreateStaff extends Component {
@@ -89,7 +89,7 @@ class ModalCreateStaff extends Component {
     }
 
     render() {
-        let { firstname, lastname, email, phone, pwd, address, gender, id_permission, arrPermiss, arrUser } = this.state;
+        let { firstname, lastname, email, phone, pwd, address, gender, id_permission, arrPermiss } = this.state;
 
 
         return (

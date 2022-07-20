@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+
 import { connect } from 'react-redux';
 import './NewsManage.scss';
 import { getAllnews, createnews, deletenews, updatenews } from '../../services/newsService';
 import ModalCreateNews from './ModalCreateNews';
 import ModalEditNews from './ModalEditNews';
-import { db } from '../../firebaseConnect';
-import { doc, setDoc } from "firebase/firestore";
+// import { db } from '../../firebaseConnect';
+// import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import _ from "lodash";
-import * as actions from "../../store/actions";
+// import * as actions from "../../store/actions";
 import { USER_ROLE } from '../../utils/constant';
 
 class NewsManage extends Component {
@@ -135,7 +135,7 @@ class NewsManage extends Component {
     }
     render() {
         let arrNews = this.state.arrNews;
-        const { processLogout, userInfo } = this.props;
+        const { userInfo } = this.props;
 
 
 

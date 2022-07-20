@@ -19,8 +19,5 @@ const FindByIdcomment = (commentID) => {
 const updatecomment = (data) => {
     return axios.put('/update-comment', data);
 }
-const GetProductByType = (datatype) => {
-    return axios.get('/getproductbytype?type=');
-}
 
 export { getAllComment, createComment, deleteComment, updatecomment, FindByIdcomment }

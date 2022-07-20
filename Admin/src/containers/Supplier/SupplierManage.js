@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+
 import { connect } from 'react-redux';
 
-import _ from "lodash";
-import * as actions from "../../store/actions";
-import { USER_ROLE } from '../../utils/constant';
+
 
 import './SupplierManage.scss';
 import { getAllSupplier, createSupplier, deleteSupplier, updateSupplier } from '../../services/supplierService';
 import ModelCreateSupplier from './ModelCreateSupplier';
 import ModelEditSupplier from './ModelEditSupplier';
-import { db } from '../../firebaseConnect';
-import { doc, setDoc } from "firebase/firestore";
+// import { db } from '../../firebaseConnect';
+// import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 
 class SupplierManage extends Component {

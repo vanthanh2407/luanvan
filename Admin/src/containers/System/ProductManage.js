@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+
+import Pagination from "react-pagination-library";
+import "react-pagination-library/build/css/index.css";
 import { connect } from 'react-redux';
 import './ProductManage.scss';
-import { getAllBooks, createProduct, deleteProduct, updateProduct, FindByIdProduct, getAllProduct } from '../../services/productService';
+import { createProduct, deleteProduct, updateProduct, getAllProduct, GetPageProduct } from '../../services/productService';
 import ModelProduct from './ModelProduct';
 import ModelEditProduct from './ModelEditProduct';
-import { db } from '../../firebaseConnect';
-import { doc, setDoc } from "firebase/firestore";
+// import { db } from '../../firebaseConnect';
+// import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import _ from "lodash";
-import * as actions from "../../store/actions";
+// import * as actions from "../../store/actions";
 import { USER_ROLE } from '../../utils/constant';
+// import PaginationProduct from '../../components/Pagination/Pagination';
 
 class ProductManage extends Component {
 
@@ -18,6 +21,10 @@ class ProductManage extends Component {
         super(props);
         this.state = {
             arrProduct: [],
+            currentPage: 1,
+            arrpage: [],
+            arrpageCount: [],
+
 
             isOpenModalProduct: false,
             isOpenModalEditProduct: false,
@@ -30,17 +37,56 @@ class ProductManage extends Component {
     }
 
     async componentDidMount() {
+
+        let resPage = await GetPageProduct(this.state.currentPage);
+        if (resPage.products.count % 9 !== 0) {
+            this.setState({
+                arrpageCount: Math.floor(resPage.products.count / 9) + 1
+            }, () => {
+                console.log('check count:', this.state.arrpageCount)
+            })
+        } else {
+            this.setState({
+                arrpageCount: Math.floor(resPage.products.count / 9)
+            }, () => {
+                console.log('check count else:', this.state.arrpageCount)
+            })
+        }
+        console.log('check zxczxczxc:', resPage.products.count)
         let resopnse = await getAllProduct();
         if (resopnse && resopnse.errCode === 0) {
             this.setState({
-
                 arrProduct: resopnse.product
             })
         }
+        if (resPage && resPage.errCode === 0) {
+            this.setState({
+                arrpage: resPage.products
+            })
+        }
+    }
+
+    async componentDidUpdate(prevProps, prevState, snapshot) {
 
 
+        if (prevState.currentPage !== this.state.currentPage) {
+            let resPage = await GetPageProduct(this.state.currentPage);
+            if (resPage && resPage.errCode === 0) {
+                this.setState({
+                    arrpage: resPage.products
+                })
+            }
+            this.setState({
+                arrpage: this.state.arrpage,
+            })
+            // , () => {
+            //     console.log('check:', this.state.arrpage.rows)
+            // }
+        }
 
     }
+
+
     handleGetAllProduct = async () => {
         let resopnse = await getAllProduct();
         if (resopnse && resopnse.errCode === 0) {
@@ -107,6 +153,23 @@ class ProductManage extends Component {
             console.log(error)
         }
     }
+    pageProduct = async (page, size) => {
+        try {
+            let res = await GetPageProduct(page, size);
+            if (res) {
+                this.setState({
+
+                    errMessage: res.errMessage,
+                    errCode: res.errCode
+                }, () => {
+                    console.log('check:', this.state.errMessage)
+                })
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
     handleDeleteProduct = async (product) => {
         try {
             let res = await deleteProduct(product.id)
@@ -120,13 +183,6 @@ class ProductManage extends Component {
         }
         // console.log('check delete product', product);
     }
-
-
-    // handleTestHidden = () => {
-    //     alert("check check");
-    // }
-
-
     handleEditProduct = (product) => {
 
         this.setState({
@@ -134,9 +190,35 @@ class ProductManage extends Component {
             arrProdcutFromParent: product
         })
     }
+    changeCurrentPage = async numPage => {
+        try {
+            let res = await GetPageProduct(numPage);
+            if (res) {
+                this.setState({
+                    currentPage: numPage,
+                    errMessage: res.errMessage,
+                    errCode: res.errCode
+                })
+                // , () => {
+                //     console.log('check:', this.state.currentPage)
+                //     console.log('check numpage:', numPage)
+                //     console.log('check  zxczxc:', 10 / 9)
+                // }
+
+
+            }
+        } catch (error) {
+            console.log(error)
+        }
+
+    };
     render() {
         let arrProdcut = this.state.arrProduct;
-        const { processLogout, userInfo } = this.props;
+        // console.log('check data array: ', arrProdcut)
+        let arrpageCount = this.state.arrpage.count;
+        let arrpage = this.state.arrpage.rows;
+        // console.log('check data array: ', arrpageCount)
+        const { userInfo } = this.props;
 
 
 
@@ -151,7 +233,6 @@ class ProductManage extends Component {
                             createProductModal={this.createProductModal}
                             errMessage={this.state.errMessage}
                             errCode={this.state.errCode}
-
                             handleEditProduct={this.handleEditProduct}
 
                         />
@@ -188,7 +269,7 @@ class ProductManage extends Component {
                                 </thead>
                                 <tbody>
                                     {
-                                        arrProdcut && arrProdcut.map((item, index) => {
+                                        arrpage && arrpage.map((item, index) => {
 
                                             return (
                                                 <>
@@ -215,11 +296,14 @@ class ProductManage extends Component {
                             </table>
                         </div>
 
-
-
-
-
-
+                        <div>
+                            <Pagination
+                                currentPage={this.state.currentPage}
+                                totalPages={this.state.arrpageCount}
+                                changeCurrentPage={this.changeCurrentPage}
+                                theme="square-i"
+                            />
+                        </div>
                     </>
                 );
             } else if (role === USER_ROLE.STAFF) {

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 // import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Input } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-import { getAllSupplier, createSupplier, deleteSupplier, updateSupplier } from '../../services/supplierService';
-import Lightbox from 'react-image-lightbox';
+import { getAllSupplier } from '../../services/supplierService';
+
 import 'react-image-lightbox/style.css';
 import './ModelEditSupplier.scss'
 class ModalEditSupplier extends Component {

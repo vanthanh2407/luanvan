@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 // import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Input } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { getAlluser } from '../../services/userService';
 
-import { getAllnews, createnews, deletenews, updatenews } from '../../services/newsService';
-import Lightbox from 'react-image-lightbox';
+import { getAllnews } from '../../services/newsService';
+
 import 'react-image-lightbox/style.css';
 import './ModalEditNews.scss'
 class ModalEditNews extends Component {

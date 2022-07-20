@@ -1,15 +1,16 @@
-import React, { useEffect, Component } from 'react';
+import React, { Component } from 'react';
+import CommonUtils from '../../utils/CommonUtils';
 // import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Input } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { getAllCate } from '../../services/cateService';
-import { getAllBooks, createProduct, deleteProduct, updateProduct } from '../../services/productService';
+import { getAllBooks } from '../../services/productService';
 import { db, storage } from '../../firebaseConnect';
 import { doc, setDoc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL, listAll, list, uploadBytes } from "firebase/storage";
-import { v4 } from "uuid";
+// import { v4 } from "uuid";
 
-import Lightbox from 'react-image-lightbox';
+// import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 import './ModelProduct.scss'
 class ModelProduct extends Component {
@@ -20,11 +21,7 @@ class ModelProduct extends Component {
             arrProductStatus: [],
             previewImageURL: '',
 
-            imageUpload: null,
-            setImageUpload: null,
 
-            fileUrl: [],
-            setFileUrl: [],
 
             arrProductFromParent: [],
 
@@ -61,6 +58,12 @@ class ModelProduct extends Component {
             id_cate: '',
 
 
+            imageUpload: null,
+            setImageUpload: null,
+
+            fileUrl: [],
+            setFileUrl: [],
+
         }
     }
 
@@ -89,16 +92,18 @@ class ModelProduct extends Component {
     toggle = () => {
         this.props.toggleProduct();
     }
-    handleOnchangeImage = (event) => {
+    handleOnchangeImage = async (event) => {
         let data = event.target.files;
         let file = data[0];
         if (file) {
+            let base64 = await CommonUtils.getBase64(file);
+            // console.log('check image: ', base64)
             let objectURL = URL.createObjectURL(file);
             this.setState({
                 previewImageURL: objectURL,
                 picture: file
             }, () => {
-                console.log('check state hinh anh: ', this.state.picture)
+                console.log('check:', this.state.picture.name)
             })
         }
 
@@ -135,9 +140,6 @@ class ModelProduct extends Component {
         })
     }
     handleAddnew = async (data) => {
-
-
-
         let isValid = this.checkValueInput();
         if (isValid === true) {
             this.props.createProductModal(this.state)
@@ -151,22 +153,39 @@ class ModelProduct extends Component {
         })
     }
     upLoadImage = () => {
-        // imageUpload: null,
-        // setImageUpload: null,
+        let uploadImageToFirebase = ref(storage, `images/${this.state.picture.name}`);
+        let uploadImagePut = uploadImageToFirebase.put(this.state.picture);
 
-        // fileUrl: [],
-        // setFileUrl: [],
-        if (this.state.imageUpload === null) return;
-        const imageREf = ref(storage, `images/${this.state.imageUpload.name + v4()}`);
-        uploadBytes(imageREf, this.state.imageUpload).then(() => {
-            console.log('check upload anh', imageREf)
-        })
+
+
+        uploadImagePut.on(
+            "state_changed",
+            snapshot => {
+                // const progress = Math.round(
+                //   (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                // );
+                // setProgress(progress);
+            },
+            error => {
+                console.log(error);
+            },
+            () => {
+                storage
+                    .ref("images")
+                    .child(this.state.picture.name)
+                    .getDownloadURL()
+                    .then(url => {
+                        console.log('check image: ', url)
+                        // setUrl(url);
+                    });
+            }
+        )
 
     }
 
     render() {
         let arrCategory = this.state.arrCategory;
-        let arrProductStatus = this.state.arrProductStatus;
+
         let {
             name, price, quantity, picture, content, summary, ram, chip, card, display, memory, port, operation, pin, dpi, micro_switch, scroll_switch,
             durability, keyboard_type, model, connect, weight, size, color, material, insurance, status, id_cate

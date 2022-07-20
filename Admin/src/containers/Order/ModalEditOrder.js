@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 // import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Input } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-import { getAllOrder, updateOrder } from '../../services/orderService';
-import { getAlluser, createuser, updateuser, deleteuser, GetUserByType } from '../../services/userService';
+import { getAllOrder } from '../../services/orderService';
+
 import { getAllStatus } from '../../services/statusService';
 
-import Lightbox from 'react-image-lightbox';
+
 import 'react-image-lightbox/style.css';
 import './ModalEditOrder.scss'
 class ModalEditOrder extends Component {

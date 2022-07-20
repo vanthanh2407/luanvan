@@ -1,17 +1,17 @@
-import React, { useEffect, Component } from 'react';
+import React, { Component } from 'react';
 // import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Input } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { getAlluser } from '../../services/userService';
 
 
-import { getAllnews, createnews, deletenews, updatenews } from '../../services/newsService';
-import { db, storage } from '../../firebaseConnect';
-import { doc, setDoc } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL, listAll, list, uploadBytes } from "firebase/storage";
-import { v4 } from "uuid";
+import { getAllnews } from '../../services/newsService';
+// import { db, storage } from '../../firebaseConnect';
+// import { doc, setDoc } from "firebase/firestore";
+// import { ref, uploadBytesResumable, getDownloadURL, listAll, list, uploadBytes } from "firebase/storage";
+// import { v4 } from "uuid";
 
-import Lightbox from 'react-image-lightbox';
+
 import 'react-image-lightbox/style.css';
 import './ModalCreateNews.scss'
 class ModalCreateNews extends Component {

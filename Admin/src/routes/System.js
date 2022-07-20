@@ -13,8 +13,8 @@ import UserManage from '../containers/User/UserManage';
 import OrderManage from '../containers/Order/OrderManage';
 
 
-import Header from '../containers/Header/Header';
-import RegisterPackageGroupOrAcc from '../containers/System/RegisterPackageGroupOrAcc';
+
+
 
 class System extends Component {
     render() {
@@ -38,7 +38,7 @@ class System extends Component {
                             <Route path="/system/user-manage" component={UserManage} />
 
 
-                            <Route path="/system/register-package-group-or-account" component={RegisterPackageGroupOrAcc} />
+
                             <Route component={() => { return (<Redirect to={systemMenuPath} />) }} />
                         </Switch>
                     </BrowserRouter>

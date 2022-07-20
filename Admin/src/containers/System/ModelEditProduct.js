@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 // import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Input } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { getAllCate } from '../../services/cateService';
-import { getAllBooks, createProduct, deleteProduct, updateProduct } from '../../services/productService';
-import Lightbox from 'react-image-lightbox';
+import { getAllBooks } from '../../services/productService';
+
 import 'react-image-lightbox/style.css';
 import './ModelEditProduct.scss'
 class ModelEditProduct extends Component {
@@ -171,7 +171,7 @@ class ModelEditProduct extends Component {
 
     render() {
         let arrCategory = this.state.arrCategory;
-        let arrProductStatus = this.state.arrProductStatus;
+
 
 
 

@@ -58,7 +58,7 @@ class Login extends Component {
 
         return (
             <div >
-                <div className='body'></div>
+                <div className='bodylogin'></div>
                 <div className="materialContainer"  >
                     <div className="box">
                         <div className="title">LOGIN</div>

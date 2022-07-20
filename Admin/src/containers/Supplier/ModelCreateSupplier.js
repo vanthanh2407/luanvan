@@ -1,15 +1,15 @@
-import React, { useEffect, Component } from 'react';
+import React, { Component } from 'react';
 // import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Input } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, } from 'reactstrap';
 
-import { getAllSupplier, createSupplier, deleteSupplier, updateSupplier } from '../../services/supplierService';
-import { db, storage } from '../../firebaseConnect';
-import { doc, setDoc } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL, listAll, list, uploadBytes } from "firebase/storage";
-import { v4 } from "uuid";
+import { getAllSupplier } from '../../services/supplierService';
+// import { db, storage } from '../../firebaseConnect';
+// import { doc, setDoc } from "firebase/firestore";
+// import { ref, uploadBytesResumable, getDownloadURL, listAll, list, uploadBytes } from "firebase/storage";
+// import { v4 } from "uuid";
 
-import Lightbox from 'react-image-lightbox';
+// import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 import './ModelCreateSupplier.scss'
 class ModalCreateSupplier extends Component {

@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+
 import { connect } from 'react-redux';
 
 import _ from "lodash";
-import * as actions from "../../store/actions";
+
 import { USER_ROLE } from '../../utils/constant';
 
 import './UserManage.scss';
 import { getAllPermiss } from '../../services/permissService';
-import { getAlluser, createuser, updateuser, deleteuser, GetUserByType } from '../../services/userService';
+import { getAlluser, createuser, deleteuser, GetUserByType } from '../../services/userService';
 import ModelCreateStaff from './ModelCreateStaff';
-import { db } from '../../firebaseConnect';
-import { doc, setDoc } from "firebase/firestore";
+// import { db } from '../../firebaseConnect';
+// import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 
 class UserManage extends Component {
@@ -123,7 +123,7 @@ class UserManage extends Component {
 
 
     render() {
-        const { processLogout, userInfo } = this.props;
+        const { userInfo } = this.props;
         let arrUser = this.state.arrUser;
         let arrCustomer = this.state.arrCustomer;
         let arrPermiss = this.state.arrPermiss;
@@ -179,8 +179,8 @@ class UserManage extends Component {
                                                         <td >{item.email}</td>
                                                         <td >{item.phone}</td>
                                                         {
-                                                            arrPermiss && arrPermiss.map((permiss) => {
-                                                                if (permiss.id == item.id_permission)
+                                                            arrPermiss && arrPermiss.map((permiss, index) => {
+                                                                if (permiss.id === item.id_permission)
                                                                     return <td >{permiss.permission}</td>
                                                             })
                                                         }

@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+
 import { connect } from 'react-redux';
 import './OrderManage.scss';
 import { getAllOrder, updateOrder } from '../../services/orderService';
-import { getAlluser, createuser, updateuser, deleteuser, GetUserByType } from '../../services/userService';
+import { getAlluser } from '../../services/userService';
 import { getAllStatus } from '../../services/statusService';
 
 import ModalEditOrder from './ModalEditOrder';
-import { db } from '../../firebaseConnect';
-import { doc, setDoc } from "firebase/firestore";
+// import { db } from '../../firebaseConnect';
+// import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 
 class OrderManage extends Component {
@@ -177,19 +177,19 @@ class OrderManage extends Component {
                                                 <td >{item.note}</td>
                                                 {
                                                     arrStatus && arrStatus.map((status) => {
-                                                        if (status.id == item.id_status)
+                                                        if (status.id === item.id_status)
                                                             return <td >{status.name}</td>
                                                     })
                                                 }
                                                 {
                                                     arrUser && arrUser.map((user) => {
-                                                        if (user.id == item.id_user)
+                                                        if (user.id === item.id_user)
                                                             return <td >{user.firstname}</td>
                                                     })
                                                 }
                                                 {
                                                     arrUser && arrUser.map((user) => {
-                                                        if (user.id == item.id_user)
+                                                        if (user.id === item.id_user)
                                                             return <td >{user.email}</td>
                                                     })
                                                 }
