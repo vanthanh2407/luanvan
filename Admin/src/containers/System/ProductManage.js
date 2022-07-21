@@ -7,13 +7,15 @@ import './ProductManage.scss';
 import { createProduct, deleteProduct, updateProduct, getAllProduct, GetPageProduct } from '../../services/productService';
 import ModelProduct from './ModelProduct';
 import ModelEditProduct from './ModelEditProduct';
-// import { db } from '../../firebaseConnect';
-// import { doc, setDoc } from "firebase/firestore";
+import { db, storage } from '../../firebaseConnect';
+import { doc, setDoc, serverTimestamp, addDoc, collection, getDocFromCache, query, where, getDocs } from "firebase/firestore";
+import { ref, uploadBytesResumable, getDownloadURL, listAll, list, uploadBytes, } from "firebase/storage";
+
 import { toast } from "react-toastify";
 import _ from "lodash";
 // import * as actions from "../../store/actions";
 import { USER_ROLE } from '../../utils/constant';
-// import PaginationProduct from '../../components/Pagination/Pagination';
+
 
 class ProductManage extends Component {
 
@@ -22,8 +24,12 @@ class ProductManage extends Component {
         this.state = {
             arrProduct: [],
             currentPage: 1,
+
             arrpage: [],
             arrpageCount: [],
+
+            arrImage: [],
+            arrImageReal: [],
 
 
             isOpenModalProduct: false,
@@ -37,22 +43,27 @@ class ProductManage extends Component {
     }
 
     async componentDidMount() {
+        // const querySnapshot = await getDocs(collection(db, "product"));
+        // // console.log('check arrImagezxczxczxczxczxczxczxczxczxc:', querySnapshot)
+        // querySnapshot.forEach((doc) => {
+        //     // doc.data() is never undefined for query doc snapshots
+        //     // console.log(doc.id, " => ", doc.data().dataImage);
+        //     this.setState({
+        //         arrImage: [doc.data()]
+        //     })
+        // });
 
         let resPage = await GetPageProduct(this.state.currentPage);
         if (resPage.products.count % 9 !== 0) {
             this.setState({
                 arrpageCount: Math.floor(resPage.products.count / 9) + 1
-            }, () => {
-                console.log('check count:', this.state.arrpageCount)
             })
         } else {
             this.setState({
                 arrpageCount: Math.floor(resPage.products.count / 9)
-            }, () => {
-                console.log('check count else:', this.state.arrpageCount)
             })
         }
-        console.log('check zxczxczxc:', resPage.products.count)
+
         let resopnse = await getAllProduct();
         if (resopnse && resopnse.errCode === 0) {
             this.setState({
@@ -67,8 +78,6 @@ class ProductManage extends Component {
     }
 
     async componentDidUpdate(prevProps, prevState, snapshot) {
-
-
         if (prevState.currentPage !== this.state.currentPage) {
             let resPage = await GetPageProduct(this.state.currentPage);
             if (resPage && resPage.errCode === 0) {
@@ -79,10 +88,36 @@ class ProductManage extends Component {
             this.setState({
                 arrpage: this.state.arrpage,
             })
-            // , () => {
-            //     console.log('check:', this.state.arrpage.rows)
-            // }
         }
+        // if (prevState.arrImageReal === this.state.arrImageReal) {
+        //     const querySnapshot = await getDocs(collection(db, "product"));
+        //     // console.log('check arrImagezxczxczxczxczxczxczxczxczxc:', querySnapshot)
+        //     querySnapshot.forEach((doc) => {
+        //         // doc.data() is never undefined for query doc snapshots
+        //         // console.log(doc.id, " => ", doc.data().dataImage);
+        //         this.setState({
+        //             arrImage: [doc.data()]
+        //         })
+        //     });
+
+        //     // listAll(ref(storage, "images/")).then((resopnse) => {
+        //     //     resopnse.items.forEach((item) => {
+        //     //         getDownloadURL(item).then((url) => {
+        //     //             this.setState({
+        //     //                 arrImageReal: url,
+        //     //                 // picture: this.state.fileUrl
+        //     //             }, () => {
+        //     //                 // console.log('check arrImagezxczxczxczxczxczxczxczxczxc:', this.state.arrImage)
+        //     //             })
+        //     //         })
+        //     //     })
+        //     // })
+        //     // this.setState({
+        //     //     arrImage: this.state.arrImage
+        //     // }, () => {
+        //     //     console.log('check arrImage:', this.state.arrImage)
+        //     // })
+        // }
 
     }
 
@@ -214,10 +249,13 @@ class ProductManage extends Component {
     };
     render() {
         let arrProdcut = this.state.arrProduct;
-        // console.log('check data array: ', arrProdcut)
+
         let arrpageCount = this.state.arrpage.count;
         let arrpage = this.state.arrpage.rows;
-        // console.log('check data array: ', arrpageCount)
+        let arrImage = this.state.arrImageReal;
+        // console.log('check data array: ', arrImage)
+
+
         const { userInfo } = this.props;
 
 
@@ -264,6 +302,7 @@ class ProductManage extends Component {
                                         <th>Name</th>
                                         <th>Price</th>
                                         <th>Quantity</th>
+                                        <th>Image</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -273,12 +312,19 @@ class ProductManage extends Component {
 
                                             return (
                                                 <>
-                                                    <tr>
+                                                    <tr onClick={() => { this.handleEditProduct(item) }}>
 
                                                         <td >{item.id}</td>
                                                         <td >{item.name}</td>
                                                         <td ><span className="new-price new-price-2">{new Intl.NumberFormat('vi-VN', { style: 'decimal', decimal: 'VND' }).format(item.price) + ' VNĐ'}</span></td>
                                                         <td >{item.quantity}</td>
+                                                        {/* {
+                                                            arrImage && arrImage.map((image) => {
+                                                                if (image.id === item.id_user)
+                                                                    return <td >{user.firstname}</td>
+                                                            })
+                                                        } */}
+                                                        <td><img style={{ width: '30px', height: '30px' }} src={item.picture}></img></td>
                                                         <td>
                                                             <button
                                                                 onClick={() => { this.handleEditProduct(item) }}
@@ -347,21 +393,23 @@ class ProductManage extends Component {
                                         <th>Name</th>
                                         <th>Price</th>
                                         <th>Quantity</th>
+                                        <th>Image</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
-                                        arrProdcut && arrProdcut.map((item, index) => {
+                                        arrpage && arrpage.map((item, index) => {
 
                                             return (
                                                 <>
-                                                    <tr>
+                                                    <tr onClick={() => { this.handleEditProduct(item) }} >
 
                                                         <td >{item.id}</td>
                                                         <td >{item.name}</td>
                                                         <td ><span className="new-price new-price-2">{new Intl.NumberFormat('vi-VN', { style: 'decimal', decimal: 'VND' }).format(item.price) + ' VNĐ'}</span></td>
                                                         <td >{item.quantity}</td>
+                                                        <td><img style={{ width: '30px', height: '30px' }} src={item.picture}></img></td>
                                                         <td>
                                                             <button
                                                                 onClick={() => { this.handleEditProduct(item) }}
@@ -375,7 +423,14 @@ class ProductManage extends Component {
                                 </tbody>
                             </table>
                         </div>
-
+                        <div>
+                            <Pagination
+                                currentPage={this.state.currentPage}
+                                totalPages={this.state.arrpageCount}
+                                changeCurrentPage={this.changeCurrentPage}
+                                theme="square-i"
+                            />
+                        </div>
 
 
 

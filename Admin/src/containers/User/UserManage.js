@@ -237,7 +237,12 @@ class UserManage extends Component {
                                                         <td >{item.lastname}</td>
                                                         <td >{item.email}</td>
                                                         <td >{item.phone}</td>
-                                                        <td >{item.id_permission}</td>
+                                                        {
+                                                            arrPermiss && arrPermiss.map((permiss, index) => {
+                                                                if (permiss.id === item.id_permission)
+                                                                    return <td >{permiss.permission}</td>
+                                                            })
+                                                        }
                                                     </tr>
                                                 </>
                                             )

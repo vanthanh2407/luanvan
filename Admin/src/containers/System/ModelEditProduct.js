@@ -420,28 +420,6 @@ class ModelEditProduct extends Component {
                                         >
 
                                         </div>
-
-                                    </div>
-                                    <div>
-                                        <label for="card-num">Product Display Status </label>
-                                        <select className='form-control'
-                                            onChange={(event) => { this.onChageInput(event, 'status') }}
-                                        >
-                                            <option>Co</option>
-                                            <option>Khong</option>
-                                            {/* {
-                                                arrProductStatus && arrProductStatus.map((item, index) => {
-                                                    // console.log('check id cate: ', item.id);
-                                                    return (
-
-                                                        <>
-                                                            <option >{item.status}</option>
-                                                        </>
-                                                    )
-                                                })
-
-                                            } */}
-                                        </select>
                                     </div>
                                     <div>
                                         <label for="card-num">Category</label>

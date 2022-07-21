@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import './BannerManage.scss';
 import { getAllBanner, createBanner, deleteBanner, updateBanner, FindByIdBanner } from '../../services/bannerService';
+import { getAllProduct } from '../../services/productService';
 import ModalCreateBanner from './ModalCreateBanner';
 import ModalEditBanner from './ModalEditBanner';
 import { db } from '../../firebaseConnect';
@@ -18,6 +19,7 @@ class BannerManage extends Component {
         super(props);
         this.state = {
             arrBanner: [],
+            arrProduct: [],
 
             arrBannerFromParent: [],
 
@@ -37,6 +39,12 @@ class BannerManage extends Component {
                 arrBanner: resopnse.banner
             })
 
+        }
+        let resProduct = await getAllProduct();
+        if (resProduct && resProduct.errCode === 0) {
+            this.setState({
+                arrProduct: resProduct.product
+            })
         }
 
     }
@@ -135,6 +143,7 @@ class BannerManage extends Component {
     }
     render() {
         let arrBanner = this.state.arrBanner;
+        let { arrProduct } = this.state;
         const { processLogout, userInfo } = this.props;
 
 
@@ -198,8 +207,13 @@ class BannerManage extends Component {
                                                         <tr>
 
                                                             <td >{item.id}</td>
-                                                            <td >{item.picture}</td>
-                                                            <td>{item.id_product}</td>
+                                                            <td><img style={{ width: '70px', height: '40px' }} src={item.picture}></img></td>
+                                                            {
+                                                                arrProduct && arrProduct.map((product) => {
+                                                                    if (product.id === item.id_product)
+                                                                        return <td >{product.name}</td>
+                                                                })
+                                                            }
 
                                                             <td>
                                                                 <button
@@ -276,8 +290,13 @@ class BannerManage extends Component {
                                                     <>
                                                         <tr>
                                                             <td >{item.id}</td>
-                                                            <td >{item.picture.substring(0, 45) + "..."}</td>
-                                                            <td>{item.id_product}</td>
+                                                            <td><img style={{ width: '70px', height: '40px' }} src={item.picture}></img></td>
+                                                            {
+                                                                arrProduct && arrProduct.map((product) => {
+                                                                    if (product.id === item.id_product)
+                                                                        return <td >{product.name}</td>
+                                                                })
+                                                            }
 
                                                             <td>
                                                                 <button

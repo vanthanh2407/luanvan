@@ -11,6 +11,7 @@ import ReceiptManage from '../containers/Receipt/ReceiptManage';
 import SupplierManage from '../containers/Supplier/SupplierManage';
 import UserManage from '../containers/User/UserManage';
 import OrderManage from '../containers/Order/OrderManage';
+import DetailOrderManage from '../containers/Order/DetailOrderManage';
 
 
 
@@ -36,10 +37,11 @@ class System extends Component {
                             <Route path="/system/receipt-manage" component={ReceiptManage} />
                             <Route path="/system/supplier-manage" component={SupplierManage} />
                             <Route path="/system/user-manage" component={UserManage} />
+                            <Route path="/system/detailorder-manage" component={DetailOrderManage} />
 
 
 
-                            <Route component={() => { return (<Redirect to={systemMenuPath} />) }} />
+                            {/* <Route component={() => { return (<Redirect to={systemMenuPath} />) }} /> */}
                         </Switch>
                     </BrowserRouter>
 

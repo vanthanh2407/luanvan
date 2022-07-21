@@ -32,7 +32,7 @@ class CommentManage extends Component {
 
     async componentDidMount() {
         let resUser = await getAlluser();
-        let resProduct = await getAllProduct();
+
         let resopnse = await getAllComment();
         if (resopnse && resopnse.errCode === 0) {
             this.setState({
@@ -44,6 +44,7 @@ class CommentManage extends Component {
                 arrUser: resUser.user
             })
         }
+        let resProduct = await getAllProduct();
         if (resProduct && resProduct.errCode === 0) {
             this.setState({
                 arrProduct: resProduct.product
@@ -61,69 +62,6 @@ class CommentManage extends Component {
 
         }
     }
-    // handleCreateNewProduct = () => {
-    //     this.setState({
-    //         isOpenModalProduct: true
-    //     })
-    // }
-    // toggleProductModal = () => {
-    //     this.setState({
-    //         isOpenModalProduct: !this.state.isOpenModalProduct,
-    //     })
-    // }
-
-    // handleEditProduct = () => {
-    //     this.setState({
-    //         isOpenModalEditProduct: true
-    //     })
-    // }
-    // toggleProductModalEdit = () => {
-    //     this.setState({
-    //         isOpenModalEditProduct: !this.state.isOpenModalEditProduct,
-    //     })
-    // }
-
-    // createProductModal = async (data) => {
-    //     // data.preventDefault()
-    //     // await setDoc(doc(db, "cities", "LA"), {
-    //     //     name: "Los Angeles",
-    //     //     state: "CA",
-    //     //     country: "USA"
-    //     // });
-    //     try {
-    //         let res = await createProduct(data);
-    //         if (res) {
-    //             toast.success("Create Product Success");
-    //             this.handleGetAllProduct();
-    //             this.setState({
-    //                 isOpenModalProduct: false,
-    //                 errMessage: res.errMessage,
-    //                 errCode: res.errCode
-    //             })
-    //             console.log('check api product', this.state.errMessage)
-    //         } else { toast.error("Create Product Failed"); }
-
-    //     } catch (error) {
-
-    //         console.log(error)
-    //     }
-    // }
-    // editProductModal = async (data) => {
-    //     try {
-    //         let res = await updateProduct(data);
-    //         if (res) {
-    //             toast.success("Update Product Success");
-    //             this.handleGetAllProduct();
-    //             this.setState({
-    //                 isOpenModalEditProduct: false,
-    //                 errMessage: res.errMessage,
-    //                 errCode: res.errCode
-    //             })
-    //         }
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
     handleDeleteComment = async (comment) => {
         try {
             let res = await deleteComment(comment.id)
@@ -139,29 +77,14 @@ class CommentManage extends Component {
     }
 
 
-    // handleTestHidden = () => {
-    //     alert("check check");
-    // }
 
-
-    // handleEditProduct = (product) => {
-
-    //     this.setState({
-    //         isOpenModalEditProduct: true,
-    //         arrCommentFromParent: product
-    //     })
-    // }
     render() {
         let arrComment = this.state.arrComment;
-        // console.log('check product', arrComment)
+        let { arrUser, arrProduct } = this.state;
         return (
             <>
                 <div className='header-listproduct'>
-                    {/* <button className='button-add' type="button"
-                        onClick={() => this.handleCreateNewProduct()}
-                    >
-                        <i className='fa fa-plus '> Add New Product</i>
-                    </button> */}
+
 
                     <h2>List Comment</h2>
                 </div>
@@ -173,7 +96,7 @@ class CommentManage extends Component {
                                 <th>Id</th>
                                 <th>Content</th>
                                 <th>Start</th>
-                                <th>Status</th>
+
                                 <th>Name Product</th>
                                 <th>User</th>
                                 <th>Action</th>
@@ -190,9 +113,19 @@ class CommentManage extends Component {
                                                 <td >{item.id}</td>
                                                 <td >{item.content}</td>
                                                 <td >{item.star}</td>
-                                                <td >{item.status}</td>
-                                                <td >{item.id_product}</td>
-                                                <td >{item.id_user}</td>
+                                                {
+                                                    arrProduct && arrProduct.map((product) => {
+                                                        if (product.id === item.id_product)
+                                                            return <td >{product.name}</td>
+                                                    })
+                                                }
+                                                {
+                                                    arrUser && arrUser.map((user) => {
+                                                        if (user.id === item.id_user)
+                                                            return <td >{user.firstname}</td>
+                                                    })
+                                                }
+
                                                 <td>
                                                     {/* <button
                                                         onClick={() => { this.handleEditProduct(item) }}

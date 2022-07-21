@@ -192,7 +192,7 @@ class SupplierManage extends Component {
 
                                                 <td >{item.id}</td>
                                                 <td >{item.name}</td>
-                                                <td >{item.picture.substring(0, 100) + "..."}</td>
+                                                <td><img style={{ width: '30px', height: '30px' }} src={item.picture}></img></td>
                                                 <td >{item.phone}</td>
                                                 <td >{item.address}</td>
                                                 <td >{item.email}</td>

@@ -186,6 +186,7 @@ class CateManage extends Component {
                                         <tr>
                                             <th>Id</th>
                                             <th>Name</th>
+
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -197,6 +198,7 @@ class CateManage extends Component {
                                                         <tr>
                                                             <td >{item.id}</td>
                                                             <td >{item.category}</td>
+
                                                             <td>
                                                                 <button
                                                                     onClick={() => { this.handleEditCate(item) }}

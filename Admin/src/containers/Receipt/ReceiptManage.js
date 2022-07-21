@@ -14,7 +14,7 @@ class ReceiptManage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            arrProdcut: [],
+            arrReceipt: [],
             isOpenModalProduct: false,
             isOpenModalEditProduct: false,
             arrProdcutFromParent: [],
