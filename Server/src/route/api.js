@@ -15,7 +15,10 @@ import orderController from "../controllers/orderController";
 
 import newsControllerServer from "../controllers/admin/newsController";
 import receiptControllerServer from "../controllers/admin/receiptController";
-
+import productControllerServer from "../controllers/admin/productController";
+import userControllerServer from "../controllers/admin/userController";
+import orderControllerServer from "../controllers/admin/orderController";
+import statusControllerServer from "../controllers/admin/statusController";
 
 
 
@@ -35,8 +38,10 @@ let initUserRouter = (app) => {
     router.put('/update-user', userController.handleUpdateUser);
     router.post('/login', userController.handleLogin);
     router.post('/loginTest', userController.handleLoginTest);
-
     router.get('/search-user', userController.handleSearchUser);
+
+    router.get('/searchByType', userControllerServer.handleUserByType); // ben server
+
 
     // Permission
     router.get('/permiss', permiss.handleGetAllPermiss);
@@ -60,6 +65,10 @@ let initUserRouter = (app) => {
     router.post('/create-product', productController.handleCreateProduct);
     router.put('/update-product', productController.handleUpdateProduct);
     router.delete('/delete-product', productController.handleDeleteProduct);
+
+    router.get('/product', productControllerServer.handleGetAllProduct); /// ben server
+    router.get('/product-page', productControllerServer.handleGetPageProduct); /// ben server
+
 
 
     //coupon 
@@ -118,6 +127,13 @@ let initUserRouter = (app) => {
     router.post('/create-receipt', receiptControllerServer.handleCreateReceipt);
     router.put('/update-receipt', receiptControllerServer.handleUpdateReceipt);
     router.delete('/delete-receipt', receiptControllerServer.handleDeleteReceipt);
+
+    // order 
+    router.get('/order', orderControllerServer.handleGetAllOrder);
+    router.put('/update-order', orderControllerServer.handleUpdateOrderStatus);
+
+    // status
+    router.get('/status', statusControllerServer.handleGetAllStatus);
 
 
     router.get('/anhquoc', (req, res) => {

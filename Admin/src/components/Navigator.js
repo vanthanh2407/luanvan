@@ -3,6 +3,10 @@ import { Link, NavLink, withRouter, BrowserRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import * as actions from "../store/actions";
+import _ from "lodash";
+
+// import * as actions from "../../store/actions";
+import { USER_ROLE } from '../utils/constant';
 
 import './Navigator.scss';
 
@@ -104,54 +108,82 @@ class Navigator extends Component {
 
 
     render() {
-        const { menus, location, onLinkClick, processLogout } = this.props;
-        return (
-            <div>
-                <details>
-                    <summary></summary>
-                    <nav className="menu">
-                        <NavLink to="/" activeClassName='active' exact={true}>Home</NavLink>
-                        <NavLink to="/product" activeClassName='active' >Product</NavLink>
-                        <NavLink to="/category" activeClassName='active' >Category</NavLink>
-                        <NavLink to="/banner" activeClassName='active' >Banner</NavLink>
-                        <NavLink to="/news" activeClassName='active' >News</NavLink>
-                        <NavLink to="/comment" activeClassName='active' >Comment</NavLink>
-                        <NavLink to="/user" activeClassName='active' >User</NavLink>
-                        <NavLink to="/order" activeClassName='active' >Order</NavLink>
-                        <NavLink to="/coupon" activeClassName='active' >Coupon</NavLink>
-                        <NavLink to="/supplier" activeClassName='active' >Supplier</NavLink>
-                        <NavLink to="/receipt" activeClassName='active' >Receipt</NavLink>
-
-
-
-
-
-                        {/* <a href="/">Home</a>
-                        <a href="/product">Product</a>
-                        <a href="/category">Category</a>
-                        <a href="/banner">Banner</a>
-                        <a href="/news">News</a>
-                        <a href="/comment">Comment</a>
-                        <a href="/user">User</a>
-                        <a href="/order">Order</a>
-                        <a href="/coupon">Coupon</a>
-                        <a href="/supplier">Supplier</a>
-                        <a href="/receipt">Receipt</a> */}
-                        <a>
-                            <div className="btn btn-logout" onClick={processLogout}>
-                                <i className="fas fa-sign-out-alt"></i>
+        const { menus, location, onLinkClick, processLogout, userInfo } = this.props;
+        if (userInfo && !_.isEmpty(userInfo)) {
+            let role = userInfo.id_permission;
+            if (role === USER_ROLE.ADMIN) {
+                return (
+                    <div>
+                        <div className="container-nav">
+                            <div className="card">
+                                <div className="header">
+                                    <h3>Manager</h3>
+                                </div>
+                                <div className="body">
+                                    <ul>
+                                        <li><i className="fas fa-home icon"></i> <a className='disable-gachchan' href='/system/'>Home</a></li>
+                                        <li><i className="fas fa-boxes icon"></i> <a className='disable-gachchan' href='/system/product-manage'>Product</a></li>
+                                        <li><i className="fas fa-boxes icon"></i> <a className='disable-gachchan' href='/system/cate-manage'>Category</a></li>
+                                        <li><i className="fas fa-table icon"></i>  <a className='disable-gachchan' href='/system/banner-manage'>Banner</a></li>
+                                        <li><i className="fab fa-wpforms icon"></i> <a className='disable-gachchan' href='/system/news-manage'>News </a></li>
+                                        <li><i className="fas fa-comment icon"></i>  <a className='disable-gachchan' href='/system/comment-manage'>Comment</a></li>
+                                        <li><i className="fas fa-user-alt icon"></i>  <a className='disable-gachchan' href='/system/user-manage'> User</a></li>
+                                        <li><i className="fa fa-indent icon "></i>  <a className='disable-gachchan' href='/system/order-manage'>Order</a></li>
+                                        <li><i className="fas fa-gift icon"></i>  <a className='disable-gachchan' href='/system/coupon-manage'>Coupon</a></li>
+                                        <li><i className="fas fa-building icon"></i>  <a className='disable-gachchan' href='/system/supplier-manage'>Supplier</a></li>
+                                        <li><i className="fas fa-receipt icon"></i> <a className='disable-gachchan' href='/system/receipt-manage'>Receipt</a></li>
+                                        <li>
+                                            <div className="btn btn-logout" onClick={processLogout}>
+                                                <i className="fas fa-sign-out-alt icon"></i>Logout
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                        </a>
-                    </nav>
-                </details>
-            </div>
+                        </div>
+                    </div>
 
-        );
+                );
+            } else if (role === USER_ROLE.STAFF) {
+                return (
+                    <div>
+                        <div className="container-nav">
+                            <div className="card">
+                                <div className="header">
+                                    <h3>Manager</h3>
+                                </div>
+                                <div className="body">
+                                    <ul>
+                                        <li><i className="fas fa-home icon"></i> <a href='/system/'>Home</a></li>
+                                        <li><i className="fas fa-boxes icon"></i><a href='/system/product-manage'>Product</a></li>
+                                        <li><i className="fas fa-boxes icon"></i> <a href='/system/cate-manage'>Category</a></li>
+                                        <li><i className="fas fa-table icon"></i>  <a href='/system/banner-manage'>Banner</a></li>
+                                        <li><i className="fab fa-wpforms icon"></i> <a href='/system/news-manage'>News </a></li>
+                                        <li><i className="fas fa-chart-pie icon"></i>  <a href='/system/comment-manage'>Comment</a></li>
+                                        <li><i className="fas fa-chart-pie icon"></i>  <a href='/system/user-manage'>User</a></li>
+                                        <li><i className="fas fa-chart-pie icon"></i>  <a href='/system/order-manage'>Order</a></li>
+                                        <li><i className="fas fa-chart-pie icon"></i>  <a href='/system/coupon-manage'>Coupon</a></li>
+                                        <li><i className="fas fa-chart-pie icon"></i>  <a href='/system/receipt-manage'>Receipt</a></li>
+                                        <li>
+                                            <div className="btn btn-logout" onClick={processLogout}>
+                                                <i className="fas fa-sign-out-alt">Logout</i>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        }
+
     }
 }
 
 const mapStateToProps = state => {
     return {
+        userInfo: state.admin.userInfo
     };
 };
 

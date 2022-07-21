@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     };
     News.init({
         name: DataTypes.STRING,
-        date: DataTypes.DATE,
+        // date: DataTypes.DATE,
         content: DataTypes.STRING,
         picture: DataTypes.STRING,
         id_user: DataTypes.INTEGER,

@@ -1,15 +1,16 @@
-import React, { useEffect, Component } from 'react';
+import React, { Component } from 'react';
+import CommonUtils from '../../utils/CommonUtils';
 // import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Input } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { getAllCate } from '../../services/cateService';
-import { getAllBooks, createProduct, deleteProduct, updateProduct } from '../../services/productService';
+import { getAllBooks } from '../../services/productService';
 import { db, storage } from '../../firebaseConnect';
-import { doc, setDoc } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL, listAll, list, uploadBytes } from "firebase/storage";
-import { v4 } from "uuid";
+import { doc, setDoc, serverTimestamp, addDoc, collection, getDocFromCache, query, where, getDocs } from "firebase/firestore";
+import { ref, uploadBytesResumable, getDownloadURL, listAll, list, uploadBytes, } from "firebase/storage";
+// import { v4 } from "uuid";
 
-import Lightbox from 'react-image-lightbox';
+// import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 import './ModelProduct.scss'
 class ModelProduct extends Component {
@@ -20,11 +21,7 @@ class ModelProduct extends Component {
             arrProductStatus: [],
             previewImageURL: '',
 
-            imageUpload: null,
-            setImageUpload: null,
 
-            fileUrl: [],
-            setFileUrl: [],
 
             arrProductFromParent: [],
 
@@ -34,7 +31,7 @@ class ModelProduct extends Component {
             name: null,
             price: null,
             quantity: null,
-            picture: null,
+            picture: '',
             content: null,
             summary: null,
             ram: null,
@@ -61,10 +58,35 @@ class ModelProduct extends Component {
             id_cate: '',
 
 
+            imageUpload: null,
+            setImageUpload: null,
+
+            fileUrl: '',
+
+
         }
     }
 
     async componentDidMount() {
+        // const querySnapshot = await getDocs(collection(db, "product"));
+        // querySnapshot.forEach((doc) => {
+        //     // doc.data() is never undefined for query doc snapshots
+        //     console.log(doc.id, " => ", doc.data().dataImage);
+        // });
+        // const q = query(collection(db, "cities"), where("LA", "==", true));
+        // console.log('check q:', q);
+        // const querySnapshot = await getDocs(q);
+        // console.log('check query:', querySnapshot);
+        // querySnapshot.forEach((doc) => {
+        //     // doc.data() is never undefined for query doc snapshots
+        //     console.log(doc.id, " => ", doc.data());
+        // });
+        // try {
+        //     const doc = await getDocFromCache(docRef);
+        //     console.log("Cached document data:", doc.data());
+        // } catch (error) {
+        //     console.log(error);
+        // }
         let resopnseStatus = await getAllBooks();
         let resopnse = await getAllCate();
 
@@ -72,44 +94,53 @@ class ModelProduct extends Component {
             this.setState({
                 arrCategory: resopnse.user
             })
-
         }
         if (resopnseStatus && resopnseStatus.errCode === 0) {
             this.setState({
                 arrProductStatus: resopnseStatus.product
-
             })
-
         }
-        // let arrProductFromParent =
-        //     this.props.handleEditProductFromParent('data from parent')
-        // this.props.handleEditProduct(arrProductFromParent)
-
     }
     toggle = () => {
         this.props.toggleProduct();
     }
-    handleOnchangeImage = (event) => {
+    handleOnchangeImage = async (event) => {
         let data = event.target.files;
         let file = data[0];
         if (file) {
+
+            // console.log('check image: ', base64)
             let objectURL = URL.createObjectURL(file);
             this.setState({
                 previewImageURL: objectURL,
                 picture: file
             }, () => {
-                console.log('check state hinh anh: ', this.state.picture)
+                console.log('check name picture:', this.state.picture.name)
+
             })
         }
 
     }
-    componentDidUpdate(prevState, prevProps, snapshot) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevState.picture !== this.state.picture) {
+            console.log('check prestate: ', prevState.picture);
+            let uploadImageToFirebase = ref(storage, `images/${this.state.picture.name}`);
 
+            uploadBytes(uploadImageToFirebase, this.state.picture)
+                .then((snapshot) => {
+                    getDownloadURL(snapshot.ref).then((url) => {
+                        this.setState({
+                            fileUrl: url,
+                            // picture: this.state.fileUrl
+                        })
+                        // console.log('check url', url.slice((-36, -1) + 1))
+
+                        console.log('check picture', this.state.fileUrl)
+                    })
+                })
+        }
     }
-    // useEffect = ((loadImage)=>{
-    //     if(useEffect.po)
 
-    // },[file]);
 
     checkValueInput = () => {
         let isValid = true;
@@ -119,7 +150,6 @@ class ModelProduct extends Component {
 
             if (!this.state[arrCheck[i]]) {
                 isValid = false;
-
                 alert('This input is required: ' + arrCheck[i]);
                 break;
             }
@@ -134,14 +164,27 @@ class ModelProduct extends Component {
             isOpen: true
         })
     }
-    handleAddnew = async (data) => {
+    handleAddnew = async () => {
+        let dataImage = ''
 
-
-
+        try {
+            let dataId = await addDoc(collection(db, "product"), {
+                dataImage: this.state.fileUrl,
+                timeStamp: serverTimestamp(),
+            });
+            this.setState({
+                picture: dataId.id
+            })
+            console.log('check dataId: ', this.state.picture)
+            console.log('check state: ', this.state)
+        } catch (error) {
+            console.log(error)
+        }
         let isValid = this.checkValueInput();
         if (isValid === true) {
             this.props.createProductModal(this.state)
         }
+
     }
     onChageInput = (event, id) => {
         let copystate = { ...this.state }
@@ -151,27 +194,32 @@ class ModelProduct extends Component {
         })
     }
     upLoadImage = () => {
-        // imageUpload: null,
-        // setImageUpload: null,
+        let uploadImageToFirebase = ref(storage, `images/${this.state.picture.name}`);
 
-        // fileUrl: [],
-        // setFileUrl: [],
-        if (this.state.imageUpload === null) return;
-        const imageREf = ref(storage, `images/${this.state.imageUpload.name + v4()}`);
-        uploadBytes(imageREf, this.state.imageUpload).then(() => {
-            console.log('check upload anh', imageREf)
-        })
+        uploadBytes(uploadImageToFirebase, this.state.picture)
+            .then((snapshot) => {
+                getDownloadURL(snapshot.ref).then((url) => {
+                    this.setState({
+                        fileUrl: url,
+                        // picture: this.state.fileUrl
+                    })
+                    // console.log('check url', url.slice((-36, -1) + 1))
+                    console.log('check url', this.state.fileUrl)
+                    console.log('check picture', this.state.picture)
+                })
+            })
 
     }
 
     render() {
         let arrCategory = this.state.arrCategory;
-        let arrProductStatus = this.state.arrProductStatus;
+
         let {
             name, price, quantity, picture, content, summary, ram, chip, card, display, memory, port, operation, pin, dpi, micro_switch, scroll_switch,
             durability, keyboard_type, model, connect, weight, size, color, material, insurance, status, id_cate
         } = this.state;
-        // console.log('check anh: ', imageREf)
+        // console.log('check anh: ', picture)
+        // console.log('check url state: ', picture)
         return (
             <Modal isOpen={this.props.isOpen}
                 toggle={() => { this.toggle() }}
@@ -404,7 +452,7 @@ class ModelProduct extends Component {
                                         <label for="card-num">Image</label>
                                         <input type="file"
                                             // value={picture}
-                                            onChange={(event) => this.handleOnchangeImage(event)}
+                                            onChange={(event) => { this.handleOnchangeImage(event) }}
 
                                         />
                                         <div className='preview-image'
@@ -484,7 +532,7 @@ class ModelProduct extends Component {
                 <ModalFooter>
                     <Button
                         color="primary"
-                        onClick={() => { this.handleAddnew(); this.upLoadImage(); }}
+                        onClick={() => { this.handleAddnew(); }} //this.upLoadImage();
                     >
                         Add new
                     </Button>

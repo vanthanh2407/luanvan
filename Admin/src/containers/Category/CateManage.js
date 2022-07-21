@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import './CateManage.scss';
+
+import _ from "lodash";
+import * as actions from "../../store/actions";
+import { USER_ROLE } from '../../utils/constant';
+
 import { getAllCate, createCate, deleteCate, updateCate, FindByIdCate } from '../../services/cateService';
 import ModalCreateCate from './ModalCreateCate';
 import ModalEditCate from './ModalEditCate';
@@ -133,95 +138,171 @@ class CateManage extends Component {
     }
     render() {
         let arrCate = this.state.arrCate;
+        const { processLogout, userInfo } = this.props;
         // console.log('check product', arrProdcut)
-        return (
-            <>
-                <ModalCreateCate
-                    isOpen={this.state.isOpenModalProduct}
-                    toggleProduct={this.toggleProductModal}
 
-                    createCateModal={this.createCateModal}
+        if (userInfo && !_.isEmpty(userInfo)) {
+            let role = userInfo.id_permission;
+            if (role === USER_ROLE.ADMIN) {
+                return (
+                    <>
+                        <ModalCreateCate
+                            isOpen={this.state.isOpenModalProduct}
+                            toggleProduct={this.toggleProductModal}
 
-                    errMessage={this.state.errMessage}
-                    errCode={this.state.errCode}
+                            createCateModal={this.createCateModal}
 
-                    handleEditCate={this.handleEditCate}
+                            errMessage={this.state.errMessage}
+                            errCode={this.state.errCode}
 
-                />
+                            handleEditCate={this.handleEditCate}
 
-                {this.state.isOpenModalEditProduct && <ModalEditCate
-                    isOpen={this.state.isOpenModalEditProduct}
-                    toggleProductEdit={this.toggleProductModalEdit}
+                        />
 
-                    editCate={this.editCateModal}
-                    arrCateEdit={this.state.arrCateFromParent}
+                        {this.state.isOpenModalEditProduct && <ModalEditCate
+                            isOpen={this.state.isOpenModalEditProduct}
+                            toggleProductEdit={this.toggleProductModalEdit}
 
-                    errMessage={this.state.errMessage}
-                    errCode={this.state.errCode}
-                />}
+                            editCate={this.editCateModal}
+                            arrCateEdit={this.state.arrCateFromParent}
 
+                            errMessage={this.state.errMessage}
+                            errCode={this.state.errCode}
+                        />}
 
-                <div className='header-listproduct'>
-                    <button className='button-add' type="button"
-                        onClick={() => this.handleCreateNewCate()}
-                    >
-                        <i className='fa fa-plus '> Add New Category</i>
-                    </button>
+                        <div className='category'>
+                            <div className='header-listproduct'>
+                                <button className='button-add' type="button"
+                                    onClick={() => this.handleCreateNewCate()}
+                                >
+                                    <i className='fa fa-plus '> Add New Category</i>
+                                </button>
 
-                    <h2>List Category</h2>
-                </div>
+                                <h2>List Category</h2>
+                            </div>
+                            <div className="table-wrapper">
+                                <table className="fl-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Name</th>
 
-                <div className="table-wrapper">
-                    <table className="fl-table">
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Name</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                arrCate && arrCate.map((item, index) => {
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            arrCate && arrCate.map((item, index) => {
+                                                return (
+                                                    <>
+                                                        <tr>
+                                                            <td >{item.id}</td>
+                                                            <td >{item.category}</td>
 
-                                    return (
-                                        <>
-                                            <tr>
-
-                                                <td >{item.id}</td>
-                                                <td >{item.category}</td>
-
-                                                <td>
-                                                    <button
-                                                        onClick={() => { this.handleEditCate(item) }}
-                                                        className='button-style-eidt' type='button' ><i className="fas fa-pencil-alt"></i></button>
-                                                    <button
-                                                        onClick={() => { this.handleDeleteProduct(item) }}
-                                                        className='button-style-delete' type='button'><i className="fa fa-trash"></i></button>
-                                                </td>
-                                            </tr>
-                                        </>
-                                    )
-                                })
-                            }
-                        </tbody>
-                    </table>
-                </div>
-                {/* <div>zxc,nzx,cmnz,xcmnz,xcnz,cn,mzxcn,mzcn,mznxc,mznxc,nz,xcn,mznxc,</div> */}
-
-
-
-
+                                                            <td>
+                                                                <button
+                                                                    onClick={() => { this.handleEditCate(item) }}
+                                                                    className='button-style-eidt' type='button' ><i className="fas fa-pencil-alt"></i></button>
+                                                                <button
+                                                                    onClick={() => { this.handleDeleteProduct(item) }}
+                                                                    className='button-style-delete' type='button'><i className="fa fa-trash"></i></button>
+                                                            </td>
+                                                        </tr>
+                                                    </>
+                                                )
+                                            })
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 
 
-            </>
-        );
+
+                    </>
+                );
+            }
+            else if (role === USER_ROLE.STAFF) {
+                return (
+                    <>
+                        <ModalCreateCate
+                            isOpen={this.state.isOpenModalProduct}
+                            toggleProduct={this.toggleProductModal}
+
+                            createCateModal={this.createCateModal}
+
+                            errMessage={this.state.errMessage}
+                            errCode={this.state.errCode}
+
+                            handleEditCate={this.handleEditCate}
+
+                        />
+                        {this.state.isOpenModalEditProduct && <ModalEditCate
+                            isOpen={this.state.isOpenModalEditProduct}
+                            toggleProductEdit={this.toggleProductModalEdit}
+
+                            editCate={this.editCateModal}
+                            arrCateEdit={this.state.arrCateFromParent}
+
+                            errMessage={this.state.errMessage}
+                            errCode={this.state.errCode}
+                        />}
+                        <div className='category'>
+                            <div className='header-listproduct'>
+                                <button className='button-add' type="button"
+                                    onClick={() => this.handleCreateNewCate()}
+                                >
+                                    <i className='fa fa-plus '> Add New Category</i>
+                                </button>
+
+                                <h2>List Category</h2>
+                            </div>
+
+                            <div className="table-wrapper">
+                                <table className="fl-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Name</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            arrCate && arrCate.map((item, index) => {
+
+                                                return (
+                                                    <>
+                                                        <tr>
+                                                            <td >{item.id}</td>
+                                                            <td >{item.category}</td>
+                                                            <td>
+                                                                <button
+                                                                    onClick={() => { this.handleEditCate(item) }}
+                                                                    className='button-style-eidt' type='button' ><i className="fas fa-pencil-alt"></i></button>
+                                                            </td>
+                                                        </tr>
+                                                    </>
+                                                )
+                                            })
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </>
+                );
+            }
+        }
+
     }
 
 }
 
 const mapStateToProps = state => {
     return {
+        userInfo: state.admin.userInfo
     };
 };
 

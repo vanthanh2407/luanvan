@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+
 import { connect } from 'react-redux';
 // import './ReceiptManage.scss';
-import { getAllBooks, createProduct, deleteProduct, updateProduct, FindByIdProduct } from '../../services/productService';
+import { getAllBooks, createProduct, deleteProduct, updateProduct } from '../../services/productService';
 // import ModelProduct from './ModelProduct';
-// import ModelEditProduct from './ModelEditProduct';
-import { db } from '../../firebaseConnect';
-import { doc, setDoc } from "firebase/firestore";
+// // import ModelEditProduct from './ModelEditProduct';
+// import { db } from '../../firebaseConnect';
+// import { doc, setDoc } from "firebase/firestore"; 
 import { toast } from "react-toastify";
 
 class ReceiptManage extends Component {
@@ -14,7 +14,7 @@ class ReceiptManage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            arrProdcut: [],
+            arrReceipt: [],
             isOpenModalProduct: false,
             isOpenModalEditProduct: false,
             arrProdcutFromParent: [],

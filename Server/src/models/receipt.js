@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     };
     Receipt.init({
         name_product: DataTypes.STRING,
-        date_import: DataTypes.DATE,
+        // date_import: DataTypes.DATE,
         price: DataTypes.INTEGER,
         id_supplier: DataTypes.INTEGER,
         quantity: DataTypes.INTEGER,

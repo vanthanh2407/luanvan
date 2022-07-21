@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+
 import { connect } from 'react-redux';
-// import './SupplierManage.scss';
-import { getAllBooks, createProduct, deleteProduct, updateProduct, FindByIdProduct } from '../../services/productService';
-// import ModelProduct from './ModelProduct';
-// import ModelEditProduct from './ModelEditProduct';
-import { db } from '../../firebaseConnect';
-import { doc, setDoc } from "firebase/firestore";
+
+
+
+import './SupplierManage.scss';
+import { getAllSupplier, createSupplier, deleteSupplier, updateSupplier } from '../../services/supplierService';
+import ModelCreateSupplier from './ModelCreateSupplier';
+import ModelEditSupplier from './ModelEditSupplier';
+// import { db } from '../../firebaseConnect';
+// import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 
 class SupplierManage extends Component {
@@ -14,30 +17,34 @@ class SupplierManage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            arrProdcut: [],
+            arrSupplier: [],
+
             isOpenModalProduct: false,
             isOpenModalEditProduct: false,
-            arrProdcutFromParent: [],
+
+            arrSupplierFromParent: [],
+
             errCode: '',
             errMessage: '',
         }
     }
 
     async componentDidMount() {
-        // let resopnse = await getAllBooks();
-        // if (resopnse && resopnse.errCode === 0) {
-        //     this.setState({
-        //         arrProdcut: resopnse.product
-        //     })
+        let resopnse = await getAllSupplier();
 
-        // }
-
-    }
-    handleGetAllProduct = async () => {
-        let resopnse = await getAllBooks();
         if (resopnse && resopnse.errCode === 0) {
             this.setState({
-                arrProdcut: resopnse.product
+                arrSupplier: resopnse.supplier
+            })
+
+        }
+
+    }
+    handleGetAllSupplier = async () => {
+        let resopnse = await getAllSupplier();
+        if (resopnse && resopnse.errCode === 0) {
+            this.setState({
+                arrSupplier: resopnse.supplier
             })
 
         }
@@ -64,24 +71,18 @@ class SupplierManage extends Component {
         })
     }
 
-    createProductModal = async (data) => {
-        // data.preventDefault()
-        // await setDoc(doc(db, "cities", "LA"), {
-        //     name: "Los Angeles",
-        //     state: "CA",
-        //     country: "USA"
-        // });
+    createSupplierModal = async (data) => {
+
         try {
-            let res = await createProduct(data);
+            let res = await createSupplier(data);
             if (res) {
-                toast.success("Create Product Success");
-                this.handleGetAllProduct();
+                toast.success("Create Supplier Success");
+                this.handleGetAllSupplier();
                 this.setState({
                     isOpenModalProduct: false,
                     errMessage: res.errMessage,
                     errCode: res.errCode
                 })
-                console.log('check api product', this.state.errMessage)
             } else { toast.error("Create Product Failed"); }
 
         } catch (error) {
@@ -89,12 +90,12 @@ class SupplierManage extends Component {
             console.log(error)
         }
     }
-    editProductModal = async (data) => {
+    editSupplierModal = async (data) => {
         try {
-            let res = await updateProduct(data);
+            let res = await updateSupplier(data);
             if (res) {
-                toast.success("Update Product Success");
-                this.handleGetAllProduct();
+                toast.success("Update Supplier Success");
+                this.handleGetAllSupplier();
                 this.setState({
                     isOpenModalEditProduct: false,
                     errMessage: res.errMessage,
@@ -105,18 +106,18 @@ class SupplierManage extends Component {
             console.log(error)
         }
     }
-    handleDeleteProduct = async (product) => {
+    handleDeleteSupplier = async (Supplier) => {
         try {
-            let res = await deleteProduct(product.id)
+            let res = await deleteSupplier(Supplier.id)
             if (res) {
-                toast.success("Delete Product Success");
-                this.handleGetAllProduct();
-            } else { toast.error("Delete Product Failed"); }
+                toast.success("Delete Supplier Success");
+                this.handleGetAllSupplier();
+            }
         } catch (error) {
-            toast.error("Delete Product Failed");
+            toast.error("Delete Supplier Failed");
             console.log(error)
         }
-        console.log('check delete product', product);
+
     }
 
 
@@ -125,34 +126,34 @@ class SupplierManage extends Component {
     // }
 
 
-    handleEditProduct = (product) => {
+    handleEditSupplier = (Supplier) => {
 
         this.setState({
             isOpenModalEditProduct: true,
-            arrProdcutFromParent: product
+            arrSupplierFromParent: Supplier
         })
     }
     render() {
-        // let arrProdcut = this.state.arrProdcut;
-        // console.log('check product', arrProdcut)
+        let arrSupplier = this.state.arrSupplier;
+        // console.log('check product', arrSupplier)
         return (
             <>
-                {/* <ModelProduct
+                <ModelCreateSupplier
                     isOpen={this.state.isOpenModalProduct}
                     toggleProduct={this.toggleProductModal}
-                    createProductModal={this.createProductModal}
+                    createSupplierModal={this.createSupplierModal}
                     errMessage={this.state.errMessage}
                     errCode={this.state.errCode}
 
-                    handleEditProduct={this.handleEditProduct}
+                    handleEditSupplier={this.handleEditSupplier}
 
                 />
 
-                {this.state.isOpenModalEditProduct && <ModelEditProduct
+                {this.state.isOpenModalEditProduct && <ModelEditSupplier
                     isOpen={this.state.isOpenModalEditProduct}
                     toggleProductEdit={this.toggleProductModalEdit}
-                    editProduct={this.editProductModal}
-                    arrProdcutEdit={this.state.arrProdcutFromParent}
+                    editSupplier={this.editSupplierModal}
+                    arrSupplierEdit={this.state.arrSupplierFromParent}
                     errMessage={this.state.errMessage}
                     errCode={this.state.errCode}
                 />}
@@ -162,10 +163,10 @@ class SupplierManage extends Component {
                     <button className='button-add' type="button"
                         onClick={() => this.handleCreateNewProduct()}
                     >
-                        <i className='fa fa-plus '> Add New Product</i>
+                        <i className='fa fa-plus '> Add New Supplier</i>
                     </button>
-                   
-                    <h2>List Product</h2>
+
+                    <h2>List Supplier</h2>
                 </div>
 
                 <div className="table-wrapper">
@@ -174,14 +175,16 @@ class SupplierManage extends Component {
                             <tr>
                                 <th>Id</th>
                                 <th>Name</th>
-                                <th>Price</th>
-                                <th>Quantity</th>
+                                <th>Picture</th>
+                                <th>Phone</th>
+                                <th>Address</th>
+                                <th>Email</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             {
-                                arrProdcut && arrProdcut.map((item, index) => {
+                                arrSupplier && arrSupplier.map((item, index) => {
 
                                     return (
                                         <>
@@ -189,14 +192,16 @@ class SupplierManage extends Component {
 
                                                 <td >{item.id}</td>
                                                 <td >{item.name}</td>
-                                                <td ><span className="new-price new-price-2">{new Intl.NumberFormat('vi-VN', { style: 'decimal', decimal: 'VND' }).format(item.price) + ' VNĐ'}</span></td>
-                                                <td >{item.quantity}</td>
+                                                <td><img style={{ width: '30px', height: '30px' }} src={item.picture}></img></td>
+                                                <td >{item.phone}</td>
+                                                <td >{item.address}</td>
+                                                <td >{item.email}</td>
                                                 <td>
                                                     <button
-                                                        onClick={() => { this.handleEditProduct(item) }}
+                                                        onClick={() => { this.handleEditSupplier(item) }}
                                                         className='button-style-eidt' type='button' ><i className="fas fa-pencil-alt"></i></button>
                                                     <button
-                                                        onClick={() => { this.handleDeleteProduct(item) }}
+                                                        onClick={() => { this.handleDeleteSupplier(item) }}
                                                         className='button-style-delete' type='button'><i className="fa fa-trash"></i></button>
                                                 </td>
                                             </tr>
@@ -206,8 +211,8 @@ class SupplierManage extends Component {
                             }
                         </tbody>
                     </table>
-                </div> */}
-                <div>Supplier</div>
+                </div>
+
 
 
 

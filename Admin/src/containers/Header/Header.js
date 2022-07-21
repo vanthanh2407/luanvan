@@ -6,7 +6,7 @@ import * as actions from "../../store/actions";
 import Navigator from '../../components/Navigator';
 import { adminMenu } from './menuApp';
 import './Header.scss';
-import { USER_ROLE } from '../../utils/constant';
+// import { USER_ROLE } from '../../utils/constant';
 
 class Header extends Component {
 
@@ -18,24 +18,25 @@ class Header extends Component {
     }
 
     componentDidMount() {
-        let { userInfo } = this.props;
-        if (userInfo && !_.isEmpty(userInfo)) {
-            let role = userInfo.id_permission;
-            if (role === USER_ROLE.ADMIN) {
+        // let { userInfo } = this.props;
+        // if (userInfo && !_.isEmpty(userInfo)) {
+        //     let role = userInfo.id_permission;
+        //     if (role === USER_ROLE.ADMIN) {
+        //         <Navigator></Navigator>
+        //     }
+        //     if (role === USER_ROLE.STAFF) {
 
-            }
-            if (role === USER_ROLE.STAFF) {
+        //     }
+        //     if (role === USER_ROLE.CUSTOMER) {
 
-            }
-            if (role === USER_ROLE.CUSTOMER) {
-
-            }
-        }
+        //     }
+        // }
     }
     render() {
         const { processLogout, userInfo } = this.props;
 
-        console.log('check user: ', userInfo)
+
+
         return (
             <div className="header-container">
                 <div className='hello'>
