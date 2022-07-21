@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import io from "socket.io-client";
-import './Checkout.css'
-import OrderAPI from '../API/OrderAPI';
-import Paypal from './Paypal';
+import { useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
-import { Redirect } from 'react-router-dom';
-import { changeCount } from '../Redux/Action/ActionCount';
 import { useDispatch, useSelector } from 'react-redux';
-import NoteAPI from '../API/NoteAPI';
-import Detail_OrderAPI from '../API/Detail_OrderAPI';
+import { Redirect } from 'react-router-dom';
+import io from "socket.io-client";
 import CouponAPI from '../API/CouponAPI';
-import MoMo from './MoMo.jsx'
+import Detail_OrderAPI from '../API/Detail_OrderAPI';
+import OrderAPI from '../API/OrderAPI';
+import User from '../API/User';
+import { changeCount } from '../Redux/Action/ActionCount';
+import './Checkout.css';
 
 const socket = io('https://hieusuper20hcm.herokuapp.com/', {
     transports: ['websocket'], jsonp: false
@@ -33,12 +31,11 @@ function Checkout(props) {
     const [discount, set_discount] = useState(0)
 
     // state load_map
-    const [load_map, set_load_map] = useState(true)
 
     // state load_order
-    const [load_order_status, set_load_order_status] = useState(false)
+    const [load_order_status, set_load_order_status] = useState(true)
 
-    const [check_action, set_check_action] = useState(false)
+    const [check_action, set_check_action] = useState(true)
 
 
     useEffect(() => {
@@ -69,7 +66,7 @@ function Checkout(props) {
 
             set_discount((total * parseInt(coupon.promotion)) / 100)
 
-            const newTotal = total - ((total * parseInt(coupon.promotion)) / 100) + Number(price)
+            const newTotal = total - ((total * parseInt(coupon.cost)) / 100) + Number(price)
 
             localStorage.setItem("total_price", newTotal)
 
@@ -94,39 +91,7 @@ function Checkout(props) {
         email: ''
     })
 
-    const onChangeFullname = (e) => {
-        set_information({
-            firstname: e.target.value,
-            phone: information.phone,
-            address: information.address,
-            email: information.email
-        })
-    }
-    const onChangePhone = (e) => {
-        set_information({
-            fullname: information.fullname,
-            phone: e.target.value,
-            address: information.address,
-            email: information.email
-        })
-    }
-
-    const onChangeAddress = (e) => {
-        set_information({
-            fullname: information.fullname,
-            phone: information.phone,
-            address: e.target.value,
-            email: information.email
-        })
-    }
-    const onChangeEmail = (e) => {
-        set_information({
-            fullname: information.fullname,
-            phone: information.phone,
-            address: information.address,
-            email: e.target.value
-        })
-    }
+    
 
     // Hàm này dùng để check validation cho paypal
     useEffect(() => {
@@ -166,6 +131,14 @@ function Checkout(props) {
     const count_change = useSelector(state => state.Count.isLoad)
 
     const dispatch = useDispatch()
+    const [note, set_note] = useState('')
+    const [paymethod, set_paymethod] = useState('')
+    const [id_payment, set_id_payment] = useState('')
+    const [id_coupon, set_id_coupon] = useState('')
+    const [id_user, set_id_user] = useState('')
+    const [id_status, set_id_status] = useState('')
+    const [createdAt, set_createdAt] = useState('')
+    const [updatedAt, set_updatedAt] = useState('')
 
     // Hàm này dùng để thanh toán offline
     const handler_Checkout = async (data) => {
@@ -179,73 +152,47 @@ function Checkout(props) {
 
         }
 
-        // data Delivery
-        const data_delivery = {
-            // id_delivery:  Math.random.toString(),
-            fullname: information.fullname,
-            phone: information.phone,
-        }
-
-        // Xứ lý API Delivery
-        const response_delivery = await NoteAPI.post_note(data_delivery)
-
         // data Order
         const data_order = {
-            id_user: sessionStorage.getItem('id_user'),
-            address: information.address,
+            id: id,
+            address: address,
+            note: note,
             total: total_price,
-            status: "1",
-            pay: false,
-            id_payment: '6086709cdc52ab1ae999e882',
-            id_note: response_delivery._id,
-            feeship: price,
-            id_coupon: localStorage.getItem('id_coupon') ? localStorage.getItem('id_coupon') : '',
-            create_time: `${new Date().getDate()}/${parseInt(new Date().getMonth()) + 1}/${new Date().getFullYear()}`
+            paymethod: '0',
+            id_payment: '1',
+            id_coupon: '1',
+            id_user: sessionStorage.getItem('id_user'),
+            id_status: '1',
         }
 
         // Xứ lý API Order
         const response_order = await OrderAPI.post_order(data_order)
+        // console.log("abc", response_order.product.id)
+
 
         // data carts
         const data_carts = JSON.parse(localStorage.getItem('carts'))
+        // console.log(data_carts)
 
         // Xử lý API Detail_Order
         for (let i = 0; i < data_carts.length; i++) {
-
-            const data_detail_order = {
-                id_order: response_order.id,
+            const datas = {
+                id_order: response_order.product.id,
                 id_product: data_carts[i].id_product,
-                name_product: data_carts[i].name_product,
-                price_product: data_carts[i].price_product,
-                count: data_carts[i].count,
-                size: data_carts[i].size
+                name: data_carts[i].name_product,
+                price: data_carts[i].price_product,
+                quantity: data_carts[i].count, 
+                total: data_carts[i].price_product * data_carts[i].count,
             }
 
-            await Detail_OrderAPI.post_detail_order(data_detail_order)
+            await Detail_OrderAPI.post_detail_order(datas)
+            // console.log(datas)
 
         }
 
-        // data email
-        // const data_email = {
-        //     id_order: response_order._id,
-        //     total: total_price,
-        //     fullname: information.fullname,
-        //     phone: information.phone,
-        //     price: price,
-        //     address: information.address,
-        //     email: information.email
-        // }
-
-        // Gửi socket lên server
-        socket.emit('send_order', "Có người vừa đặt hàng")
-        // Xử lý API Send Mail
-
-        // const send_mail = await OrderAPI.post_email(data_email)
-        // console.log(send_mail)
-
         localStorage.removeItem('information')
         localStorage.removeItem('total_price')
-        localStorage.removeItem('price')
+        localStorage.removeItem('price_product')
         localStorage.removeItem('id_coupon')
         localStorage.removeItem('coupon')
         localStorage.setItem('carts', JSON.stringify([]))
@@ -258,77 +205,43 @@ function Checkout(props) {
         dispatch(action_count_change)
 
     }
-
+    
     const Change_Load_Order = (value) => {
 
         set_load_order(value)
 
     }
 
-
-    //--------------- Xử lý Google API ------------------//
-
-    const [error_address, set_error_address] = useState(false)
-
-    const [from, set_from] = useState('')
-
-    // Khoảng cách
-    const [distance, set_distance] = useState('')
-
-    // Thời gian đi trong bn phút
-    const [duration, set_duration] = useState('')
-
     // Giá tiền
-    const [price, set_price] = useState('')
+    const [price, set_price] = useState('30000')
 
 
-    // Kiểm tra xem khách hàng đã nhập chỉ nhận hàng hay chưa
-    const handler_Next = () => {
+   
+    const [user, set_user] = useState({})
+    useEffect(() => {
 
-        if (!information.address) {
-            set_error_address(true)
-            return
-        }
+        const fetchData = async () => {
 
-        // Sau khi mà đổ dữ liệu ở bên Jquery xong
-        // thì qua bên này mình sẽ lấy những giá trị vừa xử lý
+            const response = await User.Get_User(sessionStorage.getItem('id_user'))
 
-        const kilo = document.getElementById('in_kilo').innerHTML
-        const duration_text = document.getElementById('duration_text').innerHTML
-        const price_shipping = document.getElementById('price_shipping').innerHTML
-        const to_places = document.getElementById('to_places').value
-
-        console.log(kilo)
-        console.log(duration_text)
-        console.log(price_shipping)
-
-        set_distance(kilo)
-        set_duration(duration_text)
-
-        localStorage.setItem('price', price_shipping)
-        set_price(price_shipping)
-
-        set_information({
-            fullname: information.fullname,
-            phone: information.phone,
-            address: to_places,
-            email: information.email
-        })
-        if (kilo) {
-            set_load_map(false)
-            set_load_order_status(true) // Hiển thị phần checkout
-            set_check_action(true)
+            set_user(response)
+            set_email(response.email)
+            set_firstname(response.firstname)
+            set_lastname(response.lastname)
+            set_phone(response.phone)
+            set_address(response.address)
 
         }
 
-    }
+        fetchData()
 
-    const handlerMomo = () => {
-
-        setOrderID(Math.random().toString())
-        console.log("Momo Thanh Cong")
-
-    }
+    }, [])
+    const [firstname, set_firstname] = useState('')
+    const [lastname, set_lastname] = useState('')
+    const [phone, set_phone] = useState('')
+    const [address, set_address] = useState('')
+    const [email, set_email] = useState('')
+    const [id, set_id] = useState('')
 
     return (
         <div>
@@ -350,90 +263,8 @@ function Checkout(props) {
                         </ul>
                     </div>
                 </div>
-            </div>
-
+            </div >
             <div className="container" style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
-                {
-                    load_map && (
-                        <div className="row">
-                            <div className="col-lg-6 col-12 pb-5">
-                                <div className="checkbox-form">
-                                    <h3>Check Distance</h3>
-                                    <div className="row">
-                                        <div className="col-md-12">
-                                            <div className="checkout-form-list">
-                                                <label>From <span className="required">*</span></label>
-                                                <input type="text" name="from"
-                                                    id="from_places"
-                                                    value={from} />
-                                                <input id="origin" name="origin" required="" 
-                                                    value={from} />
-                                            </div>
-                                        </div>
-                                        <div className="col-md-12">
-                                            <div className="checkout-form-list">
-                                                <label>To <span className="required">*</span></label>
-                                                <input type="text"
-                                                    id="to_places"
-                                                    placeholder="Enter A Location"
-                                                    value={information.address}
-                                                    onChange={onChangeAddress} />
-                                                {error_address && <span style={{ color: 'red' }}>* Address is required</span>}
-                                                <input id="destination" type="text hidden" name="destination" required=""  />
-                                            </div>
-                                        </div>
-                                        <div className="col-md-12">
-                                            <div className="checkout-form-list">
-                                                <div className="form-group">
-                                                    <label>
-                                                        Travel Mode
-                                                        </label>
-                                                    <select id="travel_mode" name="travel_mode">
-                                                        <option value="DRIVING">
-                                                            DRIVING
-                                                            </option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-12">
-                                            <div id="result" className="hide">
-                                                <div>
-                                                    <label htmlFor="Kilometers">Kilometers: </label>&nbsp;
-                                                        <label id="in_kilo"></label>
-                                                </div>
-                                                <div>
-                                                    <label htmlFor="Duration">Duration: </label>&nbsp;
-                                                        <label id="duration_text"></label>
-                                                </div>
-                                                <div>
-                                                    <label htmlFor="Price">Shipping Cost: </label>&nbsp;
-                                                        <label id="price_shipping"></label>
-                                                        &nbsp;<label>VNĐ</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-12">
-                                            <div className="order-button-payment">
-                                                <input value="CHECKING" type="submit" id="distance_form" />
-                                            </div>
-                                        </div>
-                                        <div className="col-md-12">
-                                            <div className="d-flex justify-content-end">
-                                                <div className="order-button-payment">
-                                                    <input value="Next" onClick={handler_Next} id="distance_next" type="submit" style={{ padding: '.4rem 1.6rem' }} />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-6 col-12">
-                                <div id="map" style={{ height: '400px', width: '500px' }}></div>
-                            </div>
-                        </div>
-                    )
-                }
                 {
                     load_order_status && (
                         <div className="row">
@@ -444,12 +275,22 @@ function Checkout(props) {
                                         <div className="row">
                                             <div className="col-md-12">
                                                 <div className="checkout-form-list">
-                                                    <label>Full Name <span className="required">*</span></label>
-                                                    <input placeholder="Enter Fullname" type="text" name="fullname"
+                                                    <label>First Name <span className="required">*</span></label>
+                                                    <input placeholder="Enter Firstname" type="text" name="firstname"
                                                         ref={register({ required: true })}
-                                                        value={information.fullname}
-                                                        onChange={onChangeFullname} />
-                                                    {errors.fullname && errors.fullname.type === "required" && <span style={{ color: 'red' }}>* Fullname is required</span>}
+                                                        value={firstname}
+                                                        onChange={(e) => set_firstname(e.target.value)} />
+                                                    {errors.firstname && errors.firstname.type === "required" && <span style={{ color: 'red' }}>* Firstname is required</span>}
+                                                </div>
+                                            </div>
+                                            <div className="col-md-12">
+                                                <div className="checkout-form-list">
+                                                    <label>Last Name <span className="required">*</span></label>
+                                                    <input placeholder="Enter lastname" type="text" name="lastname"
+                                                        ref={register({ required: true })}
+                                                        value={lastname}
+                                                        onChange={(e) => set_lastname(e.target.value)} />
+                                                    {errors.lastname && errors.lastname.type === "required" && <span style={{ color: 'red' }}>* Lastname is required</span>}
                                                 </div>
                                             </div>
                                             <div className="col-md-12">
@@ -457,8 +298,8 @@ function Checkout(props) {
                                                     <label>Phone Number <span className="required">*</span></label>
                                                     <input placeholder="Enter Phone Number" type="text" name="phone"
                                                         ref={register({ required: true })}
-                                                        value={information.phone}
-                                                        onChange={onChangePhone} />
+                                                        value={phone}
+                                                        onChange={(e) => set_phone(e.target.value)} />
                                                     {errors.phone && errors.phone.type === "required" && <span style={{ color: 'red' }}>* Phone Number is required</span>}
                                                 </div>
                                             </div>
@@ -467,9 +308,9 @@ function Checkout(props) {
                                                     <label>Address <span className="required">*</span></label>
                                                     <input placeholder="Street address" type="text" name="address"
                                                         ref={register({ required: true })}
-                                                        value={information.address}
-                                                        onChange={onChangeAddress}
-                                                        disabled="true" />
+                                                        value={address}
+                                                        onChange={(e) => set_address(e.target.value)}
+                                                         />
                                                     {errors.address && errors.address.type === "required" && <span style={{ color: 'red' }}>* Address is required</span>}
                                                 </div>
                                             </div>
@@ -478,8 +319,9 @@ function Checkout(props) {
                                                     <label>Email <span className="required">*</span></label>
                                                     <input placeholder="Enter Email" type="email" name="email"
                                                         ref={register({ required: true })}
-                                                        value={information.email}
-                                                        onChange={onChangeEmail} />
+                                                        value={email}
+                                                        onChange={(e) => set_email(e.target.value)} 
+                                                        disabled/>
                                                     {errors.email && errors.email.type === "required" && <span style={{ color: 'red' }}>* Email is required</span>}
                                                 </div>
                                             </div>
@@ -488,7 +330,7 @@ function Checkout(props) {
                                                     {
                                                         redirect && <Redirect to="/success" />
                                                     }
-                                                    <input value="Place order" type="submit" />
+                                                    <input value="Place order" type="submit" onChange={handler_Checkout}/>
                                                 </div>
                                             </div>
                                         </div>
@@ -509,7 +351,7 @@ function Checkout(props) {
                                             <tbody>
                                                 {
                                                     carts && carts.map(value => (
-                                                        <tr className="cart_item" key={value._id}>
+                                                        <tr className="cart_item" key={value.id}>
                                                             <td className="cart-product-name">{value.name_product}<strong className="product-quantity"> × {value.count}</strong></td>
                                                             <td className="cart-product-total"><span className="amount">{new Intl.NumberFormat('vi-VN',{style: 'decimal',decimal: 'VND'}).format(parseInt(value.price_product) * parseInt(value.count)) + ' VNĐ'}</span></td>
                                                         </tr>
@@ -531,8 +373,18 @@ function Checkout(props) {
                                                 </tr>
                                             </tfoot>
                                         </table>
+                                        <div className="col-md-12">
+                                                <div className="checkout-form-list">
+                                                    <label>Note <span className="required">*</span></label>
+                                                    <textarea type="text" name="note"
+                                                        value={note}
+                                                        onChange={(e) => set_note(e.target.value)} 
+                                                        style={{ backgroundColor: '#ffffff' }}/>
+                                                        
+                                                </div>
+                                            </div>
                                     </div>
-                                    <div className="payment-method">
+                                    {/* <div className="payment-method">
                                         <div className="payment-accordion">
                                             <div id="accordion">
                                                 <div className="card">
@@ -560,8 +412,8 @@ function Checkout(props) {
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div>
+                                            </div> */}
+                                            {/* <div>
                                                 <div className="card">
                                                     <div className="card-header" id="#payment-3">
                                                         <h5 className="panel-title">
@@ -586,16 +438,16 @@ function Checkout(props) {
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                            </div> */}
+                                        {/* </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </div>
                     )
                 }
             </div>
-        </div>
+        // </div>
 
     );
 }

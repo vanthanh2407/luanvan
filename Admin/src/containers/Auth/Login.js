@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from "connected-react-router";
 import * as actions from "../../store/actions";
-import { handleLoginApi } from '../../services/userService';
+import { handleLoginApi } from '../../services/productService';
 import './Login.scss';
 // import { FormattedMessage } from 'react-intl';
 

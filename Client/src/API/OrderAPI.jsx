@@ -8,12 +8,12 @@ const OrderAPI = {
     },
 
     get_order: (id) => {
-        const url = `/api/Payment/order/${id}`
+        const url = `/orders/${id}`
         return axiosClient.get(url)
     },
 
     get_detail: (id) => {
-        const url = `/orders/${id}`
+        const url = `/order/${id}`
         return axiosClient.get(url)
     },
 
@@ -22,10 +22,14 @@ const OrderAPI = {
         return axiosClient.post(url, data)
     },
 
-    cancel_order: (query) => {
-        const url = `/api/admin/Order/cancelorder${query}`
-        return axiosClient.patch(url)
-    }
+    cancel_order: (data) => {
+        const url = `/update-order/${data}`
+        return axiosClient.put(url)
+    },
+    Get_User: (id) => {
+        const url = `/userBy/${id}`
+        return axiosClient.get(url)
+    },
 
 }
 

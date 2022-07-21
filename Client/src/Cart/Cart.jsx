@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import queryString from 'query-string';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
-import { deleteCart, updateCart } from '../Redux/Action/ActionCart';
-import { changeCount } from '../Redux/Action/ActionCount';
-import CartAPI from '../API/CartAPI'
-import queryString from 'query-string'
-import CartsLocal from '../Share/CartsLocal';
+import { useParams } from 'react-router';
+import { Link } from 'react-router-dom';
 import CouponAPI from '../API/CouponAPI';
+import { getProduct } from '../API/Product';
+import { changeCount } from '../Redux/Action/ActionCount';
+import CartsLocal from '../Share/CartsLocal';
+
 
 Cart.propTypes = {
 
 };
 
 function Cart(props) {
+    const { id } = useParams()
 
     const dispatch = useDispatch()
 
@@ -33,8 +34,21 @@ function Cart(props) {
         Sum_Price(JSON.parse(localStorage.getItem('carts')), 0)
 
     }, [count_change])
+    
+    const [product, set_product] = useState({})
+    useEffect(() => {
 
+        const fetchData = async () => {
 
+            const response = await getProduct(id)
+            set_product(response)
+            console.log('test', response)
+            
+        }
+
+        fetchData()
+
+    }, [id])
 
     // Hàm này dùng để tính tổng tiền
     function Sum_Price(carts, sum_price) {
@@ -272,6 +286,7 @@ function Cart(props) {
                                                                 <input className="cart-plus-minus-box" value={value.count} type="text" />
                                                                 <div className="dec qtybutton" onClick={() => downCount(value.count, value.id_cart)}><i className="fa fa-angle-down"></i></div>
                                                                 <div className="inc qtybutton" onClick={() => upCount(value.count, value.id_cart)}><i className="fa fa-angle-up"></i></div>
+                                                                {/* <span>còn {product.quantity} sản phẩm</span> */}
                                                             </div>
                                                         </td>
                                                         <td className="product-subtotal"><span className="amount">{new Intl.NumberFormat('vi-VN',{style: 'decimal',decimal: 'VND'}).format(parseInt(value.price_product) * parseInt(value.count))+ ' VNĐ'}</span></td>

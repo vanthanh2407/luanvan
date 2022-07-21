@@ -10,7 +10,11 @@ const Detail_OrderAPI = {
     get_detail_order: (id_order) => {
         const url = `/detailorder/${id_order}`
         return axiosClient.get(url)
-    }
+    },
+    Get_Detail_Product: (id) => {
+        const url = `/products/${id}`
+        return axiosClient.get(url)
+    },
 
 }
 

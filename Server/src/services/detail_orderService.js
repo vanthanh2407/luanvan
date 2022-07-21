@@ -20,7 +20,38 @@ let getAllDetailOrder = (ProductID) => {
         }
     })
 }
+let updateCountProduct = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.id) {
+                resolve({
+                    errCode: 2,
+                    errMessage: "Messing requited parameter"
+                });
+            }
+            let product = await db.Product.findOne({
+                where: { id: data.id },
+                raw: false,
+            });
+            if (product) {
+                    product.quantity = data.quantity - Detail_Order.quantity,
 
+                    await product.save();
+                resolve({
+                    errCode: 0,
+                    errMessage: "Update Product Success!"
+                })
+            } else {
+                resolve({
+                    errCode: 1,
+                    errMessage: "Product is not found!"
+                });
+            }
+        } catch (error) {
+            reject(error);
+        }
+    })
+}
 let createDetailorder = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -35,10 +66,28 @@ let createDetailorder = (data) => {
                 createdAt: data.createdAt,
                 updatedAt: data.updatedAt,
             })
+            let product = await db.Product.findOne({
+                where: { id: data.id_product },
+                raw: false,
+            });
+            if (product) {
+                    product.quantity = product.quantity - data.quantity,
+
+                    await product.save();
+                resolve({
+                    errCode: 0,
+                    errMessage: "Update Product Success!"
+                })
+            } else {
+                resolve({
+                    errCode: 1,
+                    errMessage: "Product is not found!"
+                });
+            }
 
             resolve({
                 errCode: 0,
-                errMessage: 'OK'
+                errMessage: 'OK',
             })
         } catch (e) {
             reject(e)
@@ -49,4 +98,5 @@ let createDetailorder = (data) => {
 module.exports = {
     getAllDetailOrder:getAllDetailOrder,
     createDetailorder:createDetailorder,
+    updateCountProduct:updateCountProduct
 }

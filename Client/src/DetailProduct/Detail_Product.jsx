@@ -41,14 +41,7 @@ function Detail_Product(props) {
             const response = await getProduct(id)
 
             set_product(response)
-            // console.log(response)
-
-
-            // const resDetail = await SaleAPI.checkSale(id)
             
-            // if (resDetail.msg === "Thanh Cong"){
-            //     setSale(resDetail.sale)
-            // }
 
         }
 
@@ -314,6 +307,7 @@ function Detail_Product(props) {
                                     <div className="single-add-to-cart">
                                         <form action="#" className="cart-quantity">
                                             <div className="quantity">
+                                                <span style={{color: 'red'}}>Còn lại {product.quantity} sản phẩm</span>
                                                 <label>Thêm vào giỏ hàng</label>
                                                 {/* <div className="cart-plus-minus">
                                                     <input className="cart-plus-minus-box" value={this.state.count} type="text" onChange={(e) => this.state.set_count(e.target.value)} />

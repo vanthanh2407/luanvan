@@ -13,6 +13,25 @@ let getAllCoupon = () => {
         }
     })
 };
+let getCouponByID = (ProductID) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let product = await db.Coupon.findOne({
+                where: { id: ProductID },
+                raw: false
+            })
+            if (!product) {
+                resolve({
+                    errCode: 2,
+                    errMessage: 'The coupon is not exist'
+                })
+            }
+            resolve(product);
+        } catch (error) {
+            reject(error);
+        }
+    })
+}
 
 let createCoupon = (data) => {
     return new Promise(async (resolve, reject) => {
@@ -99,4 +118,5 @@ module.exports = {
     createCoupon: createCoupon,
     updateCoupon: updateCoupon,
     deleteCoupon: deleteCoupon,
+    getCouponByID:getCouponByID
 }

@@ -11,6 +11,11 @@ import detail_orderController from "../controllers/detail_orderController";
 import orderController from "../controllers/orderController";
 
 
+// api ben server
+
+import newsControllerServer from "../controllers/admin/newsController";
+import receiptControllerServer from "../controllers/admin/receiptController";
+
 
 
 
@@ -90,9 +95,29 @@ let initUserRouter = (app) => {
     router.post('/create-detailorder', detail_orderController.handleCreateDetailOrder);
 
     //order
-    router.get('/orders/:id', orderController.handleGetOrderByID);
+    router.get('/orders/:id_user', orderController.handleGetOrderByID);
+    router.get('/order/:id', orderController.handleGetOrder);
     router.post('/create-order', orderController.handleCreateOrder);
+    router.put('/update-order/:id', orderController.handleUpdateOrder);
+    // router.post('/sendmail/:id_order', orderController.handleSendMail);
 
+
+
+    //////////////// api ben server
+
+    // news
+    router.get('/news', newsControllerServer.handleGetAllNews);
+    router.post('/create-news', newsControllerServer.handleCreateNews);
+    router.put('/update-news', newsControllerServer.handleUpdateNews);
+    router.delete('/delete-news', newsControllerServer.handleDeleteNews);
+
+
+    // receipt
+    router.get('/receipt', receiptControllerServer.handleGetAllReceipt);
+    router.get('/receipt/:id', receiptControllerServer.handleGetReceiptByID);
+    router.post('/create-receipt', receiptControllerServer.handleCreateReceipt);
+    router.put('/update-receipt', receiptControllerServer.handleUpdateReceipt);
+    router.delete('/delete-receipt', receiptControllerServer.handleDeleteReceipt);
 
 
     router.get('/anhquoc', (req, res) => {
