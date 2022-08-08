@@ -39,7 +39,6 @@ let createComment = (data) => {
 
             await db.Comment.create({
                 content: data.content,
-
                 star: data.star,
                 status: data.status,
                 id_product: data.id_product,

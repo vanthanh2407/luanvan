@@ -10,10 +10,7 @@ import User from '../API/User';
 import { changeCount } from '../Redux/Action/ActionCount';
 import './Checkout.css';
 
-const socket = io('https://hieusuper20hcm.herokuapp.com/', {
-    transports: ['websocket'], jsonp: false
-});
-socket.connect();
+
 
 Checkout.propTypes = {
 
@@ -63,8 +60,9 @@ function Checkout(props) {
         if (localStorage.getItem('coupon')){
             // GET localStorage
             const coupon = JSON.parse(localStorage.getItem('coupon'))
+            // console.log('a',coupon.id)
 
-            set_discount((total * parseInt(coupon.promotion)) / 100)
+            set_discount((total * parseInt(coupon.cost)) / 100)
 
             const newTotal = total - ((total * parseInt(coupon.cost)) / 100) + Number(price)
 
@@ -145,25 +143,51 @@ function Checkout(props) {
 
         set_load_order(true)
 
-        if (localStorage.getItem("id_coupon")){
+        // if (localStorage.getItem("id_coupon")){
 
-            const responseUpdate = await CouponAPI.updateCoupon(localStorage.getItem("id_coupon"))
-            console.log(responseUpdate)
+        //     const responseUpdate = await CouponAPI.updateCoupon(localStorage.getItem("coupon").id)
+        //     console.log(responseUpdate)
 
+        // }
+        let checkCoupon = () =>{
+            const coupon = JSON.parse(localStorage.getItem('coupon'))
+            if(coupon){
+                return coupon.id;
+            }else{
+                return null;
+            }
         }
-
-        // data Order
-        const data_order = {
-            id: id,
-            address: address,
-            note: note,
-            total: total_price,
-            paymethod: '0',
-            id_payment: '1',
-            id_coupon: '1',
-            id_user: sessionStorage.getItem('id_user'),
-            id_status: '1',
-        }
+        // if(coupon){
+            // data Order
+            const data_order = {
+                id: id,
+                address: address,
+                note: note,
+                total: total_price,
+                paymethod: '0',
+                id_payment: '1',
+                id_user: sessionStorage.getItem('id_user'),
+                id_status: '1',
+                email: email,
+                phone: phone,
+                name:firstname,
+                id_coupon: await checkCoupon(),
+            }
+        // }else{
+        //     return data_order = {
+        //         id: id,
+        //         address: address,
+        //         note: note,
+        //         total: total_price,
+        //         paymethod: '0',
+        //         id_payment: '1',
+        //         id_user: sessionStorage.getItem('id_user'),
+        //         id_status: '1',
+        //         email: email,
+        //         phone: phone,
+        //         name:firstname,
+        //     }
+        // }
 
         // Xứ lý API Order
         const response_order = await OrderAPI.post_order(data_order)
@@ -197,12 +221,14 @@ function Checkout(props) {
         localStorage.removeItem('coupon')
         localStorage.setItem('carts', JSON.stringify([]))
 
+        
         set_redirect(true)
-
 
         // Hàm này dùng để load lại phần header bằng Redux
         const action_count_change = changeCount(count_change)
         dispatch(action_count_change)
+        await OrderAPI.post_email(data_order)
+
 
     }
     
@@ -275,15 +301,15 @@ function Checkout(props) {
                                         <div className="row">
                                             <div className="col-md-12">
                                                 <div className="checkout-form-list">
-                                                    <label>First Name <span className="required">*</span></label>
+                                                    <label>Name <span className="required">*</span></label>
                                                     <input placeholder="Enter Firstname" type="text" name="firstname"
                                                         ref={register({ required: true })}
                                                         value={firstname}
                                                         onChange={(e) => set_firstname(e.target.value)} />
-                                                    {errors.firstname && errors.firstname.type === "required" && <span style={{ color: 'red' }}>* Firstname is required</span>}
+                                                    {errors.firstname && errors.firstname.type === "required" && <span style={{ color: 'red' }}>* name is required</span>}
                                                 </div>
                                             </div>
-                                            <div className="col-md-12">
+                                            {/* <div className="col-md-12">
                                                 <div className="checkout-form-list">
                                                     <label>Last Name <span className="required">*</span></label>
                                                     <input placeholder="Enter lastname" type="text" name="lastname"
@@ -292,7 +318,7 @@ function Checkout(props) {
                                                         onChange={(e) => set_lastname(e.target.value)} />
                                                     {errors.lastname && errors.lastname.type === "required" && <span style={{ color: 'red' }}>* Lastname is required</span>}
                                                 </div>
-                                            </div>
+                                            </div> */}
                                             <div className="col-md-12">
                                                 <div className="checkout-form-list">
                                                     <label>Phone Number <span className="required">*</span></label>
@@ -321,7 +347,7 @@ function Checkout(props) {
                                                         ref={register({ required: true })}
                                                         value={email}
                                                         onChange={(e) => set_email(e.target.value)} 
-                                                        disabled/>
+                                                        />
                                                     {errors.email && errors.email.type === "required" && <span style={{ color: 'red' }}>* Email is required</span>}
                                                 </div>
                                             </div>

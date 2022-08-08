@@ -10,7 +10,7 @@ let handleGetProcductByID = async (req, res) => {
     return res.status(200).json(data);
 }
 let handleSearchProcduct = async (req, res) => {
-    let findByID = await productService.SearchProduct(req.body.key);
+    let findByID = await productService.SearchProduct(req.params.key);
     return res.status(200).json(findByID);
 }
 let handleCreateProduct = async (req, res) => {
@@ -34,6 +34,10 @@ let handleDeleteProduct = async (req, res) => {
     }
 
 }
+let handleGetProcductByCate = async (req, res) => {
+    let data = await productService.getProductByCate(req.params.id_cate);
+    return res.status(200).json(data);
+}
 
 module.exports = {
     handleGetAllProduct: handleGetAllProduct,
@@ -42,4 +46,5 @@ module.exports = {
     handleCreateProduct: handleCreateProduct,
     handleUpdateProduct: handleUpdateProduct,
     handleDeleteProduct: handleDeleteProduct,
+    handleGetProcductByCate:handleGetProcductByCate,
 }

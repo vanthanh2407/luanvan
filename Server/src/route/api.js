@@ -61,6 +61,7 @@ let initUserRouter = (app) => {
     // product
     router.get('/products', productController.handleGetAllProduct);
     router.get('/products/:id', productController.handleGetProcductByID);
+    router.get('/cate-product/:id_cate', productController.handleGetProcductByCate);
     router.get('/search-product', productController.handleSearchProcduct);
     router.post('/create-product', productController.handleCreateProduct);
     router.put('/update-product', productController.handleUpdateProduct);
@@ -72,10 +73,13 @@ let initUserRouter = (app) => {
 
 
     //coupon 
-    router.get('/coupon', couPonController.handleGetAllCoupon);
+    router.get('/coupons', couPonController.handleGetAllCoupon);
+    router.get('/coupon/:name', couPonController.handleGetCoupon);
     router.post('/create-coupon', couPonController.handleCreateCoupon);
     router.put('/update-coupon', couPonController.handleUpdateCoupon);
     router.delete('/delete-coupon', couPonController.handleDeleteCoupon);
+    router.get('/checkCoupon', couPonController.handleCheckCoupon);
+
 
 
     // banner
@@ -108,7 +112,7 @@ let initUserRouter = (app) => {
     router.get('/order/:id', orderController.handleGetOrder);
     router.post('/create-order', orderController.handleCreateOrder);
     router.put('/update-order/:id', orderController.handleUpdateOrder);
-    // router.post('/sendmail/:id_order', orderController.handleSendMail);
+    router.post('/sendmail', orderController.handleSendMail);
 
 
 

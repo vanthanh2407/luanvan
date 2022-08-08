@@ -125,12 +125,15 @@ let updateUser = (data) => {
                 where: { id: data.id },
                 raw: false,
             });
+            let hashPwdBcrypt = await hashUserPwd(data.pwd);
             if (user) {
                 user.firstname = data.firstname;
                 user.lastname = data.lastname;
                 user.phone = data.phone;
                 user.address = data.address;
                 user.gender = data.gender;
+                user.pwd = hashPwdBcrypt;
+
 
                 await user.save();
                 resolve({

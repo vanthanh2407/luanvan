@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 import Cart from '../API/CartAPI';
 import CommentAPI from '../API/CommentAPI';
 import CartsLocal from '../Share/CartsLocal';
-import SaleAPI from '../API/SaleAPI';
+import User from '../API/User';
 import { getProduct } from '../API/Product'
 
 Detail_Product.propTypes = {
@@ -83,8 +83,6 @@ function Detail_Product(props) {
 
     }
 
-
-
     // Hàm này dùng để giảm số lượng
     const downCount = () => {
         if (count === 1) {
@@ -96,142 +94,120 @@ function Detail_Product(props) {
 
     const upCount = () => {
         set_count(count + 1)
+        console.log(count+1)
     }
 
-
-    // // State dùng để mở modal
-    // const [modal, set_modal] = useState(false)
 
     // // State thông báo lỗi comment
     const [error_comment, set_error_comment] = useState(false)
 
-    // const [star, set_star] = useState(1)
+    
+    // State dùng để mở modal
+    const [modal, set_modal] = useState(false)
 
-    // const [comment, set_comment] = useState('')
+    // State thông báo lỗi comment
 
-    // const [validation_comment, set_validation_comment] = useState(false)
+    const [star, set_star] = useState(1)
 
-    // // state load comment
-    // const [load_comment, set_load_comment] = useState(true)
+    const [comment, set_comment] = useState('')
 
-    // // State list_comment
-    // const [list_comment, set_list_comment] = useState([])
+    const [validation_comment, set_validation_comment] = useState(false)
 
-    // // Hàm này dùng để gọi API post comment sản phẩm của user
-    // const handler_Comment = () => {
+    // state load comment
+    const [load_comment, set_load_comment] = useState(true)
 
-    //     if (!sessionStorage.getItem('id_user')) { // Khi khách hàng chưa đăng nhập
+    // State list_comment
+    const [list_comment, set_list_comment] = useState([])
 
-    //         set_error_comment(true)
+    const handler_Comment = () => {
 
-    //     } else { // Khi khách hàng đã đăng nhập
+        if (!sessionStorage.getItem('id_user')) { // Khi khách hàng chưa đăng nhập
 
-    //         if (!comment) {
-    //             set_validation_comment(true)
-    //             return
-    //         }
+            set_error_comment(true)
 
-    //         const data = {
-    //             id_user: sessionStorage.getItem('id_user'),
-    //             content: comment,
-    //             star: star
-    //         }
+        } else { // Khi khách hàng đã đăng nhập
 
-    //         const post_data = async () => {
+            if (!comment) {
+                set_validation_comment(true)
+                return
+            }
 
-    //             const response = await CommentAPI.post_comment(data, id)
+            const data = {
+                id_user: sessionStorage.getItem('id_user'),
+                id_product: id,
+                content: comment,
+                star: star
+            }
 
-    //             console.log(response)
+            const post_data = async () => {
 
-    //             set_load_comment(true)
+                const response = await CommentAPI.post_comment(data)
 
-    //             set_comment('')
+                console.log(response)
 
-    //             set_modal(false)
+                set_load_comment(true)
 
-    //         }
+                set_comment('')
 
-    //         post_data()
+                set_modal(false)
 
-    //     }
+            }
 
-    //     setTimeout(() => {
-    //         set_error_comment(false)
-    //     }, 1500)
+            post_data()
 
-    // }
+        }
 
+        setTimeout(() => {
+            set_error_comment(false)
+        }, 1500)
+
+    }
 
     // // Hàm này dùng để GET API load ra những comment của sản phẩm
+    useEffect(() => {
+
+        if (load_comment) {
+            const fetchData = async () => {
+
+                const response = await CommentAPI.get_comment(id)
+                console.log('comment',response)
+               
+
+                const response_user = await User.Get_All_User()
+                // console.log('user')
+                console.log('user',response_user.user)
+
+
+                set_list_comment(response)
+                set_arr_user(response_user)
+
+            }   
+
+            fetchData()
+
+            set_load_comment(false)
+        }
+
+    }, [load_comment])
+    const [arr_user, set_arr_user] = useState([])
     // useEffect(() => {
 
-    //     if (load_comment) {
-    //         const fetchData = async () => {
+    //     const fetchData = async () => {
 
-    //             const response = await CommentAPI.get_comment(id)
+    //         const response_user = await User.Get_All_User()
+    //         console.log('user',response_user)
+    //         set_arr_user(response_user.user)
 
-    //             set_list_comment(response)
-
-    //         }
-
-    //         fetchData()
-
-    //         set_load_comment(false)
     //     }
 
-    // }, [load_comment])
+    //     fetchData()
 
+    // }, [])
 
-// class Detail_Product extends Component{
-    
-//     constructor(props) {
-//         super(props);
-//         this.state = {
-//             detailProduct: {},
-//             downCount:'',
-//             upCount:'',
-//             set_count: 1,
-//             count:1
-//         }
-//     }
-    
-//     async componentDidMount() {
-        
-//         if(this.props.match && this.props.match.params && this.props.match.params.id){
-            
-//             let id = this.props.match.params.id
-//             let res = await getProduct(id)
-//             if(res && res.errCode===0){
-//                 this.setState({
-//                     detailProduct: res.data
-//                 })
-//             }
-
-//             // console.log('thanhdeptrai: res',res)
-//         }
-//     }
-//     // Hàm này dùng để giảm số lượng
-//     downCount = () => {
-//         if (this.state.count === 1) {
-//             return
-//         }
-
-//         this.state.set_count(this.state.count - 1)
-//     }
-//     upCount = () => {
-//         this.state.set_count(this.state.count + 1)
-//     }
-
-//     render() {
-//         // console.log(this.props.match.params.id)
-//         console.log('thanhdeptrai: state',this.state)
-//         let product = this.state.detailProduct;
-        
-//         let downCount = this.state.downCount;
-//         let upCount = this.state.upCount;
-        
     return (
+        
         <div>
+            {/* {console.log('aaa',arr_user)} */}
             {
                 show_success &&
                 <div className="modal_success">
@@ -269,7 +245,6 @@ function Detail_Product(props) {
 
             <div className="content-wraper">
                 <div className="container">
-                    {/* {product && product.map(value => ( */}
                     <div className="row single-product-area">
                     
                         <div className="col-lg-5 col-md-6">
@@ -309,11 +284,11 @@ function Detail_Product(props) {
                                             <div className="quantity">
                                                 <span style={{color: 'red'}}>Còn lại {product.quantity} sản phẩm</span>
                                                 <label>Thêm vào giỏ hàng</label>
-                                                {/* <div className="cart-plus-minus">
-                                                    <input className="cart-plus-minus-box" value={this.state.count} type="text" onChange={(e) => this.state.set_count(e.target.value)} />
+                                                <div className="cart-plus-minus">
+                                                    {/* <input className="cart-plus-minus-box" value={this.state.count} type="text" onChange={(e) => this.state.set_count(e.target.value)} />
                                                     <div className="dec qtybutton" onClick={downCount}><i className="fa fa-angle-down"></i></div>
-                                                    <div className="inc qtybutton" onClick={upCount}><i className="fa fa-angle-up"></i></div>
-                                                </div> */}
+                                                    <div className="inc qtybutton" onClick={upCount}><i className="fa fa-angle-up"></i></div> */}
+                                                </div>
                                             </div>
                                             <a href="#" className="add-to-cart" type="submit" onClick={handler_addcart}>Add to cart</a>
                                         </form>
@@ -327,14 +302,15 @@ function Detail_Product(props) {
                 </div>
             </div>
 
+           
             <div className="product-area pt-35">
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-12">
                             <div className="li-product-tab">
                                 <ul className="nav li-product-menu">
-                                    <li><a className="active" data-toggle="tab" href="#description"><span>Thông số kỹ thuật</span></a></li>
-                                    <li><a data-toggle="tab" href="#reviews"><span>Mô tả sản phẩm</span></a></li>
+                                    <li><a className="active" data-toggle="tab" href="#description"><span>Description</span></a></li>
+                                    <li><a data-toggle="tab" href="#reviews"><span>Reviews</span></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -342,7 +318,7 @@ function Detail_Product(props) {
                     <div className="tab-content">
                         <div id="description" className="tab-pane active show" role="tabpanel">
                             <div className="product-description">
-                                <table cellspacing="0" border="1" className="table-product">
+                            <table cellspacing="0" border="1" className="table-product">
                                     <tr >
                                         <td colspan="2" className="table-product-0">Thông số kỹ thuật</td>
 
@@ -396,18 +372,113 @@ function Detail_Product(props) {
                                         <td>{product.insurance} tháng</td>
                                     </tr>
                                 </table>
-                            
+                                <div>{product.content}</div>
                             </div>
                         </div>
                         <div id="reviews" className="tab-pane" role="tabpanel">
                             <div className="product-reviews">
-                                {product.content}
+                                <div className="product-details-comment-block">
+                                    <div style={{ overflow: 'auto', height: '10rem' }}>
+                                        {/* {console.log('ccc',arr_user.user)} */}
+
+                                        {
+                                            list_comment && list_comment.map(value => (
+
+                                                <div className="comment-author-infos pt-25" key={value._id}>
+                                                {
+                                                    arr_user.user&&arr_user.user.map(item => {
+                                                
+                                                        if(value.id_user===item.id){
+                                                            return(<div style={{ fontWeight: 'bold', fontSize: "15px" }}>{ item.lastname + ' ' + item.firstname}</div>);
+                                                            
+                                                            // console.log(value.id_user===item.id ? item.firstname : 'a')
+                                                        }
+
+                                                    })
+                                                }                                                   
+                                                <div style={{ fontWeight: '400' }}>{value.content}</div>
+                                                    <ul className="rating">
+                                                        <li><i className={value.star > 0 ? 'fa fa-star' : 'fa fa-star-o'}></i></li>
+                                                        <li><i className={value.star > 1 ? 'fa fa-star' : 'fa fa-star-o'}></i></li>
+                                                        <li><i className={value.star > 2 ? 'fa fa-star' : 'fa fa-star-o'}></i></li>
+                                                        <li><i className={value.star > 3 ? 'fa fa-star' : 'fa fa-star-o'}></i></li>
+                                                        <li><i className={value.star > 4 ? 'fa fa-star' : 'fa fa-star-o'}></i></li>
+                                                    </ul>
+                                                </div>
+
+                                            ))
+                                        }
+                                    </div>
+
+                                    <div className="review-btn" style={{ marginTop: '2rem' }}>
+                                        <a className="review-links" style={{ cursor: 'pointer', color: '#fff' }} onClick={() => set_modal(true)}>Write Your Review!</a>
+                                    </div>
+                                    <Modal onHide={() => set_modal(false)} show={modal} className="modal fade modal-wrapper">
+                                        <div className="modal-dialog modal-dialog-centered" role="document">
+                                            <div className="modal-content">
+                                                <div className="modal-body">
+                                                    <h3 className="review-page-title">Write Your Review</h3>
+                                                    <div className="modal-inner-area row">
+                                                        <div className="col-lg-6">
+                                                            <div className="li-review-product">
+                                                                <img src={product.picture} alt="Li's Product" style={{ width: '20rem' }} />
+                                                                <div className="li-review-product-desc">
+                                                                    <p className="li-product-name">{product.name}</p>
+                                                                    <p>
+                                                                        <span>{product.summary}</span>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="col-lg-6">
+                                                            <div className="li-review-content">
+                                                                <div className="feedback-area">
+                                                                    <div className="feedback">
+                                                                        <h3 className="feedback-title">Our Feedback</h3>
+                                                                        <form action="#">
+                                                                            <p className="your-opinion">
+                                                                                <label>Your Rating</label>
+                                                                                <span>
+                                                                                    <select className="star-rating" onChange={(e) => set_star(e.target.value)}>
+                                                                                        <option value="1">1</option>
+                                                                                        <option value="2">2</option>
+                                                                                        <option value="3">3</option>
+                                                                                        <option value="4">4</option>
+                                                                                        <option value="5">5</option>
+                                                                                    </select>
+                                                                                </span>
+                                                                            </p>
+                                                                            <p className="feedback-form">
+                                                                                <label htmlFor="feedback">Your Review</label>
+                                                                                <textarea id="feedback" name="comment" cols="45" rows="8" aria-required="true" onChange={(e) => set_comment(e.target.value)}></textarea>
+                                                                                {
+                                                                                    validation_comment && <span style={{ color: 'red' }}>* This is required!</span>
+                                                                                }
+                                                                            </p>
+                                                                            <div className="feedback-input">
+                                                                                <div className="feedback-btn pb-15">
+                                                                                    <a className="close" onClick={() => set_modal(false)}>Close</a>
+                                                                                    <a style={{ cursor: 'pointer' }} onClick={handler_Comment}>Submit</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </Modal>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+           
+     </div>
     );
 }
 

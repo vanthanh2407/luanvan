@@ -1,5 +1,6 @@
 import db from "../models/index";
 import orderService from "../services/orderService";
+import sendMailService from "../services/sendMailService";
 
 
 let handleGetOrderByID = async (req, res) => {
@@ -20,8 +21,7 @@ let handleUpdateOrder = async (req, res) => {
     return res.status(200).json(message);
 }
 let handleSendMail = async (req, res) => {
-    let data = req.body;
-    let message = await orderService.sendMail(req.body.id_order);
+    let message = await sendMailService.sendEmail(req.body);
     return res.status(200).json(message);
 }
 

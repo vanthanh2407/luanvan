@@ -42,7 +42,7 @@ function Cart(props) {
 
             const response = await getProduct(id)
             set_product(response)
-            console.log('test', response)
+            // console.log('test', response)
             
         }
 
@@ -61,11 +61,11 @@ function Cart(props) {
     }
 
     // Hàm này dùng để tăng số lượng
-    const upCount = (count, id_cart) => {
+    const upCount = (quantity, id_cart) => {
 
         const data = {
             id_cart: id_cart,
-            count: parseInt(count) + 1
+            count: parseInt(quantity) + 1
         }
 
         console.log(data)
@@ -80,15 +80,15 @@ function Cart(props) {
     }
 
     // Hàm này dùng để giảm số lượng
-    const downCount = (count, id_cart) => {
+    const downCount = (quantity, id_cart) => {
 
-        if (parseInt(count) === 1) {
+        if (parseInt(quantity) === 1) {
             return
         }
 
         const data = {
             id_cart: id_cart,
-            count: parseInt(count) - 1
+            count: parseInt(quantity) - 1
         }
 
         console.log(data)
@@ -158,26 +158,27 @@ function Cart(props) {
             set_show_error(true)
         }else{
 
-            const params = {
-                id_user: sessionStorage.getItem('id_user'),
-                code: coupon
-            }
+            // const params = {
+            //     id_user: sessionStorage.getItem('id_user'),
+            //     code: coupon
+            // }
 
-            const query = '?' + queryString.stringify(params)
+            // const query = '?' + queryString.stringify(params)
 
-            const response = await CouponAPI.checkCoupon(query)
+            const response = await CouponAPI.getCoupon(coupon)
+            console.log('coupon', response)
 
-            if (response.msg === 'Không tìm thấy'){
+            if (response.errCode === 2){
                 setErrorCode(true)
             }else if (response.msg === 'Bạn đã sử dụng mã này rồi'){
                 setErrorCode(true)
             }else{
-                localStorage.setItem('id_coupon', response.coupon._id)
-                localStorage.setItem('coupon', JSON.stringify(response.coupon))
+                localStorage.setItem('id_coupon', response.name)
+                localStorage.setItem('coupon', JSON.stringify(response))
 
-                setDiscount((total_price * response.coupon.promotion) / 100)
+                setDiscount((total_price * response.cost) / 100)
 
-                const newTotal = total_price - ((total_price * response.coupon.promotion) / 100)
+                const newTotal = total_price - ((total_price * response.cost) / 100)
 
                 set_new_price(newTotal)
                 set_show_success(true)
@@ -279,7 +280,6 @@ function Cart(props) {
                                                         <td className="li-product-thumbnail"><Link to={`/detail/${value.id_product}`}><img src={value.image} style={{ width: '5rem' }} alt="Li's Product Image" /></Link></td>
                                                         <td className="li-product-name"><a href="#">{value.name_product}</a></td>
                                                         <td className="li-product-price"><span className="amount">{new Intl.NumberFormat('vi-VN',{style: 'decimal',decimal: 'VND'}).format(value.price_product)+ ' VNĐ'}</span></td>
-                                                        {/* <td className="li-product-price"><span className="amount">{value.size}</span></td> */}
                                                         <td className="quantity">
                                                             {/* <label>Quantity</label> */}
                                                             <div className="cart-plus-minus">

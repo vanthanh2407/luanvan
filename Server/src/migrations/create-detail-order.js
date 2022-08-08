@@ -11,7 +11,7 @@ module.exports = {
             id_order: {
                 allowNull: false,
                 references: {
-                    model: 'orders',
+                    model: 'Orders',
                     key: 'id',
                   },
                 type: Sequelize.INTEGER
@@ -19,7 +19,7 @@ module.exports = {
             id_product: {
                 allowNull: false,
                 references: {
-                    model: 'products',
+                    model: 'Products',
                     key: 'id',
                   },
                 type: Sequelize.INTEGER

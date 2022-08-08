@@ -8,7 +8,13 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
+            name: {
+                type: Sequelize.STRING
+            },
             address: {
+                type: Sequelize.STRING
+            },
+            phone: {
                 type: Sequelize.STRING
             },
             paymethod: {
@@ -24,7 +30,7 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 allowNull: true,
                 references: {
-                    model: 'payments',
+                    model: 'Payments',
                     key: 'id',
                 },
             },
@@ -32,7 +38,7 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 allowNull: true,
                 references: {
-                    model: 'coupons',
+                    model: 'Coupons',
                     key: 'id',
                 },
             },
@@ -40,7 +46,7 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 references: {
-                    model: 'users',
+                    model: 'Users',
                     key: 'id',
                 },
             },
@@ -48,7 +54,7 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 references: {
-                    model: 'statuses',
+                    model: 'Statuses',
                     key: 'id',
                 },
             },

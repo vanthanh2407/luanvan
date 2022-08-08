@@ -14,11 +14,7 @@ let handleGetAllComment = async (req, res) => {
 }
 let handleGetCommentByID = async (req, res) => {
     let data = await commentService.getCommenttByID(req.params.id_product);
-    return res.status(200).json({
-        errCode: 0,
-        message: 'Get Comment Succuess',
-        data
-    });
+    return res.status(200).json(data);
 }
 //////////////
 let handleCreateComment = async (req, res) => {

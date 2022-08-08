@@ -171,7 +171,25 @@ let deleteProduct = (ProductID) => {
         }
     })
 }
-
+let getProductByCate = (ProductID) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let product = await db.Product.findAll({
+                where: { id_cate: ProductID },
+                raw: false
+            })
+            if (!product) {
+                resolve({
+                    errCode: 2,
+                    errMessage: 'The product is not exist'
+                })
+            }
+            resolve(product);
+        } catch (error) {
+            reject(error);
+        }
+    })
+}
 module.exports = {
     getAllProduct: getAllProduct,
     getProductByID: getProductByID,
@@ -179,4 +197,5 @@ module.exports = {
     createProduct: createProduct,
     updateProduct: updateProduct,
     deleteProduct: deleteProduct,
+    getProductByCate:getProductByCate
 }
