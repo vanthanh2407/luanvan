@@ -3,11 +3,11 @@ require('dotenv').config();
 
 const sequelize = new Sequelize(
 
-    "luanvan",
-    "root",
-    null,
+    'heroku_23281361c925cac',
+    'bda5e15a372bbe',
+    '999f1599',
     {
-        host: "127.0.0.1",
+        host: 'us-cdbr-east-06.cleardb.net',
         dialect: 'mysql',
         logging: false,
 

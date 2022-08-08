@@ -8,7 +8,6 @@
         "define": {
             "timestamps": false
         }
-        
     },
     "test": {
         "username": "root",
