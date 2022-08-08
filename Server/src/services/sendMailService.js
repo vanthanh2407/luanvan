@@ -1,67 +1,68 @@
-import nodemailer from 'nodemailer';
-let getBodyHTMLEmail = (dataSend) => {
-  let result = '';
-  if (dataSend.length !== 0) {
-    result = `<h3>Xin chào ${dataSend.patientName}!</h3>
-    <p>Bạn nhận được email này vì đã đặt lịch khám bệnh online trên Bookingcare</p>
-    <p>Thông tin đặt lịch khám bệnh:</p>
-    <div style="margin:30px 0;display:flex;width:100%;justify-content: center;">
-    <img height="77" src="https://ci5.googleusercontent.com/proxy/J2qOvYC5kqiqo8yu1R-kkCfxNRVRIBUdeaEtwmU7tQ4Pn0UPJ6sxuyQKnt9rPWdPulwGu9nU2QFCoanlRC2p5c1M3M45CCJbGyM_yMNpgeoy4bN2eAbKXTi2D4EjMt4=s0-d-e1-ft#https://cdn.discordapp.com/email_assets/b8b45946cdb48e362c48e0d7dc704f23.png" style="border:0;display:block;outline:none;text-decoration:none;height:77;font-size:13px" width="160" class="CToWUd">
-    </div>
-    <div><b>Thời gian: ${dataSend.time}</b></div>
-    <div><b>Bác sĩ: ${dataSend.doctorName}</b></div>
-    <p>Nếu các thông tin trên là đúng sự thật, vui lòng click vào đường link bên dưới để xác nhận và hoàn tất thủ tục đặt lịch khám bệnh.</p>
-    <div><a href=${dataSend.redirectLink} target="_blank">Click here</a></div>
-    <div>Xin chân thành cảm ơn!</div>
-    <div style="font-size:0.8em;text-align:center;color:#999999"> Isofhcare, 180 Đ. Cao Lỗ, Phường 4, Quận 8, Thành phố Hồ Chí Minh </div>
-  `;
-  }
+require('dotenv').config();
+import db from "../models/index";
+import nodemailer from 'nodemailer'
 
-  return result;
-};
-const senMailServices = {
-  sendEmail: async (email, dataSend) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let transporter = nodemailer.createTransport({
-          host: "smtp.gmail.com",
-          port: 587,
-          secure: false,// true for 465, false for other ports
-          auth: {
-            user: "laptopquocthanh@gmail.com", // generated ethereal user
-            pass: "Thanh123", // generated ethereal password
-          },
-        });
-        // send mail with defined transport object
+let htmlresult = async () => {
 
-        await transporter.sendMail({
-          from: '"Laptop Quốc Thành" <foo@example.com>', // sender address
-          to: `${email}`, // list of receivers
-          subject: 'Thông tin đơn đặt hàng.', // Subject line
-          text: getBodyHTMLEmail(dataSend), // plain text body
-          html: getBodyHTMLEmail(dataSend), // html body
-        }, (err) => {
-          if (err) {
-            console.log(err);
-            resolve({
-              errCode: 1,
-              errMessage: "Lỗi send mail",
-            })
-          }
-          resolve({
-            errCode: 0,
-            errMessage: "send done",
-          })
-        });
-
-      } catch (e) {
-        reject({
-          errCode: 1,
-          errMessage: "Lỗi server"
-        })
-      }
+    const order = await db.Order.findOne({ 
+      // where: { id_order: req.body.id_order},
+      order: [
+        ['id', 'DESC'],
+      ],
+      raw: false
     })
-  }
+    const carts = await db.Detail_Order.findAll({ 
+      where: { id_order: order.id},
+      raw: false
+    })
+    const coupon = await db.Coupon.findOne({
+      where: {id: order.id_coupon}
+    })
+    let checkCoup = () =>{
+      if(coupon){
+        return ((order.total-30000) * 100 / (100 - coupon.cost)) - order.total + 30000;
+      }else{
+        return 0;
+      }
+    }
+    const htmlHead = '<table style="width:50%; border-collapse: collapse;">' +
+        '<tr style="border: 1px solid black; border-collapse: collapse;"><th style="border: 1px solid black;">Tên Sản Phẩm</th><th style="border: 1px solid black;">Giá</th><th style="border: 1px solid black;">Số Lượng</th><th style="border: 1px solid black;">Thành Tiền</th>'
+
+
+    let htmlContent = ""
+    for (let i = 0; i < carts.length; i++) {
+        htmlContent += '<tr>' +
+            '<td style="border: 1px solid black; font-size: 1.2rem; text-align: center;">' + carts[i].name + '</td>' +
+            '<td style="border: 1px solid black; font-size: 1.2rem; text-align: center;">' + new Intl.NumberFormat('vi-VN',{style: 'decimal',decimal: 'VND'}).format(carts[i].price) + ' VNĐ' + '</td>' +
+            '<td style="border: 1px solid black; font-size: 1.2rem; text-align: center;">' + carts[i].quantity + '</td>' +
+            '<td style="border: 1px solid black; font-size: 1.2rem; text-align: center;">' + new Intl.NumberFormat('vi-VN',{style: 'decimal',decimal: 'VND'}).format(parseInt(carts[i].price) * parseInt(carts[i].quantity)) + ' VNĐ' + '</td>' +
+            '<tr>'
+    }
+    return(
+      '<h1>Xin Chào ' + order.name + '</h1>' + '<h3>Phone: ' + order.phone + '</h3>' + '<h3>Address: ' + order.address + '</h3>' + '<h3>Note: ' + order.note + '</h3>' +
+      htmlHead + htmlContent + '<h3>Fee Ship: ' + new Intl.NumberFormat('vi-VN',{style: 'decimal',decimal: 'VND'}).format(30000) + ' VNĐ' + '</h3>' 
+      +'<h3>Discount: ' + new Intl.NumberFormat('vi-VN',{style: 'decimal',decimal: 'VND'}).format(await checkCoup() ) + ' VNĐ' + '</h3>' 
+      + '<h3>Total: ' + new Intl.NumberFormat('vi-VN',{style: 'decimal',decimal: 'VND'}).format(order.total) + ' VNĐ' + '</h3>' + '<p>Cảm ơn bạn!</p>')
 }
 
-module.exports = senMailServices
+let sendEmail=async(data)=>{
+    let transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false, // true for 465, false for other ports
+        auth: {
+          user:'dh51801961@student.stu.edu.vn', // generated ethereal user
+          pass:'bin131294', // generated ethereal password
+        },
+      });
+    
+      // send mail with defined transport object
+      let info = await transporter.sendMail({
+        from: '"Laptop Quốc Thành" <dh51801961@student.stu.edu.vn>', // sender address
+        to:data.email, // list of receivers
+        subject: "Hóa đơn đặt hàng", // Subject line
+        text: "Đơn hàng của bạn đã được xác nhận", // plain text body
+        html: await htmlresult() , // html body
+      });
+}
+module.exports={sendEmail:sendEmail}

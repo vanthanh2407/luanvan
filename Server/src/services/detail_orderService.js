@@ -1,4 +1,6 @@
 import db from "../models/index";
+import sendMailService from "../services/sendMailService"
+
 
 let getAllDetailOrder = (ProductID) => {
     return new Promise(async (resolve, reject) => {
@@ -70,6 +72,7 @@ let createDetailorder = (data) => {
                 where: { id: data.id_product },
                 raw: false,
             });
+            // await sendMailService.sendEmail(data)
             if (product) {
                     product.quantity = product.quantity - data.quantity,
 
@@ -78,6 +81,8 @@ let createDetailorder = (data) => {
                     errCode: 0,
                     errMessage: "Update Product Success!"
                 })
+            // await sendMailService.sendMail(data)
+
             } else {
                 resolve({
                     errCode: 1,

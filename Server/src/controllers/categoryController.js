@@ -3,11 +3,7 @@ import categoryService from "../services/categoryService";
 
 let handleGetAllCate = async (req, res) => {
     let user = await categoryService.getAllCate();
-    return res.status(200).json({
-        errCode: 0,
-        message: 'Get All Category Succuess',
-        user
-    })
+    return res.status(200).json(user)
 }
 let handleGetCateByID = async (req, res) => {
     let findByID = await categoryService.getCateByID(req.params.id);

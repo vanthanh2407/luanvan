@@ -17,7 +17,7 @@ let getCouponByID = (ProductID) => {
     return new Promise(async (resolve, reject) => {
         try {
             let product = await db.Coupon.findOne({
-                where: { id: ProductID },
+                where: { name: ProductID },
                 raw: false
             })
             if (!product) {
@@ -113,10 +113,35 @@ let deleteCoupon = (CouponID) => {
         }
     })
 }
+let checkCoupon = (Name) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let coupon = await db.Coupon.findOne({
+                where: { name: Name },
+                raw: false
+            })
+            if (!coupon) {
+                res.json({ msg: "Không tìm thấy" })
+            } 
+            let checkCoupon = await Order.findOne({ id_user: id_user, id_coupon: coupon.id })
+            
+            if (checkCoupon){
+                res.json({ msg: "Bạn đã sử dụng mã này rồi"})
+            }
+        
+            res.json({ msg: "Thành công", coupon: coupon })
+
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+
 module.exports = {
     getAllCoupon: getAllCoupon,
     createCoupon: createCoupon,
     updateCoupon: updateCoupon,
     deleteCoupon: deleteCoupon,
-    getCouponByID:getCouponByID
+    getCouponByID:getCouponByID,
+    checkCoupon:checkCoupon
 }

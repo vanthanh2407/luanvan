@@ -18,7 +18,7 @@ const OrderAPI = {
     },
 
     post_email: (data) => {
-        const url = `/api/Payment/email`
+        const url = `/sendmail`
         return axiosClient.post(url, data)
     },
 

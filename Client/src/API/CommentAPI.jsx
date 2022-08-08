@@ -2,13 +2,13 @@ import axiosClient from './axiosClient'
 
 const CommentAPI = {
 
-    get_comment: (id) => {
-        const url = `/comment/${id}`
+    get_comment: (id_product) => {
+        const url = `/comment/${id_product}`
         return axiosClient.get(url)
     },
 
     post_comment: (data, id) => {
-        const url = `/create-comment/${id}`
+        const url = `/create-comment`
         return axiosClient.post(url, data)
     }
 
