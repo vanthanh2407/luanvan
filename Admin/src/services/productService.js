@@ -27,5 +27,7 @@ const updateProduct = (data) => {
 const GetPageProduct = (page, size) => {
     return axios.get(`/product-page?page=${page}&size=${9}`);
 }
-
-export { handleLoginApi, getAllBooks, createProduct, deleteProduct, updateProduct, FindByIdProduct, getAllProduct, GetPageProduct }
+const searchProduct = (key) => {
+    return axios.get(`/search-product?key=${key}`);
+}
+export { handleLoginApi, getAllBooks, createProduct, deleteProduct, updateProduct, FindByIdProduct, getAllProduct, GetPageProduct,searchProduct }

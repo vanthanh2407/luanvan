@@ -35,11 +35,26 @@ let getProductByID = (ProductID) => {
 let SearchProduct = (key) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let products = await db.Product.findAll({
-                where: Sequelize.literal(`MATCH (name, ram, chip, memory,display,color,content) AGAINST(` + `'` + key + `'` + `)`),
-
-            });
-            resolve(products);
+            if(!key){
+                let products = await db.Product.findAll();
+                resolve({
+                    errCode: 8,
+                    errMessage: 'Get All Product!',
+                    products});
+            }else{
+                let products = await db.Product.findAll({
+                    where: Sequelize.literal(`MATCH (name, ram, chip, memory,display,color,content) AGAINST(` + `'` + key + `'` + `)`),
+    
+                });
+                resolve({
+                    errCode: 6,
+                        errMessage: 'Search Product Success!',
+                        products});
+                        // console.log('--------------------------------------')
+                        // console.log('check data search:', products)
+                        // console.log('--------------------------------------')
+            }
+            
         } catch (error) {
             // reject(error);
             console.log(error);

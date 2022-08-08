@@ -4,7 +4,7 @@ import Pagination from "react-pagination-library";
 import "react-pagination-library/build/css/index.css";
 import { connect } from 'react-redux';
 import './ProductManage.scss';
-import { createProduct, deleteProduct, updateProduct, getAllProduct, GetPageProduct } from '../../services/productService';
+import { createProduct, deleteProduct, updateProduct, getAllProduct, GetPageProduct, searchProduct } from '../../services/productService';
 import ModelProduct from './ModelProduct';
 import ModelEditProduct from './ModelEditProduct';
 import { db, storage } from '../../firebaseConnect';
@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import _ from "lodash";
 // import * as actions from "../../store/actions";
 import { USER_ROLE } from '../../utils/constant';
+import { async } from '@firebase/util';
 
 
 class ProductManage extends Component {
@@ -31,6 +32,8 @@ class ProductManage extends Component {
             arrImage: [],
             arrImageReal: [],
 
+            searchPro: null,
+            arrSearch: [],
 
             isOpenModalProduct: false,
             isOpenModalEditProduct: false,
@@ -52,7 +55,7 @@ class ProductManage extends Component {
         //         arrImage: [doc.data()]
         //     })
         // });
-
+        
         let resPage = await GetPageProduct(this.state.currentPage);
         if (resPage.products.count % 9 !== 0) {
             this.setState({
@@ -164,7 +167,7 @@ class ProductManage extends Component {
                     errMessage: res.errMessage,
                     errCode: res.errCode
                 })
-                console.log('check api product', this.state.errMessage)
+              
             } else { toast.error("Create Product Failed"); }
 
         } catch (error) {
@@ -196,8 +199,6 @@ class ProductManage extends Component {
 
                     errMessage: res.errMessage,
                     errCode: res.errCode
-                }, () => {
-                    console.log('check:', this.state.errMessage)
                 })
             }
 
@@ -247,13 +248,42 @@ class ProductManage extends Component {
         }
 
     };
+    handleSearch =async ()=>{
+        let resSearch = await searchProduct(this.state.searchPro);
+        if(this.state.searchPro===null){
+            this.handleGetAllProduct();
+            
+        }
+        else if (resSearch && resSearch.errCode === 6) {
+            this.setState({
+                arrSearch: resSearch.products,
+                errMessage: resSearch.errMessage,
+                errCode: resSearch.errCode
+            })
+        }
+        console.log('check state: ',this.state.searchPro)
+        console.log('check search: ',resSearch)
+        console.log('check arr search: ', this.state.arrSearch)
+        console.log('check error: ', this.state.errMessage)
+        
+    }
+    onChageInput = (event, id) => {
+        let copystate = { ...this.state }
+        copystate[id] = event.target.value;
+        this.setState({
+            ...copystate
+        },()=>{
+            console.log('check copystate:.....', copystate)
+        })
+    }
     render() {
         let arrProdcut = this.state.arrProduct;
 
-        let arrpageCount = this.state.arrpage.count;
+        let arrSearch = this.state.arrSearch;
         let arrpage = this.state.arrpage.rows;
         let arrImage = this.state.arrImageReal;
         // console.log('check data array: ', arrImage)
+        let {searchPro} = this.state
 
 
         const { userInfo } = this.props;
@@ -263,6 +293,7 @@ class ProductManage extends Component {
         if (userInfo && !_.isEmpty(userInfo)) {
             let role = userInfo.id_permission;
             if (role === USER_ROLE.ADMIN) {
+                
                 return (
                     <>
                         <ModelProduct
@@ -285,13 +316,21 @@ class ProductManage extends Component {
                         />}
 
 
-                        <div className='header-listproduct'>
+                        <div className='header-listmananger'>
                             <button className='button-add' type="button"
                                 onClick={() => this.handleCreateNewProduct()}
                             >
                                 <i className='fa fa-plus '> Add New Product</i>
                             </button>
-                            <h2>List Product</h2>
+                            <div className='button-timkiem'>
+                                <input style={{height: '30px', marginTop: '22px'}}
+                                value={searchPro}
+                                onChange={(event) => { this.onChageInput(event, 'searchPro') }}
+                                />
+                            <button className='button-search' type='button'
+                            onClick={() => this.handleSearch()}>Search</button>
+                            </div>
+                            <h2 style={{    marginLeft: 'auto', marginRight: '20px'}}>List Product</h2>
                         </div>
 
                         <div className="table-wrapper">
@@ -307,37 +346,68 @@ class ProductManage extends Component {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {
-                                        arrpage && arrpage.map((item, index) => {
+                                    {this.state.errCode===6?<>{arrSearch && arrSearch.map((item, index) => {
 
-                                            return (
-                                                <>
-                                                    <tr onClick={() => { this.handleEditProduct(item) }}>
+return (
+    <>
+        <tr onClick={() => { this.handleEditProduct(item) }}>
 
-                                                        <td >{item.id}</td>
-                                                        <td >{item.name}</td>
-                                                        <td ><span className="new-price new-price-2">{new Intl.NumberFormat('vi-VN', { style: 'decimal', decimal: 'VND' }).format(item.price) + ' VNĐ'}</span></td>
-                                                        <td >{item.quantity}</td>
-                                                        {/* {
-                                                            arrImage && arrImage.map((image) => {
-                                                                if (image.id === item.id_user)
-                                                                    return <td >{user.firstname}</td>
-                                                            })
-                                                        } */}
-                                                        <td><img style={{ width: '30px', height: '30px' }} src={item.picture}></img></td>
-                                                        <td>
-                                                            <button
-                                                                onClick={() => { this.handleEditProduct(item) }}
-                                                                className='button-style-eidt' type='button' ><i className="fas fa-pencil-alt"></i></button>
-                                                            <button
-                                                                onClick={() => { this.handleDeleteProduct(item) }}
-                                                                className='button-style-delete' type='button'><i className="fa fa-trash"></i></button>
-                                                        </td>
-                                                    </tr>
-                                                </>
-                                            )
-                                        })
-                                    }
+            <td >{item.id}</td>
+            <td >{item.name.substring(0,45)+"..."}</td>
+            <td ><span className="new-price new-price-2">{new Intl.NumberFormat('vi-VN', { style: 'decimal', decimal: 'VND' }).format(item.price) + ' VNĐ'}</span></td>
+            <td >{item.quantity}</td>
+            {/* {
+                arrImage && arrImage.map((image) => {
+                    if (image.id === item.id_user)
+                        return <td >{user.firstname}</td>
+                })
+            } */}
+            <td><img style={{ width: '30px', height: '30px' }} src={item.picture}></img></td>
+            <td>
+                <button
+                    onClick={() => { this.handleEditProduct(item) }}
+                    className='button-style-eidt' type='button' ><i className="fas fa-pencil-alt"></i></button>
+                <button
+                    onClick={() => { this.handleDeleteProduct(item) }}
+                    className='button-style-delete' type='button'><i className="fa fa-trash"></i></button>
+            </td>
+        </tr>
+    </>
+)
+})}</>
+                
+:<>{arrpage && arrpage.map((item, index) => {
+
+    return (
+        <>
+            <tr onClick={() => { this.handleEditProduct(item) }}>
+    
+                <td >{item.id}</td>
+                <td >{item.name.substring(0,45)+"..."}</td>
+                <td ><span className="new-price new-price-2">{new Intl.NumberFormat('vi-VN', { style: 'decimal', decimal: 'VND' }).format(item.price) + ' VNĐ'}</span></td>
+                <td >{item.quantity}</td>
+                {/* {
+                    arrImage && arrImage.map((image) => {
+                        if (image.id === item.id_user)
+                            return <td >{user.firstname}</td>
+                    })
+                } */}
+                <td><img style={{ width: '30px', height: '30px' }} src={item.picture}></img></td>
+                <td>
+                    <button
+                        onClick={() => { this.handleEditProduct(item) }}
+                        className='button-style-eidt' type='button' ><i className="fas fa-pencil-alt"></i></button>
+                    <button
+                        onClick={() => { this.handleDeleteProduct(item) }}
+                        className='button-style-delete' type='button'><i className="fa fa-trash"></i></button>
+                </td>
+            </tr>
+        </>
+    )
+    })}</>}
+                                    
+                                        
+                                    
                                 </tbody>
                             </table>
                         </div>

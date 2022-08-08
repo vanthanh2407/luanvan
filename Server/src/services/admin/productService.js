@@ -55,8 +55,7 @@ let SearchProduct = (key) => {
     return new Promise(async (resolve, reject) => {
         try {
             let products = await db.Product.findAll({
-                where: Sequelize.literal(`MATCH (name, ram, chip, memory,display,color,content) AGAINST(` + `'` + key + `'` + `)`),
-
+                where: Sequelize.literal(`MATCH (name, ram, chip, memory,display,color,content,price) AGAINST(` + `'` + key + `'` + `)`),
             });
             resolve(products);
         } catch (error) {
@@ -190,8 +189,6 @@ let deleteProduct = (ProductID) => {
         }
     })
 }
-
-
 let getPage = (page, size) => {
     return new Promise(async (resolve, reject) => {
         try {

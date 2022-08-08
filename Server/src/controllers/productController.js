@@ -10,7 +10,8 @@ let handleGetProcductByID = async (req, res) => {
     return res.status(200).json(data);
 }
 let handleSearchProcduct = async (req, res) => {
-    let findByID = await productService.SearchProduct(req.body.key);
+    let findByID = await productService.SearchProduct(req.query.key);
+    // console.log('check ben controller: ', findByID.products)
     return res.status(200).json(findByID);
 }
 let handleCreateProduct = async (req, res) => {

@@ -88,8 +88,25 @@ body{
     color: white;
 
 }
-.header-listproduct{
+.button-timkiem{
+    display: flex;
+    
+    .button-search{
+        background-color: #000000;
+        margin-left: 5px;
+        margin-top: 20px;
+        float: right;
+        margin-right: 65px;
+        padding: 5px;
+        margin-bottom: 10px;
+        border-radius: 10px;
+        color: white;
+    }
+}
 
+
+.header-listmananger{
+    display: flex;
     
 }
 h2{
