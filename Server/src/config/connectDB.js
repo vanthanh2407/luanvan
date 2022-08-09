@@ -3,15 +3,25 @@ require('dotenv').config();
 
 const sequelize = new Sequelize(
 
-    'heroku_23281361c925cac',
-    'bda5e15a372bbe',
-    '999f1599',
+    // "heroku_23281361c925cac",
+    // "bda5e15a372bbe",
+    // '999f1599',
+    // {
+    //     host: "us-cdbr-east-06.cleardb.net",
+    //     dialect: 'mysql',
+    //     logging: false,
+
+    // });
+    "luanvan",
+    "root",
+    null,
     {
-        host: 'us-cdbr-east-06.cleardb.net',
+        host: "127.0.0.1",
         dialect: 'mysql',
         logging: false,
 
     });
+
 
 
 let connectDB = async () => {

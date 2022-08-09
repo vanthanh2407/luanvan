@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
       modelName: 'Product',
       indexes: [
         // add a FULLTEXT index
-        { type: 'FULLTEXT', name: 'text_idx', fields: ['name', 'ram', 'chip', 'display', 'memory','content','price'] }
+        { type: 'FULLTEXT', name: 'text_idx', fields: ['name', 'ram', 'chip', 'display', 'memory', 'color', 'content'] }
       ]
     });
   return Product;

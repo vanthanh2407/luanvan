@@ -154,19 +154,20 @@ class Navigator extends Component {
                                 </div>
                                 <div className="body">
                                     <ul>
-                                        <li><i className="fas fa-home icon"></i> <a href='/system/'>Home</a></li>
-                                        <li><i className="fas fa-boxes icon"></i><a href='/system/product-manage'>Product</a></li>
-                                        <li><i className="fas fa-boxes icon"></i> <a href='/system/cate-manage'>Category</a></li>
-                                        <li><i className="fas fa-table icon"></i>  <a href='/system/banner-manage'>Banner</a></li>
-                                        <li><i className="fab fa-wpforms icon"></i> <a href='/system/news-manage'>News </a></li>
-                                        <li><i className="fas fa-chart-pie icon"></i>  <a href='/system/comment-manage'>Comment</a></li>
-                                        <li><i className="fas fa-chart-pie icon"></i>  <a href='/system/user-manage'>User</a></li>
-                                        <li><i className="fas fa-chart-pie icon"></i>  <a href='/system/order-manage'>Order</a></li>
-                                        <li><i className="fas fa-chart-pie icon"></i>  <a href='/system/coupon-manage'>Coupon</a></li>
-                                        <li><i className="fas fa-chart-pie icon"></i>  <a href='/system/receipt-manage'>Receipt</a></li>
+                                        <li><i className="fas fa-home icon"></i> <a className='disable-gachchan' href='/system/'>Home</a></li>
+                                        <li><i className="fas fa-boxes icon"></i> <a className='disable-gachchan' href='/system/product-manage'>Product</a></li>
+                                        <li><i className="fas fa-boxes icon"></i> <a className='disable-gachchan' href='/system/cate-manage'>Category</a></li>
+                                        <li><i className="fas fa-table icon"></i>  <a className='disable-gachchan' href='/system/banner-manage'>Banner</a></li>
+                                        <li><i className="fab fa-wpforms icon"></i> <a className='disable-gachchan' href='/system/news-manage'>News </a></li>
+                                        <li><i className="fas fa-comment icon"></i>  <a className='disable-gachchan' href='/system/comment-manage'>Comment</a></li>
+                                        <li><i className="fas fa-user-alt icon"></i>  <a className='disable-gachchan' href='/system/user-manage'> User</a></li>
+                                        <li><i className="fa fa-indent icon "></i>  <a className='disable-gachchan' href='/system/order-manage'>Order</a></li>
+                                        <li><i className="fas fa-gift icon"></i>  <a className='disable-gachchan' href='/system/coupon-manage'>Coupon</a></li>
+
+                                        <li><i className="fas fa-receipt icon"></i> <a className='disable-gachchan' href='/system/receipt-manage'>Receipt</a></li>
                                         <li>
                                             <div className="btn btn-logout" onClick={processLogout}>
-                                                <i className="fas fa-sign-out-alt">Logout</i>
+                                                <i className="fas fa-sign-out-alt icon"></i>Logout
                                             </div>
                                         </li>
                                     </ul>

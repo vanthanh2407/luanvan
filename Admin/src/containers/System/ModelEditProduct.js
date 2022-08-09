@@ -57,10 +57,10 @@ class ModelEditProduct extends Component {
         let resEdit = this.props.arrProdcutEdit;
         let resopnseStatus = await getAllBooks();
         let resopnse = await getAllCate();
-
-        if (resopnse && resopnse.errCode === 0) {
+        console.log('check thu xem co hoat dong khong: ', resopnse)
+        if (resopnse) {
             this.setState({
-                arrCategory: resopnse.user
+                arrCategory: resopnse
             })
 
         }
@@ -171,7 +171,8 @@ class ModelEditProduct extends Component {
 
     render() {
         let arrCategory = this.state.arrCategory;
-
+        console.log('check data:', arrCategory)
+        console.log('check id cate:', this.props.arrProdcutEdit)
 
 
 
@@ -406,8 +407,8 @@ class ModelEditProduct extends Component {
                                         />
                                     </div>
                                 </div>
-                                {/* // cc-info */}
-                                <div className="address-info">
+
+                                <div className="name">
                                     <div className='preview-image-container'>
                                         <label for="card-num">Image</label>
                                         <input type="file"
@@ -416,17 +417,12 @@ class ModelEditProduct extends Component {
                                         <div className='preview-image'
                                             style={{ backgroundImage: `url(${this.state.previewImageURL})` }}
                                             onClick={() => this.openPreviewImage()}
-
                                         >
-
                                         </div>
                                     </div>
                                     <div>
                                         <label for="card-num">Category</label>
-                                        {/* <input type="text" name="zip"
 
-                                            onChange={(event) => { this.onChageInput(event, 'id_cate') }}
-                                        /> */}
                                         <select className='form-control'
                                             value={id_cate}
                                             onChange={(event) => { this.onChageInput(event, 'id_cate') }}
@@ -436,7 +432,6 @@ class ModelEditProduct extends Component {
                                                 arrCategory && arrCategory.map((item, index) => {
 
                                                     return (
-
                                                         <>
                                                             <option value={item.id}>{item.category}</option>
                                                         </>
@@ -448,17 +443,9 @@ class ModelEditProduct extends Component {
                                     </div>
                                 </div>
                                 <div className="btns">
-                                    {/* <button>Purchase</button>
-                                    <button>Back to cart</button> */}
+
                                 </div>
                             </form>
-                            {/* {this.state.isOpen === true &&
-                                <Lightbox
-                                    mainSrc={this.state.previewImageURL}
-                                    onCloseRequest={() => this.setState({ isOpen: false })}
-
-                                />
-                            } */}
                         </div>
 
 
@@ -468,7 +455,6 @@ class ModelEditProduct extends Component {
                     <Button
                         color="primary"
                         onClick={() => { this.handleUpdate() }}
-
                     >
                         Update
                     </Button>

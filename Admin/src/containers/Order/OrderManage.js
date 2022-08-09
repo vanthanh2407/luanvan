@@ -24,6 +24,9 @@ class OrderManage extends Component {
 
             arrOrderFromParent: [],
 
+            isOpenDetailOrder: false,
+            arrDetailOrder: null,
+
             isOpenModalProduct: false,
             isOpenModalEditProduct: false,
 
@@ -68,9 +71,9 @@ class OrderManage extends Component {
             isOpenModalProduct: true
         })
     }
-    toggleProductModal = () => {
+    toggleDetailOrderModal = () => {
         this.setState({
-            isOpenModalProduct: !this.state.isOpenModalProduct,
+            isOpenDetailOrder: !this.state.isOpenDetailOrder,
         })
     }
 
@@ -114,16 +117,23 @@ class OrderManage extends Component {
         }
     }
 
-    handleDetailOrder = () => {
-        <BrowserRouter>
-            <Switch>
-                <Route path="/system/detailorder-manage" component={DetailOrderManage} />
-            </Switch>
-        </BrowserRouter>
-        console.log('check detail')
+    // handleDetailOrder = () => {
+    //     <BrowserRouter>
+    //         <Switch>
+    //             <Route path="/system/detailorder-manage" component={DetailOrderManage} />
+    //         </Switch>
+    //     </BrowserRouter>
+    //     console.log('check detail')
+    // }
+
+    handleDetailOrder = (IdOrder) => {
+        this.setState({
+            isOpenDetailOrder: true,
+            arrDetailOrder: IdOrder
+        }, () => {
+            console.log('check detail order: ', this.state.arrDetailOrder)
+        })
     }
-
-
 
 
     handleEditOrder = (Order) => {
@@ -142,6 +152,12 @@ class OrderManage extends Component {
         return (
             <>
 
+                {this.state.isOpenDetailOrder && < DetailOrderManage
+                    isOpen={true}
+                    toggleDetailOrder={this.toggleDetailOrderModal}
+                    idOrder={this.state.arrDetailOrder}
+                />}
+
 
                 {this.state.isOpenModalEditProduct && <ModalEditOrder
                     isOpen={this.state.isOpenModalEditProduct}
@@ -153,6 +169,7 @@ class OrderManage extends Component {
                     errMessage={this.state.errMessage}
                     errCode={this.state.errCode}
                 />}
+
 
 
                 <div className='header-listproduct'>
@@ -180,31 +197,31 @@ class OrderManage extends Component {
 
                                     return (
                                         <>
-                                            <tr   >
+                                            <tr  >
 
-                                                <td >{item.id}</td>
-                                                <td >{item.note}</td>
+                                                <td onClick={() => { this.handleDetailOrder(item.id) }}>{item.id}</td>
+                                                <td onClick={() => { this.handleDetailOrder(item.id) }}>{item.note}</td>
                                                 {
                                                     arrStatus && arrStatus.map((status) => {
                                                         if (status.id === item.id_status)
-                                                            return <td >{status.name}</td>
+                                                            return <td onClick={() => { this.handleDetailOrder(item.id) }} >{status.name}</td>
                                                     })
                                                 }
                                                 {
                                                     arrUser && arrUser.map((user) => {
                                                         if (user.id === item.id_user)
-                                                            return <td >{user.firstname}</td>
+                                                            return <td onClick={() => { this.handleDetailOrder(item.id) }}>{user.firstname}</td>
                                                     })
                                                 }
                                                 {
                                                     arrUser && arrUser.map((user) => {
                                                         if (user.id === item.id_user)
-                                                            return <td >{user.email}</td>
+                                                            return <td onClick={() => { this.handleDetailOrder(item.id) }} >{user.email}</td>
                                                     })
                                                 }
 
                                                 {/* <td >{item.payment}</td> */}
-                                                <td >{item.total}</td>
+                                                <td onClick={() => { this.handleDetailOrder(item.id) }}>{item.total}</td>
                                                 <td>
                                                     <button
                                                         onClick={() => { this.handleEditOrder(item) }}

@@ -5,7 +5,7 @@ import axios from "../axios"
 
 
 const getAllcoupon = () => {
-    return axios.get('/coupon');
+    return axios.get('/coupons');
 }
 const createcoupon = (data) => {
     return axios.post('/create-coupon', data);

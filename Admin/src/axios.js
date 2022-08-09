@@ -3,7 +3,9 @@ import _ from 'lodash';
 
 
 const instance = axios.create({
-    baseURL: process.env.REACT_APP_BACKEND_URL,
+    baseURL: "https://lvtn-laptop-backend.herokuapp.com",
+    // baseURL: "http://localhost:8085/",
+
     //withCredentials: true
 });
 

@@ -35,29 +35,30 @@ let getProductByID = (ProductID) => {
 let SearchProduct = (key) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if(!key){
+            if (!key) {
                 let products = await db.Product.findAll();
                 resolve({
                     errCode: 8,
                     errMessage: 'Get All Product!',
-                    products});
-            }else{
+                    products
+                });
+            } else {
                 let products = await db.Product.findAll({
                     where: Sequelize.literal(`MATCH (name, ram, chip, memory,display,color,content) AGAINST(` + `'` + key + `'` + `)`),
-    
+
                 });
                 resolve({
                     errCode: 6,
-                        errMessage: 'Search Product Success!',
-                        products});
-                        // console.log('--------------------------------------')
-                        // console.log('check data search:', products)
-                        // console.log('--------------------------------------')
+                    errMessage: 'Search Product Success!',
+                    products
+                });
+
             }
-            
+
         } catch (error) {
-            // reject(error);
+
             console.log(error);
+            console.log('check loi search: ', error)
         }
     })
 }
@@ -212,5 +213,5 @@ module.exports = {
     createProduct: createProduct,
     updateProduct: updateProduct,
     deleteProduct: deleteProduct,
-    getProductByCate:getProductByCate
+    getProductByCate: getProductByCate
 }

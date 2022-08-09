@@ -1,211 +1,138 @@
 import React, { Component } from 'react';
-
+// import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-// import './DetailOrderManage.scss';
-import { getAllOrder, updateOrder } from '../../services/orderService';
-import { getAlluser } from '../../services/userService';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+
+import { getAllOrder } from '../../services/orderService';
+
 import { getAllStatus } from '../../services/statusService';
+import { getAllDetailOrder } from '../../services/orderService';
 
-import ModalEditOrder from './ModalEditOrder';
-// import { db } from '../../firebaseConnect';
-// import { doc, setDoc } from "firebase/firestore";
-import { toast } from "react-toastify";
 
+import 'react-image-lightbox/style.css';
+import './DetailOrderManage.scss'
 class DetailOrderManage extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
-            arrOrder: [],
-            arrStatus: [],
-            arrUser: [],
 
-            arrOrderFromParent: [],
+            arrdetail: [],
+            arroder: [],
 
-            isOpenModalProduct: false,
-            isOpenModalEditProduct: false,
-
-
-            errCode: '',
-            errMessage: '',
         }
     }
 
-    // async componentDidMount() {
-    //     let resStatus = await getAllStatus();
-    //     let resUser = await getAlluser();
-    //     let resopnse = await getAllOrder();
-    //     if (resopnse && resopnse.errCode === 0) {
-    //         this.setState({
-    //             arrOrder: resopnse.order
-    //         })
-    //     }
-    //     if (resUser && resUser.errCode === 0) {
-    //         this.setState({
-    //             arrUser: resUser.user
-    //         })
-    //     }
-    //     if (resStatus && resStatus.errCode === 0) {
-    //         this.setState({
-    //             arrStatus: resStatus.status
-    //         })
-    //     }
-
-    // }
-    // handleGetAllOrder = async () => {
-    //     let resopnse = await getAllOrder();
-    //     if (resopnse && resopnse.errCode === 0) {
-    //         this.setState({
-    //             arrOrder: resopnse.order
-    //         })
-
-    //     }
-    // }
-    // handleCreateNewCate = () => {
-    //     this.setState({
-    //         isOpenModalProduct: true
-    //     })
-    // }
-    // toggleProductModal = () => {
-    //     this.setState({
-    //         isOpenModalProduct: !this.state.isOpenModalProduct,
-    //     })
-    // }
-
-    // handleEditProduct = () => {
-    //     this.setState({
-    //         isOpenModalEditProduct: true
-    //     })
-    // }
-    // toggleProductModalEdit = () => {
-    //     this.setState({
-    //         isOpenModalEditProduct: !this.state.isOpenModalEditProduct,
-    //     })
-    // }
+    async componentDidMount() {
+        let resDetail = await getAllDetailOrder(this.props.idOrder)
+        this.setState({
+            arrdetail: resDetail
+        })
+        console.log('check id order', resDetail)
 
 
-    // editOrderModal = async (data) => {
-    //     try {
-    //         let res = await updateOrder(data);
-    //         if (res && res.errCode === 0 || res.errCode === 3) {
-    //             toast.success("Update Order Success");
-    //             this.handleGetAllOrder();
-    //             this.setState({
-    //                 isOpenModalEditProduct: false,
-    //                 errMessage: res.errMessage,
-    //                 errCode: res.errCode
-    //             })
-    //         } else if (res && res.errCode === 11 || res.errCode === 5 || res.errCode === 4) {
-    //             toast.error("Update Order Failed");
-    //             this.handleGetAllOrder();
-    //             this.setState({
-    //                 isOpenModalEditProduct: false,
-    //                 errMessage: res.errMessage,
-    //                 errCode: res.errCode
-    //             })
-    //         }
-    //         // else if () {
+    }
+    toggle = () => {
+        this.props.toggleDetailOrder();
+    }
 
-    //         // }
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
-    // handleEditOrder = (Order) => {
-    //     this.setState({
-    //         isOpenModalEditProduct: true,
-    //         arrOrderFromParent: Order
-    //     })
-    // }
+
+    checkValueInput = () => {
+        // let isValid = true;
+        // let arrCheck = ['id_status']
+
+        // for (let i = 0; i < arrCheck.length; i++) {
+
+        //     if (!this.state[arrCheck[i]]) {
+        //         isValid = false;
+
+        //         alert('This input is required: ' + arrCheck[i]);
+        //         break;
+        //     }
+
+        // }
+        // return isValid;
+    }
+
+
+    handleUpdate = () => {
+
+        // let isValid = this.checkValueInput();
+        // if (isValid === false) return;
+
+        // this.props.editOrder(this.state)
+
+
+
+    }
+    onChageInput = (event, id) => {
+        // let copystate = { ...this.state }
+        // copystate[id] = event.target.value;
+        // this.setState({
+        //     ...copystate
+        // })
+    }
+
     render() {
-        // let arrOrder = this.state.arrOrder;
-        // let arrUser = this.state.arrUser;
-        // let arrStatus = this.state.arrStatus;
-
+        let {
+            id_status } = this.state;
+        let arrStatus = this.state.arrStatus;
 
 
         return (
-            <>
+            <Modal isOpen={this.props.isOpen}
+                toggle={() => { this.toggle() }}
+                size="lg"
+
+            >
+                <ModalHeader toggle={() => { this.toggle() }}
+                >
+                    Detail Order
+                </ModalHeader>
+                <ModalBody>
+
+                    <table class="table">
+                        <tr>
+                            {/* <th >Mã</th> */}
+
+                            <th>Product</th>
+                            <th>Count</th>
+                            <th className='detailSpace'>Price</th>
+                            {/* <th>Oder</th> */}
+                            <th className='cssDetail'>Total</th>
 
 
-                {/* {this.state.isOpenModalEditProduct && <ModalEditOrder
-                    isOpen={this.state.isOpenModalEditProduct}
-                    toggleProductEdit={this.toggleProductModalEdit}
+                        </tr>
+                        {this.state.arrdetail.map(item => {
+                            // if (arroder.id === item.idoder)
+                            return (
+                                <tr>
+                                    {/* <td>{item.id}</td> */}
 
-                    editOrder={this.editOrderModal}
-                    arrOrderEdit={this.state.arrOrderFromParent}
-
-                    errMessage={this.state.errMessage}
-                    errCode={this.state.errCode}
-                />}
-
-
-                <div className='header-listproduct'>
-
-                    <h2>List Order</h2>
-                </div>
-
-                <div className="table-wrapper">
-                    <table className="fl-table">
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Note</th>
-                                <th>Trạng thái đơn hàng</th>
-                                <th>Tên khách hàng</th>
-                                <th>Email</th>
-                               
-                                <th>Total</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                arrOrder && arrOrder.map((item, index) => {
-
-                                    return (
-                                        <>
-                                            <tr>
-
-                                                <td >{item.id}</td>
-                                                <td >{item.note}</td>
-                                                {
-                                                    arrStatus && arrStatus.map((status) => {
-                                                        if (status.id === item.id_status)
-                                                            return <td >{status.name}</td>
-                                                    })
-                                                }
-                                                {
-                                                    arrUser && arrUser.map((user) => {
-                                                        if (user.id === item.id_user)
-                                                            return <td >{user.firstname}</td>
-                                                    })
-                                                }
-                                                {
-                                                    arrUser && arrUser.map((user) => {
-                                                        if (user.id === item.id_user)
-                                                            return <td >{user.email}</td>
-                                                    })
-                                                }
-
-                                               
-                                                <td >{item.total}</td>
-                                                <td>
-                                                    <button
-                                                        onClick={() => { this.handleEditOrder(item) }}
-                                                        className='button-style-eidt' type='button' ><i className="fas fa-pencil-alt"></i></button>
-                                                </td>
-                                            </tr>
-                                        </>
-                                    )
-                                })
-                            }
-                        </tbody>
+                                    <td>{item.name.substring()}</td>
+                                    <td className='cssDetail'>{item.quantity}</td>
+                                    <td className='detailSpaceMap'>{new Intl.NumberFormat('vi-VN', { style: 'decimal', decimal: 'VND' }).format(item.price)}</td>
+                                    {/* <td>{item.id_order}</td> */}
+                                    <td className='detailSpaceMap'>{new Intl.NumberFormat('vi-VN', { style: 'decimal', decimal: 'VND' }).format(item.total)}</td>
+                                </tr>
+                            )
+                        })}
                     </table>
-                </div> */}
-                <div>DetailOrderManage</div>
-            </>
-        );
+                </ModalBody>
+                <ModalFooter>
+                    {/* <Button
+                        color="primary"
+                        onClick={() => { this.handleUpdate() }}
+
+                    >
+                        Update
+                    </Button> */}
+                    {' '}
+                    <Button onClick={() => { this.toggle() }}>
+                        Cancel
+                    </Button>
+                </ModalFooter>
+            </Modal>
+        )
     }
 
 }

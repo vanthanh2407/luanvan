@@ -34,12 +34,18 @@ class CateManage extends Component {
 
     async componentDidMount() {
         let resopnse = await getAllCate();
-        if (resopnse && resopnse.errCode === 0) {
-            this.setState({
-                arrCate: resopnse.user
-            })
+        console.log('checlkkkkkk: ', resopnse)
+        this.setState({
+            arrCate: resopnse
 
-        }
+        })
+        // if (resopnse && resopnse.errCode === 0) {
+        //     this.setState({
+        //         arrCate: resopnse.user
+
+        //     })
+
+        // }
 
     }
     handleGetAllCate = async () => {
@@ -111,11 +117,14 @@ class CateManage extends Component {
     }
     handleDeleteProduct = async (cate) => {
         try {
-            let res = await deleteCate(cate.id)
-            if (res) {
-                toast.success("Delete Cate Success");
-                this.handleGetAllCate();
-            } else { toast.error("Delete Product Failed"); }
+            if (window.confirm("Bạn chắc chắn muốn xóa danh mục!") == true) {
+                let res = await deleteCate(cate.id)
+                if (res) {
+                    toast.success("Delete Cate Success");
+                    this.handleGetAllCate();
+                } else { toast.error("Delete Product Failed"); }
+            }
+
         } catch (error) {
             console.log(error)
         }

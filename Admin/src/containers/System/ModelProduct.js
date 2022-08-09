@@ -90,9 +90,9 @@ class ModelProduct extends Component {
         let resopnseStatus = await getAllBooks();
         let resopnse = await getAllCate();
 
-        if (resopnse && resopnse.errCode === 0) {
+        if (resopnse) {
             this.setState({
-                arrCategory: resopnse.user
+                arrCategory: resopnse
             })
         }
         if (resopnseStatus && resopnseStatus.errCode === 0) {
@@ -447,7 +447,7 @@ class ModelProduct extends Component {
                                     </div>
                                 </div>
                                 {/* // cc-info */}
-                                <div className="address-info">
+                                <div className="name">
                                     <div className='preview-image-container'>
                                         <label for="card-num">Image</label>
                                         <input type="file"
@@ -464,27 +464,7 @@ class ModelProduct extends Component {
                                         </div>
 
                                     </div>
-                                    <div>
-                                        <label for="card-num">Product Display Status </label>
-                                        <select className='form-control'
-                                            onChange={(event) => { this.onChageInput(event, 'status') }}
-                                        >
-                                            <option>Co</option>
-                                            <option>Khong</option>
-                                            {/* {
-                                                arrProductStatus && arrProductStatus.map((item, index) => {
-                                                    // console.log('check id cate: ', item.id);
-                                                    return (
 
-                                                        <>
-                                                            <option >{item.status}</option>
-                                                        </>
-                                                    )
-                                                })
-
-                                            } */}
-                                        </select>
-                                    </div>
                                     <div>
                                         <label for="card-num">Category</label>
                                         <select className='form-control'
@@ -507,11 +487,11 @@ class ModelProduct extends Component {
                                         </select>
                                     </div>
                                 </div>
-                                {/* <div className="btns">
-                                    <button id='new' hidden
+                                <div className="btns">
+                                    {/* <button id='new' hidden
                                         onClick={() => { this.testHandle(); alert("Hello!"); }}>Purchase</button>
-                                    <label className='label-create' htmlFor='new'>Add New</label>
-                                </div> */}
+                                    <label className='label-create' htmlFor='new'>Add New</label> */}
+                                </div>
                             </form>
                             {/* {this.state.isOpen === true &&
                                 <Lightbox

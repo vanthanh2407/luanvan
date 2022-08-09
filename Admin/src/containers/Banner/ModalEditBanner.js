@@ -38,9 +38,9 @@ class ModalEditBanner extends Component {
             })
 
         }
-        if (resProduct && resProduct.errCode === 0) {
+        if (resProduct) {
             this.setState({
-                arrProduct: resProduct.product
+                arrProduct: resProduct
             })
         }
 
@@ -97,6 +97,7 @@ class ModalEditBanner extends Component {
         let {
             picture, id_product } = this.state;
         let arrProduct = this.state.arrProduct;
+        console.log('check id pro:', id_product)
 
         return (
             <Modal isOpen={this.props.isOpen}
@@ -113,42 +114,40 @@ class ModalEditBanner extends Component {
                     <div className="wrapper">
                         <div className="container">
                             <form action="">
-                                <div className='preview-image-container'>
-                                    <label for="card-num">Image</label>
-                                    <input type="file"
-                                        // value={picture}
-                                        onChange={(event) => this.handleOnchangeImage(event)}
+                                <div className="name">
+                                    <div className='preview-image-container'>
+                                        <label for="card-num">Image</label>
+                                        <input type="file"
+                                            // value={picture}
+                                            onChange={(event) => this.handleOnchangeImage(event)}
 
-                                    />
-                                    <div className='preview-image'
-                                        style={{ backgroundImage: `url(${this.state.previewImageURL})` }}
-                                        onClick={() => this.openPreviewImage()}
+                                        />
+                                        <div className='preview-image'
+                                            style={{ backgroundImage: `url(${this.state.previewImageURL})` }}
+                                            onClick={() => this.openPreviewImage()}
 
-                                    >
+                                        >
+
+                                        </div>
 
                                     </div>
-
-                                </div>
-                                <div>
-                                    <label for="card-num">Id Product</label>
-                                    <select className='form-control'
-                                        value={id_product}
-                                        onChange={(event) => { this.onChageInput(event, 'id_product') }}
-                                    >
-
-                                        {
-                                            arrProduct && arrProduct.map((item, index) => {
-
-                                                return (
-
-                                                    <>
-                                                        <option value={item.id}>{item.id}</option>
-                                                    </>
-                                                )
-                                            })
-
-                                        }
-                                    </select>
+                                    <div>
+                                        <label for="card-num">Name Product</label>
+                                        <select className='form-control'
+                                            value={id_product}
+                                            onChange={(event) => { this.onChageInput(event, 'id_product') }}
+                                        >
+                                            {
+                                                arrProduct && arrProduct.map((item, index) => {
+                                                    return (
+                                                        <>
+                                                            <option value={item.id}>{item.name.substring(0, 40) + "..."}</option>
+                                                        </>
+                                                    )
+                                                })
+                                            }
+                                        </select>
+                                    </div>
                                 </div>
                                 <div className="btns">
 

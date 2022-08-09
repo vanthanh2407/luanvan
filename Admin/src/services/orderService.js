@@ -7,7 +7,9 @@ import axios from "../axios"
 const getAllOrder = () => {
     return axios.get('/order');
 }
-
+const getAllDetailOrder = (IdOrder) => {
+    return axios.get(`/detailorder/${IdOrder}`);
+}
 
 
 const updateOrder = (data) => {
@@ -15,4 +17,4 @@ const updateOrder = (data) => {
 }
 
 
-export { getAllOrder, updateOrder  }
+export { getAllOrder, updateOrder, getAllDetailOrder }

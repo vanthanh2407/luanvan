@@ -184,10 +184,11 @@ class UserManage extends Component {
                                                                     return <td >{permiss.permission}</td>
                                                             })
                                                         }
-
-                                                        <button
-                                                            onClick={() => { this.handleDeleteUser(item) }}
-                                                            className='button-style-delete' type='button'><i className="fa fa-trash"></i></button>
+                                                        <td>
+                                                            <button
+                                                                onClick={() => { this.handleDeleteUser(item) }}
+                                                                className='button-style-delete' type='button'><i className="fa fa-trash"></i></button>
+                                                        </td>
                                                     </tr>
                                                 </>
                                             )

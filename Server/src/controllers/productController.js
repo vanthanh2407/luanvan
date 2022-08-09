@@ -10,12 +10,10 @@ let handleGetProcductByID = async (req, res) => {
     return res.status(200).json(data);
 }
 let handleSearchProcduct = async (req, res) => {
-<<<<<<< HEAD
+
     let findByID = await productService.SearchProduct(req.query.key);
     // console.log('check ben controller: ', findByID.products)
-=======
-    let findByID = await productService.SearchProduct(req.params.key);
->>>>>>> 9c06d06afd9217669d8d33da9f2e5a739c6310c1
+
     return res.status(200).json(findByID);
 }
 let handleCreateProduct = async (req, res) => {
@@ -51,5 +49,5 @@ module.exports = {
     handleCreateProduct: handleCreateProduct,
     handleUpdateProduct: handleUpdateProduct,
     handleDeleteProduct: handleDeleteProduct,
-    handleGetProcductByCate:handleGetProcductByCate,
+    handleGetProcductByCate: handleGetProcductByCate,
 }
