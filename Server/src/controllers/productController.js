@@ -13,7 +13,10 @@ let handleSearchProcduct = async (req, res) => {
 
     let findByID = await productService.SearchProduct(req.query.key);
     // console.log('check ben controller: ', findByID.products)
+<<<<<<< HEAD
 
+=======
+>>>>>>> e3210afdd31b0778857910ec415f792f4d778d5c
     return res.status(200).json(findByID);
 }
 let handleCreateProduct = async (req, res) => {
